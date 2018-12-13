@@ -1,0 +1,17 @@
+platform :ios, '8.0'
+target "ZhanyouIM" do
+
+pod 'AFNetworking' 		#网络请求
+pod 'MBProgressHUD' 		#加载视图
+pod 'SDWebImage' 		#加载图片
+pod 'MJRefresh' 		#下拉刷新
+pod 'MJExtension'               #字典转模型工具
+pod 'MLLabel'			#战友圈
+pod 'MMWebView'			#战友圈
+pod 'UUButton'			#战友圈
+pod 'WechatOpenSDK'		#微信支付
+#pod 'NIMSDK_LITE'		#网易云信
+pod 'NIMKit/Lite'
+
+
+end

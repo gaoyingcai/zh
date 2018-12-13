@@ -1,0 +1,87 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - M80AttributedLabel (1.6.3)
+  - MBProgressHUD (1.1.0)
+  - MJExtension (3.0.13)
+  - MJRefresh (3.1.15.3)
+  - MLLabel (1.10.5)
+  - MMWebView (1.1)
+  - NIMKit/Core (1.8.0):
+    - M80AttributedLabel (>= 1.6.3)
+    - SDWebImage (>= 4.0.0)
+    - Toast (>= 3.0)
+    - TZImagePickerController (>= 1.7.7)
+  - NIMKit/Lite (1.8.0):
+    - NIMKit/Core
+    - NIMSDK_LITE (~> 4.1.0)
+  - NIMSDK_LITE (4.1.0)
+  - SDWebImage (4.3.3):
+    - SDWebImage/Core (= 4.3.3)
+  - SDWebImage/Core (4.3.3)
+  - Toast (4.0.0)
+  - TZImagePickerController (2.1.1)
+  - UUButton (1.1)
+  - WechatOpenSDK (1.8.2)
+
+DEPENDENCIES:
+  - AFNetworking
+  - MBProgressHUD
+  - MJExtension
+  - MJRefresh
+  - MLLabel
+  - MMWebView
+  - NIMKit/Lite
+  - SDWebImage
+  - UUButton
+  - WechatOpenSDK
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - AFNetworking
+    - M80AttributedLabel
+    - MBProgressHUD
+    - MJExtension
+    - MJRefresh
+    - MLLabel
+    - MMWebView
+    - NIMKit
+    - NIMSDK_LITE
+    - SDWebImage
+    - Toast
+    - TZImagePickerController
+    - UUButton
+    - WechatOpenSDK
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  M80AttributedLabel: d06543195d3e451d2ea62ad76d04aa9cea7661d4
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
+  MLLabel: d76124055a2205e7f76878e62cd06ba925ba0c97
+  MMWebView: 4d7c3789bc558e615bed91e9fb3e1a2a62a514ad
+  NIMKit: 77326c7645e18b6517afa402caf0a90898429672
+  NIMSDK_LITE: e182c79e958bfdd58821fcfb380fc58088242ec4
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  TZImagePickerController: 788184b04158006b25ffdbccbb550bfc193e9d9c
+  UUButton: 9a19bbe0c812a6920de21da8acca7a2d0bad52da
+  WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
+
+PODFILE CHECKSUM: a235fecb385e379f0f876c70ab35982810ada214
+
+COCOAPODS: 1.5.0

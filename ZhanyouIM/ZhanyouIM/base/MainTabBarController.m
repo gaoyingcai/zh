@@ -74,8 +74,8 @@
     }
 
     NSArray*titles=@[@"会话",@"寻找战友",@"通讯录",@"战友圈"];
-    NSArray*normalImgNames=@[@"session_1@2x.png",@"user_1@2x.png",@"home_1@2x.png",@"circle_1@2x.png"];
-    NSArray*selectImgNames=@[@"session@2x.png",@"user@2x.png",@"home@2x.png",@"circle@2x.png"];
+    NSArray*normalImgNames=@[@"session_1@2x.png",@"search_tab_1.png",@"directory_tab_1.png",@"circle_1@2x.png"];
+    NSArray*selectImgNames=@[@"session@2x.png",@"search_tab.png",@"directory_tab.png",@"circle@2x.png"];
     
     for (UINavigationController*nvc in self.viewControllers) {
         NSInteger index=[self.viewControllers indexOfObject:nvc];

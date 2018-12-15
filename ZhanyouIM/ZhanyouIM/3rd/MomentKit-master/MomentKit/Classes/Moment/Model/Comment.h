@@ -16,6 +16,8 @@
 @property (nonatomic,copy) NSString *text;
 // 发布者名字
 @property (nonatomic,copy) NSString *userName;
+// 发布者头像
+@property (nonatomic,copy) NSString *userImage;
 // 发布者名字
 @property (nonatomic,copy) NSString *replyUserName;
 // 发布时间戳

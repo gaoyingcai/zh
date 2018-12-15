@@ -78,8 +78,8 @@
 @end
 
 
-//#### 评论
-@interface CommentLabel : UIView <MLLinkLabelDelegate>
+//#### 评论 内容
+@interface CommentView : UIView <MLLinkLabelDelegate>
 
 // 内容Label
 @property (nonatomic,strong) MLLinkLabel *linkLabel;
@@ -91,5 +91,3 @@
 @property (nonatomic, copy) void (^didClickText)(Comment *comment);
 
 @end
-
-

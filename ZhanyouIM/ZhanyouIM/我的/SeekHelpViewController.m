@@ -12,6 +12,7 @@
 
 @interface SeekHelpViewController (){
     NSMutableArray *dataArray;
+    UILabel *cellLabel;
 }
 
 @end
@@ -47,13 +48,16 @@
     UserCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (!cell) {
         cell = [UserCell seekHelpCell];
-        
     }
     
     cell.seekDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row]objectForKey:@"add_time"]];
     NSString * contentStr = [NSString stringWithFormat:@"求助项目:%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"content"]];
     NSString * verifyMsgStr = [NSString stringWithFormat:@"审核结果:%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"verify_msg"]];
-    cell.seekTextView.text = [NSString stringWithFormat:@"%@\n%@",contentStr,verifyMsgStr];
+//    cell.seekTextView.backgroundColor = [UIColor redColor];
+    cell.seekLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    cell.seekLabel.numberOfLines = 0;
+    cell.seekLabel.text = [NSString stringWithFormat:@"%@\n%@",contentStr,verifyMsgStr];
+    cellLabel = cell.seekLabel;
     
     NSString * str = [NSString stringWithFormat:@"%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"status"]];
     if ([str isEqualToString:@"0"]) {
@@ -74,8 +78,30 @@
     return dataArray.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 150;
+    
+    CGSize attrStrSize = [self getSpaceLabelHeight:cellLabel.text withFont:cellLabel.font withWidth:cellLabel.width];
+    NSLog(@"%@",cellLabel.text);
+    NSLog(@"%f",attrStrSize.height);
+    return attrStrSize.height+50;
+
 }
+-(CGSize)getSpaceLabelHeight:(NSString*)str withFont:(UIFont*)font withWidth:(CGFloat)width {
+    
+    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+    paraStyle.lineBreakMode = NSLineBreakByCharWrapping; //截断方式
+    paraStyle.alignment = NSTextAlignmentLeft; //对齐方式
+    paraStyle.paragraphSpacingBefore = 15.0f;  //段落间距
+    paraStyle.lineSpacing = 10.0f; //行间距
+    paraStyle.hyphenationFactor = 1.0; //连字符属性
+    paraStyle.firstLineHeadIndent = 0.0; //每段首行缩进
+    paraStyle.headIndent = 0; //首行缩进
+    paraStyle.tailIndent = 0; //右侧缩进或显示宽度
+    //, NSKernAttributeName:@1.5f
+    NSDictionary *dic = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paraStyle};
+    CGSize size = [str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:dic context:nil].size;
+    return  size;
+}
+
 
 /*
 #pragma mark - Navigation

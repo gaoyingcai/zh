@@ -19,6 +19,8 @@
 
 @interface NIMLocationViewController : UIViewController<MKMapViewDelegate>
 
+@property (nonatomic,strong) NSString *business;
+
 @property(nonatomic,strong) MKMapView *mapView;
 
 @property(nonatomic,weak)   id<NIMLocationViewControllerDelegate> delegate;

@@ -21,6 +21,8 @@
 #import "NIMKitInfoFetchOption.h"
 #import <AVFoundation/AVFoundation.h>
 #import "UIImageView+WebCache.h"
+#import "NIMLocationViewController.h"
+#import "NIMKitLocationPoint.h"
 
 @interface NIMSessionViewController ()<NIMMediaManagerDelegate,NIMInputDelegate>
 
@@ -541,6 +543,12 @@
     if ([eventName isEqualToString:NIMKitEventNameTapImage]) {
         [self singleTapSmallViewCallback:event.messageModel.message];
         return YES;
+    }
+    if ([eventName isEqualToString:NIMKitEventNameLocation]) {
+        NIMKitLocationPoint * location = [[NIMKitLocationPoint alloc]initWithLocationObject:event.messageModel.message.messageObject];
+        NIMLocationViewController *vc = [[NIMLocationViewController alloc] initWithLocationPoint:location];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
     }
     if ([eventName isEqualToString:NIMKitEventNameTapVideo]) {
         [self singleTapSmallViewVideoPlayer:event.messageModel.message];

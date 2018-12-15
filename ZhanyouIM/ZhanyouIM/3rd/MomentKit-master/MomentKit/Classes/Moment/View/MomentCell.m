@@ -210,28 +210,28 @@ CGFloat maxLimitHeight = 0;
         line.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.3];
         [_commentView addSubview:line];
         for (NSInteger i = 0; i < count; i ++) {
-            CommentLabel *label = [[CommentLabel alloc] initWithFrame:CGRectMake(0, top, width, 0)];
-            label.comment = [moment.commentList objectAtIndex:i];
-            [label setDidClickText:^(Comment *comment) {
+            CommentView *commentView = [[CommentView alloc]initWithFrame:CGRectMake(0, top, width, 0)];
+            commentView.comment = [moment.commentList objectAtIndex:i];
+            [commentView setDidClickText:^(Comment *comment) {
                 if ([self.delegate respondsToSelector:@selector(didSelectComment:)]) {
                     [self.delegate didSelectComment:comment];
                 }
             }];
-            [label setDidClickLinkText:^(MLLink *link, NSString *linkText) {
+            [commentView setDidClickLinkText:^(MLLink *link, NSString *linkText) {
                 if ([self.delegate respondsToSelector:@selector(didClickLink:linkText:)]) {
                     [self.delegate didClickLink:link linkText:linkText];
                 }
             }];
-            [_commentView addSubview:label];
+            [_commentView addSubview:commentView];
             // 更新
-            top += label.height;
+            top += commentView.height;
         }
     }
     // 更新UI
     if (top > 0) {
 //        _bgImageView.frame = CGRectMake(_nameLab.left, bottom, width, top + kArrowHeight);
         _bgImageView.frame = CGRectMake(12, bottom, width, top + kArrowHeight);
-        _bgImageView.image = [[UIImage imageNamed:@"comment_bg"] stretchableImageWithLeftCapWidth:40 topCapHeight:30];
+//        _bgImageView.image = [[UIImage imageNamed:@"comment_bg"] stretchableImageWithLeftCapWidth:40 topCapHeight:30];
 //        _commentView.frame = CGRectMake(_nameLab.left, bottom + kArrowHeight, width, top);
         _commentView.frame = CGRectMake(12, bottom + kArrowHeight, width, top);
         rowHeight = _commentView.bottom + kBlank;
@@ -291,8 +291,9 @@ CGFloat maxLimitHeight = 0;
 }
 @end
 
-#pragma mark - ------------------ 评论 ------------------
-@implementation CommentLabel
+
+#pragma mark - ------------------ 评论(内容) ------------------
+@implementation CommentView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -309,10 +310,26 @@ CGFloat maxLimitHeight = 0;
 - (void)setComment:(Comment *)comment
 {
     _comment = comment;
+
+    
+    //添加用户头像和昵称
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 12, 34, 34)];
+    [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img(comment.userImage)]];
+    [self addSubview:imageView];
+    
+    UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(44, 19, k_screen_width-kRightMargin-12 - 44, 20)];
+    label.text = comment.userName;
+    [self addSubview:label];
+    
     _linkLabel.attributedText = kMLLinkLabelAttributedText(comment);
     CGSize attrStrSize = [_linkLabel preferredSizeWithMaxWidth:kTextWidth];
-    _linkLabel.frame = CGRectMake(5, 3, attrStrSize.width, attrStrSize.height);
-    self.height = attrStrSize.height + 5;
+    _linkLabel.frame = CGRectMake(40, 50, attrStrSize.width, attrStrSize.height);
+    self.height = attrStrSize.height + 60;
+    
+    UILabel * lineLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, self.height, k_screen_width, 1)];
+    lineLabel.backgroundColor = color_lightGray;
+    [self addSubview:lineLabel];
+    self.height ++;
 }
 
 #pragma mark - MLLinkLabelDelegate

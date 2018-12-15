@@ -26,6 +26,7 @@
 extern NSString *const NIMKitEventNameTapContent;
 extern NSString *const NIMKitEventNameTapLabelLink;
 extern NSString *const NIMKitEventNameTapImage;
+extern NSString *const NIMKitEventNameLocation;
 extern NSString *const NIMKitEventNameTapAudio;
 extern NSString *const NIMKitEventNameTapVideo;
 extern NSString *const NIMKitEventNameTapRobotLink;

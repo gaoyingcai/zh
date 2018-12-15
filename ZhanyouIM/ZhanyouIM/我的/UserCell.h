@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 //我的求助
 @property (weak, nonatomic) IBOutlet UILabel *seekDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *seekStatusLabel;
-@property (weak, nonatomic) IBOutlet UITextView *seekTextView;
+@property (weak, nonatomic) IBOutlet UILabel *seekLabel;
 
 //我的举报
 @property (weak, nonatomic) IBOutlet UILabel *tipNameLabel;

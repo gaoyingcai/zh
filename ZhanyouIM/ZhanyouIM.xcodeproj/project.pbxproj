@@ -16,6 +16,14 @@
 		DF0BEB1E219DBB790069B38A /* next@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0BEB1D219DBB790069B38A /* next@2x.png */; };
 		DF0BEB21219DC6810069B38A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0BEB20219DC6800069B38A /* WebViewController.m */; };
 		DF0E897A2199CD720067B4E1 /* TeamInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0E89792199CD720067B4E1 /* TeamInfoViewController.m */; };
+		DF11ED5421C4ABD20064E2D3 /* search_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4C21C4ABCE0064E2D3 /* search_tab@2x.png */; };
+		DF11ED5521C4ABD20064E2D3 /* directory_tab@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4D21C4ABCF0064E2D3 /* directory_tab@3x.png */; };
+		DF11ED5621C4ABD20064E2D3 /* directory_tab_1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4E21C4ABD00064E2D3 /* directory_tab_1@3x.png */; };
+		DF11ED5721C4ABD20064E2D3 /* search_tab_1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4F21C4ABD00064E2D3 /* search_tab_1@3x.png */; };
+		DF11ED5821C4ABD20064E2D3 /* search_tab@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED5021C4ABD00064E2D3 /* search_tab@3x.png */; };
+		DF11ED5921C4ABD20064E2D3 /* directory_tab_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED5121C4ABD10064E2D3 /* directory_tab_1@2x.png */; };
+		DF11ED5A21C4ABD20064E2D3 /* directory_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED5221C4ABD10064E2D3 /* directory_tab@2x.png */; };
+		DF11ED5B21C4ABD20064E2D3 /* search_tab_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED5321C4ABD20064E2D3 /* search_tab_1@2x.png */; };
 		DF192330219C55150006CDB6 /* 红星5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF19232F219C55150006CDB6 /* 红星5@2x.png */; };
 		DF1D4D9F21931EAB001B17DE /* star_test@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF1D4D9E21931EAB001B17DE /* star_test@2x.png */; };
 		DF1DCD8D2180C685004AAF30 /* 缴费@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF1DCD8C2180C684004AAF30 /* 缴费@2x.png */; };
@@ -168,6 +176,14 @@
 		DF0BEB20219DC6800069B38A /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		DF0E89782199CD720067B4E1 /* TeamInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TeamInfoViewController.h; sourceTree = "<group>"; };
 		DF0E89792199CD720067B4E1 /* TeamInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TeamInfoViewController.m; sourceTree = "<group>"; };
+		DF11ED4C21C4ABCE0064E2D3 /* search_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_tab@2x.png"; sourceTree = "<group>"; };
+		DF11ED4D21C4ABCF0064E2D3 /* directory_tab@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directory_tab@3x.png"; sourceTree = "<group>"; };
+		DF11ED4E21C4ABD00064E2D3 /* directory_tab_1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directory_tab_1@3x.png"; sourceTree = "<group>"; };
+		DF11ED4F21C4ABD00064E2D3 /* search_tab_1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_tab_1@3x.png"; sourceTree = "<group>"; };
+		DF11ED5021C4ABD00064E2D3 /* search_tab@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_tab@3x.png"; sourceTree = "<group>"; };
+		DF11ED5121C4ABD10064E2D3 /* directory_tab_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directory_tab_1@2x.png"; sourceTree = "<group>"; };
+		DF11ED5221C4ABD10064E2D3 /* directory_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directory_tab@2x.png"; sourceTree = "<group>"; };
+		DF11ED5321C4ABD20064E2D3 /* search_tab_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_tab_1@2x.png"; sourceTree = "<group>"; };
 		DF19232F219C55150006CDB6 /* 红星5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "红星5@2x.png"; sourceTree = "<group>"; };
 		DF1D4D9E21931EAB001B17DE /* star_test@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star_test@2x.png"; sourceTree = "<group>"; };
 		DF1DCD8C2180C684004AAF30 /* 缴费@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缴费@2x.png"; sourceTree = "<group>"; };
@@ -753,6 +769,14 @@
 		DF5B8E3D216F8E2400F84CF5 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				DF11ED5121C4ABD10064E2D3 /* directory_tab_1@2x.png */,
+				DF11ED4E21C4ABD00064E2D3 /* directory_tab_1@3x.png */,
+				DF11ED5221C4ABD10064E2D3 /* directory_tab@2x.png */,
+				DF11ED4D21C4ABCF0064E2D3 /* directory_tab@3x.png */,
+				DF11ED5321C4ABD20064E2D3 /* search_tab_1@2x.png */,
+				DF11ED4F21C4ABD00064E2D3 /* search_tab_1@3x.png */,
+				DF11ED4C21C4ABCE0064E2D3 /* search_tab@2x.png */,
+				DF11ED5021C4ABD00064E2D3 /* search_tab@3x.png */,
 				DF3491DA21B6C7C2002AD782 /* wangluo@2x.png */,
 				DFBA3C6C21B2A43C0001D4AA /* wangluo@3x.png */,
 				DFA6DD8A21B966680079043D /* huanying@2x.png */,
@@ -912,6 +936,7 @@
 				DF331FA62178A9BD00034F3F /* moment_operate@2x.png in Resources */,
 				DF09CB3E219C711500284399 /* qunzu@2x.png in Resources */,
 				DF5B8DF4216F6E6C00F84CF5 /* LaunchScreen.storyboard in Resources */,
+				DF11ED5521C4ABD20064E2D3 /* directory_tab@3x.png in Resources */,
 				DFE600A52176310800E1736A /* 评论@2x.png in Resources */,
 				DF1E69D72191E5E60056325B /* 图片视频@2x.png in Resources */,
 				DF331FA22178A9BD00034F3F /* moment_like@2x.png in Resources */,
@@ -930,6 +955,7 @@
 				DFA40C4221719C9000B884A9 /* user_1@2x.png in Resources */,
 				DFBA3C6121B2A3C80001D4AA /* neirong@2x.png in Resources */,
 				DFA40C4121719C9000B884A9 /* home_1@2x.png in Resources */,
+				DF11ED5A21C4ABD20064E2D3 /* directory_tab@2x.png in Resources */,
 				DF331F9D2178A9BD00034F3F /* moment_comment@3x.png in Resources */,
 				DFE600912176159500E1736A /* UserCell.xib in Resources */,
 				DFBA3C6521B2A4080001D4AA /* pinglun@3x.png in Resources */,
@@ -937,16 +963,20 @@
 				DFBA3C6621B2A4080001D4AA /* pinglun@2x.png in Resources */,
 				DFA40C4621719C9000B884A9 /* user@2x.png in Resources */,
 				DFA40C4321719C9000B884A9 /* session_1@2x.png in Resources */,
+				DF11ED5421C4ABD20064E2D3 /* search_tab@2x.png in Resources */,
 				DFA40C4521719C9000B884A9 /* circle_1@2x.png in Resources */,
 				DFB206E9219FC4E900A1C3E1 /* team_info@2x.png in Resources */,
 				DF0BEB1E219DBB790069B38A /* next@2x.png in Resources */,
 				DF5B8DF1216F6E6C00F84CF5 /* Assets.xcassets in Resources */,
 				DFBA3C6221B2A3C80001D4AA /* neirong@3x.png in Resources */,
+				DF11ED5B21C4ABD20064E2D3 /* search_tab_1@2x.png in Resources */,
+				DF11ED5621C4ABD20064E2D3 /* directory_tab_1@3x.png in Resources */,
 				DF331FA82178A9BD00034F3F /* moment_operate_hl@2x.png in Resources */,
 				DF192330219C55150006CDB6 /* 红星5@2x.png in Resources */,
 				DF1DCD8D2180C685004AAF30 /* 缴费@2x.png in Resources */,
 				DF331F9B2178A9BD00034F3F /* moment_camera@3x.png in Resources */,
 				DFE60098217630D900E1736A /* 设置@2x.png in Resources */,
+				DF11ED5821C4ABD20064E2D3 /* search_tab@3x.png in Resources */,
 				DF0B3C572173777F00B73186 /* LoginRegist.storyboard in Resources */,
 				DFE600A22176310800E1736A /* 客服@2x.png in Resources */,
 				DFB206E7219FC49F00A1C3E1 /* Rectangle11@2x.png in Resources */,
@@ -959,6 +989,7 @@
 				DFBA3C6E21B2A43C0001D4AA /* wangluo@3x.png in Resources */,
 				DF331FA72178A9BD00034F3F /* moment_operate@3x.png in Resources */,
 				DF331FA42178A9BD00034F3F /* moment_like_hl@2x.png in Resources */,
+				DF11ED5721C4ABD20064E2D3 /* search_tab_1@3x.png in Resources */,
 				DFBA3C5E21B2A3A10001D4AA /* zhanyou@3x.png in Resources */,
 				DF331F9C2178A9BD00034F3F /* moment_comment@2x.png in Resources */,
 				DF1DCD932180CC34004AAF30 /* 公告@2x.png in Resources */,
@@ -978,6 +1009,7 @@
 				DFA40C4021719C9000B884A9 /* home@2x.png in Resources */,
 				DFA6DD8D21B966680079043D /* huanying@3x.png in Resources */,
 				DFBA3C5621B28A6D0001D4AA /* 客服电话@2x.png in Resources */,
+				DF11ED5921C4ABD20064E2D3 /* directory_tab_1@2x.png in Resources */,
 				DF331F9A2178A9BD00034F3F /* moment_camera@2x.png in Resources */,
 				DF68D52E21B033D0001899B1 /* 群详情添加按钮@2x.png in Resources */,
 				DFA6DD8C21B966680079043D /* huanying@2x.png in Resources */,

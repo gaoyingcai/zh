@@ -46,6 +46,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setTintColor:[UIColor darkGrayColor]];
     self.navigationItem.title = @"位置";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss:)];
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
@@ -60,7 +61,11 @@
         [self.mapView addAnnotation:self.locationPoint];
         [self.mapView setRegion:theRegion animated:YES];
     }else{
-        [self setUpRightNavButton];
+        if ([self.business isEqualToString:@"展示"]) {
+            //如果只是展示,不展示右侧按钮
+        }else{
+            [self setUpRightNavButton];
+        }
         self.locationPoint   = [[NIMKitLocationPoint alloc] init];
         if ([CLLocationManager locationServicesEnabled]) {
             [_locationManager requestAlwaysAuthorization];
@@ -91,8 +96,16 @@
 }
 
 - (void)onSend:(id)sender{
-    if ([self.delegate respondsToSelector:@selector(onSendLocation:)]) {
-        [self.delegate onSendLocation:self.locationPoint];
+    
+    if ([self.business isEqualToString:@"定位"]) {
+        NSDictionary*dic=@{@"location":self.locationPoint.title};
+        //发送通知
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"GET_LOCATION_TITLE" object:nil userInfo:dic];
+
+    }else{
+        if ([self.delegate respondsToSelector:@selector(onSendLocation:)]) {
+            [self.delegate onSendLocation:self.locationPoint];
+        }
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SeekHelpDetailsViewController : BaseViewController
 
-@property (nonatomic) int commentId;
+@property (nonatomic, assign) int commentId;
 
 
 

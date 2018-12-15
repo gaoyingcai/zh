@@ -101,6 +101,7 @@
         tableView.tag = i;
         tableView.delegate = self;
         tableView.dataSource = self;
+        tableView.backgroundColor = color_lightGray;
         [self.scrollView addSubview:tableView];
         if (i == 0) {
             friendTableView = tableView;

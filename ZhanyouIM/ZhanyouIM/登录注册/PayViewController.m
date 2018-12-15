@@ -24,7 +24,7 @@
     NSLog(@"微信支付");
     
     //获取支付金额
-    NSDictionary * paramDic = @{@"field":@""};
+    NSDictionary * paramDic = @{@"field":@"reg_money"};
     [DataService requestWithPostUrl:@"api/config/getConfig" params:paramDic block:^(id result) {
         if (result) {
             NSLog(@"%@",result);

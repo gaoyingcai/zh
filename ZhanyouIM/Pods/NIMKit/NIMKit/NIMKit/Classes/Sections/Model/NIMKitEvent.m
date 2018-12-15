@@ -11,6 +11,7 @@
 NSString *const NIMKitEventNameTapContent = @"NIMKitEventNameTapContent";
 NSString *const NIMKitEventNameTapLabelLink = @"NIMKitEventNameTapLabelLink";
 NSString *const NIMKitEventNameTapImage   = @"NIMKitEventNameTapImage";
+NSString *const NIMKitEventNameLocation   = @"NIMKitEventNameLocation";
 NSString *const NIMKitEventNameTapAudio   = @"NIMKitEventNameTapAudio";
 NSString *const NIMKitEventNameTapVideo   = @"NIMKitEventNameTapVideo";
 NSString *const NIMKitEventNameTapRobotLink  = @"NIMKitEventNameTapRobotLink";

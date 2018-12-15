@@ -70,6 +70,7 @@
         for (int i = 0; i < commentResultList.count; i ++) {
             Comment *comment = [[Comment alloc] init];
             comment.userName = [[commentResultList objectAtIndex:i] objectForKey:@"username"];
+            comment.userImage = [[commentResultList objectAtIndex:i] objectForKey:@"head_url"];
             comment.text = [[commentResultList objectAtIndex:i] objectForKey:@"content"];
             NSString * addTime = [[commentResultList objectAtIndex:i] objectForKey:@"add_time"];
             if (![addTime isKindOfClass:[NSNull class]]&&![addTime isEqualToString:@"<null>"]){

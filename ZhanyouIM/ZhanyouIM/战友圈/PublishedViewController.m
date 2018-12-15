@@ -10,26 +10,26 @@
 #import "DataService.h"
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import <CoreLocation/CoreLocation.h>
+//#import <CoreLocation/CoreLocation.h>
+#import "NIMLocationViewController.h"
 
 
 #define VIDEOCACHEPATH [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoCache"]
 
 
 
-@interface PublishedViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextViewDelegate,CLLocationManagerDelegate>{
+@interface PublishedViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextViewDelegate>{
     float width;
     NSMutableArray *sourceArray;
 
 }
-@property (nonatomic, strong) CLLocationManager* locationManager;
+//@property (nonatomic, strong) CLLocationManager* locationManager;
 @property(nonatomic,strong)CLGeocoder *geocoder;
 @property (strong, nonatomic) CIDetector *detector;
 @property (nonatomic,strong)AVPlayerViewController * PlayerVC;
 @end
 
 @implementation PublishedViewController
-
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
@@ -402,74 +402,92 @@
 */
 - (IBAction)locationBtnAction:(id)sender {
     
-    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
-    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
-    if ([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
-        self.locationManager = [[CLLocationManager alloc] init];
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        // 3、请求定位授权
-        // 请求在使用期间授权（弹框提示用户是否允许在使用期间定位）,需添加NSLocationWhenInUseUsageDescription到info.plist
-        [_locationManager requestWhenInUseAuthorization];
-        // 请求在后台定位授权（弹框提示用户是否允许不在使用App时仍然定位）,需添加NSLocationAlwaysUsageDescription添加key到info.plist
-        [_locationManager requestAlwaysAuthorization];
-        // 4、设置定位精度
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        // 5、设置定位频率，每隔多少米定位一次
-        _locationManager.distanceFilter = 10.0;
-        // 6、设置代理
-        _locationManager.delegate = self;
-        // 7、开始定位
-        // 注意：开始定位比较耗电，不需要定位的时候最好调用 [stopUpdatingLocation] 结束定位。
-        [_locationManager startUpdatingLocation];
-    }else{
-        // 弹框提示
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请打开允许定位!" preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    
-    
-}
-#pragma mark - CLLocationManagerDelegate methods
-
-// 定位失败
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    NSLog(@"%@",error.localizedDescription);
-}
-
-// 位置更新
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    // 获取最新定位
-    CLLocation *location = locations.lastObject;
-    // 打印位置信息
-    NSLog(@"精度：%.2f, 纬度：%.2f", location.coordinate.latitude, location.coordinate.longitude);
-    
-    if (_geocoder==nil) {
-        _geocoder=[[CLGeocoder alloc]init];
-    }
-    [_geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        
-        CLPlacemark *placemark=[placemarks firstObject];
-        
-        //        NSLog(@"详细信息:%@",placemark.addressDictionary);
-        NSLog(@"位置信息:%@",placemark.name);
-        NSLog(@"街道:%@",placemark.thoroughfare);
-        NSLog(@"城市:%@",placemark.locality);
-        NSLog(@"区县:%@",placemark.subLocality);
-        NSLog(@"省份:%@",placemark.administrativeArea);
-        NSLog(@"国家:%@",placemark.country);
-        
-        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@",placemark.locality,placemark.subLocality,placemark.name];
-        
-//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:placemark.subLocality message:placemark.thoroughfare preferredStyle:UIAlertControllerStyleAlert];
+//    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
+//    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
+//    if ([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
+//        self.locationManager = [[CLLocationManager alloc] init];
+//        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+//        // 3、请求定位授权
+//        // 请求在使用期间授权（弹框提示用户是否允许在使用期间定位）,需添加NSLocationWhenInUseUsageDescription到info.plist
+//        [_locationManager requestWhenInUseAuthorization];
+//        // 请求在后台定位授权（弹框提示用户是否允许不在使用App时仍然定位）,需添加NSLocationAlwaysUsageDescription添加key到info.plist
+//        [_locationManager requestAlwaysAuthorization];
+//        // 4、设置定位精度
+//        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+//        // 5、设置定位频率，每隔多少米定位一次
+//        _locationManager.distanceFilter = 10.0;
+//        // 6、设置代理
+//        _locationManager.delegate = self;
+//        // 7、开始定位
+//        // 注意：开始定位比较耗电，不需要定位的时候最好调用 [stopUpdatingLocation] 结束定位。
+//        [_locationManager startUpdatingLocation];
+//
+//
+//
+//
+//    }else{
+//        // 弹框提示
+//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请打开允许定位!" preferredStyle:UIAlertControllerStyleAlert];
 //        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
 //        [self presentViewController:alertController animated:YES completion:nil];
-        
-    }];
+//    }
     
-    // 停止定位
-    [_locationManager stopUpdatingLocation];
+    NIMLocationViewController *locationController = [[NIMLocationViewController alloc] initWithNibName:nil bundle:nil];
+    locationController.business = @"定位";
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(value:) name:@"GET_LOCATION_TITLE" object:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:locationController];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
+    
 }
+
+
+-(void)value:(NSNotification*)sender{
+    NSLog(@"%@",sender.userInfo);
+    self.locationLabel.text = [sender.userInfo objectForKey:@"location"];
+    //注意关闭通知，否则下次监听还会收到这次的通知
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+//#pragma mark - CLLocationManagerDelegate methods
+//
+//// 定位失败
+//- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+//    NSLog(@"%@",error.localizedDescription);
+//}
+//
+//// 位置更新
+//- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+//    // 获取最新定位
+//    CLLocation *location = locations.lastObject;
+//    // 打印位置信息
+//    NSLog(@"精度：%.2f, 纬度：%.2f", location.coordinate.latitude, location.coordinate.longitude);
+//
+//    if (_geocoder==nil) {
+//        _geocoder=[[CLGeocoder alloc]init];
+//    }
+//    [_geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+//
+//        CLPlacemark *placemark=[placemarks firstObject];
+//
+//        //        NSLog(@"详细信息:%@",placemark.addressDictionary);
+//        NSLog(@"位置信息:%@",placemark.name);
+//        NSLog(@"街道:%@",placemark.thoroughfare);
+//        NSLog(@"城市:%@",placemark.locality);
+//        NSLog(@"区县:%@",placemark.subLocality);
+//        NSLog(@"省份:%@",placemark.administrativeArea);
+//        NSLog(@"国家:%@",placemark.country);
+//
+//        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@",placemark.locality,placemark.subLocality,placemark.name];
+//
+////        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:placemark.subLocality message:placemark.thoroughfare preferredStyle:UIAlertControllerStyleAlert];
+////        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+////        [self presentViewController:alertController animated:YES completion:nil];
+//
+//    }];
+//
+//    // 停止定位
+//    [_locationManager stopUpdatingLocation];
+//}
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [_textView resignFirstResponder];
 }

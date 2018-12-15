@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -268,31 +268,31 @@
                         <color key="textColor" red="0.1647058824" green="0.63137254899999995" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="cfl-Ud-dwS">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YwS-Qk-bpI">
                         <rect key="frame" x="12" y="42" width="343" height="47"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    </textView>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="L8F-1g-oj0" firstAttribute="top" secondItem="4Lp-Bx-t95" secondAttribute="top" id="0IZ-by-quc"/>
+                    <constraint firstAttribute="bottom" secondItem="YwS-Qk-bpI" secondAttribute="bottom" constant="10.5" id="7px-ZA-Fh4"/>
                     <constraint firstItem="L2F-0b-chK" firstAttribute="width" secondItem="4Lp-Bx-t95" secondAttribute="width" multiplier="1:2" id="Hmg-c7-UfE"/>
                     <constraint firstItem="4Fe-Ta-bPi" firstAttribute="leading" secondItem="4Lp-Bx-t95" secondAttribute="leadingMargin" constant="-4" id="IEY-zQ-sff"/>
-                    <constraint firstItem="cfl-Ud-dwS" firstAttribute="top" secondItem="4Fe-Ta-bPi" secondAttribute="bottom" id="PGA-vf-1Ej"/>
+                    <constraint firstItem="YwS-Qk-bpI" firstAttribute="top" secondItem="4Fe-Ta-bPi" secondAttribute="bottom" id="LFN-CR-PHg"/>
+                    <constraint firstItem="YwS-Qk-bpI" firstAttribute="leading" secondItem="4Lp-Bx-t95" secondAttribute="leading" constant="12" id="Pgu-SJ-bKe"/>
                     <constraint firstItem="L2F-0b-chK" firstAttribute="top" secondItem="4Lp-Bx-t95" secondAttribute="top" id="TXR-cs-mKi"/>
                     <constraint firstItem="4Fe-Ta-bPi" firstAttribute="width" secondItem="L2F-0b-chK" secondAttribute="width" id="cj7-xK-krn"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="cfl-Ud-dwS" secondAttribute="trailing" constant="4" id="ivj-cB-5qC"/>
                     <constraint firstItem="L2F-0b-chK" firstAttribute="leading" secondItem="4Lp-Bx-t95" secondAttribute="leading" constant="12" id="nts-p1-ahn"/>
                     <constraint firstAttribute="trailing" secondItem="L8F-1g-oj0" secondAttribute="trailing" constant="12" id="rXo-SG-1sx"/>
                     <constraint firstItem="4Fe-Ta-bPi" firstAttribute="top" secondItem="L2F-0b-chK" secondAttribute="bottom" id="uZ8-cS-zvA"/>
-                    <constraint firstItem="cfl-Ud-dwS" firstAttribute="bottom" secondItem="4Lp-Bx-t95" secondAttribute="bottomMargin" id="umU-pU-8Aj"/>
-                    <constraint firstItem="cfl-Ud-dwS" firstAttribute="leading" secondItem="4Lp-Bx-t95" secondAttribute="leadingMargin" constant="-4" id="voq-fb-TC6"/>
+                    <constraint firstAttribute="trailing" secondItem="YwS-Qk-bpI" secondAttribute="trailing" constant="20" id="xCG-CA-nOJ"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="seekLabel" destination="YwS-Qk-bpI" id="8YR-xB-wmr"/>
                 <outlet property="seekStatusLabel" destination="L8F-1g-oj0" id="dtH-nf-m6h"/>
-                <outlet property="seekTextView" destination="cfl-Ud-dwS" id="JLp-if-T8X"/>
             </connections>
             <point key="canvasLocation" x="-943.20000000000005" y="-246.47676161919043"/>
         </tableViewCell>

@@ -140,7 +140,7 @@
     return 30;
 }
 - (IBAction)helpBtnAction:(id)sender {
-    NSDictionary * paramDic = @{@"field":[NSString stringWithFormat:@"%d",_commentId]};
+    NSDictionary * paramDic = @{@"field":@"sup_money"};
     [DataService requestWithPostUrl:@"api/config/getConfig" params:paramDic block:^(id result) {
         if (result) {
             NSLog(@"%@",result);

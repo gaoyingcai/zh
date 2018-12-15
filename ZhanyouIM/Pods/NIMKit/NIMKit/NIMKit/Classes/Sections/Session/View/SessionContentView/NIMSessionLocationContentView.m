@@ -59,7 +59,7 @@
 - (void)onTouchUpInside:(id)sender
 {
     NIMKitEvent *event = [[NIMKitEvent alloc] init];
-    event.eventName = NIMKitEventNameTapContent;
+    event.eventName = NIMKitEventNameLocation;
     event.messageModel = self.model;
     [self.delegate onCatchEvent:event];
 }

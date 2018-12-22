@@ -76,7 +76,11 @@
     
     firendArray = [NSMutableArray arrayWithArray:[NIMSDK sharedSDK].userManager.myFriends];
     NSLog(@"%@",firendArray);
-    
+    if (firendArray.count<=0) {
+        [self addQueshengImageToView:self.tableView imageName:@"zhanyou@2x.png"hidden:NO];
+    }else{
+        [self addQueshengImageToView:self.tableView imageName:@"zhanyou@2x.png"hidden:YES];
+    }
     
     initialArray=[[NSMutableArray alloc] init];
     dataArray = [NSMutableArray arrayWithCapacity:0];
@@ -241,7 +245,6 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
 }
 

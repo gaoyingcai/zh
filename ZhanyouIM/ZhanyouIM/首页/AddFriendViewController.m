@@ -71,7 +71,7 @@
     
     regist2.passValueBlock= ^(NSArray* array){
         self->mySearchArr = [NSMutableArray arrayWithArray:array];
-        [self mySearchAction:nil];
+        [self setMySearchBtnStatus];
     };
     [self.navigationController pushViewController:regist2 animated:YES];
 }
@@ -103,19 +103,22 @@
     }];
     
 }
+-(void)setMySearchBtnStatus{
+    [self.searchMeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.searchMeLine.backgroundColor = [UIColor clearColor];
+    [self.mySearchBtn setTitleColor:color_green forState:UIControlStateNormal];
+    self.mySearchLine.backgroundColor = color_green;
+    self.scrollView.contentOffset=CGPointMake(k_screen_width, 0);
+    if (!mySearchArr.count) {
+        [self addQueshengImageToView:mySearchTableView imageName:@"sousuo@2x.png" hidden:NO];
+    }else{
+        [self addQueshengImageToView:mySearchTableView imageName:@"sousuo@2x.png" hidden:YES];
+    }
+    [mySearchTableView reloadData];
+
+}
 - (IBAction)mySearchAction:(id)sender {
     [self searchBtnAction:nil];
-//    [self.searchMeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    self.searchMeLine.backgroundColor = [UIColor clearColor];
-//    [self.mySearchBtn setTitleColor:color_green forState:UIControlStateNormal];
-//    self.mySearchLine.backgroundColor = color_green;
-//    self.scrollView.contentOffset=CGPointMake(k_screen_width, 0);
-//    if (!mySearchArr.count) {
-//        [self addQueshengImageToView:mySearchTableView imageName:@"sousuo@2x.png" hidden:NO];
-//    }else{
-//        [self addQueshengImageToView:mySearchTableView imageName:@"sousuo@2x.png" hidden:YES];
-//    }
-//    [mySearchTableView reloadData];
     
 }
 
@@ -174,6 +177,12 @@
 -(void)addBtnAction:(UIButton*)btn{
     NIMUserRequest *request = [[NIMUserRequest alloc] init];
     NSLog(@"%@",mySearchArr);
+    
+    if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+        [self showTextMessage:@"您不能添加自己为好友"];
+        return;
+    }
+    
     request.userId          = [[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"];                            //封装用户ID
     request.operation       = NIMUserOperationRequest;                    //封装验证方式
 //    request.operation       = NIMUserOperationAdd;                    //封装验证方式

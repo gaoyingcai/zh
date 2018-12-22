@@ -56,7 +56,7 @@
             self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
             NSDictionary *userInfo = [[result objectForKey:@"data"]objectForKey:@"userInfo"];
 
-            NSString *urlStr = domain_img([userInfo objectForKey:@"head_url"]);
+//            NSString *urlStr = domain_img([userInfo objectForKey:@"head_url"]);
 //            [self.userImgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
             int star_num = [[userInfo objectForKey:@"star"] intValue];
             if (star_num == 0) {
@@ -219,7 +219,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
 
-    if (![scrollView isKindOfClass:[UITableView class]]) {
+    if (![scrollView isKindOfClass:[UITableView class]] && ![scrollView isKindOfClass:[UITableView class]]) {
         if (scrollView.contentOffset.x < k_screen_width/2) {
             [self friendBtnAction:nil];
         }else{
@@ -274,7 +274,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     
     if (tableView.tag == 0) {
         NIMUser *user = [friendArr objectAtIndex:indexPath.row];

@@ -34,12 +34,19 @@
 static NSString *moduleType;
 
 -(void)viewWillAppear:(BOOL)animated{
-    if (_hideTabBar) {
+    if (self.myDynamic) {
         self.tabBarController.tabBar.hidden = YES;
     }else{
         self.tabBarController.tabBar.hidden = NO;
     }
-    [self newsBtnAction:nil];
+    
+    if ([self.content isEqualToString:@"新闻事实"]) {
+        [self newsBtnAction:nil];
+    }else if([self.content isEqualToString:@"创业"]){
+        [self aidBtnAction:nil];
+    }else if ([self.content isEqualToString:@"求助"]){
+        [self seekHelpBtnAction:nil];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -150,7 +157,13 @@ static NSString *moduleType;
 
 -(void)loadData{
     
-    NSDictionary * paramDic = @{@"type":moduleType,@"page":@"1",@"length":@"10"};
+    NSDictionary *paramDic;
+    if (self.myDynamic) {
+        paramDic = @{@"type":moduleType,@"page":@"1",@"uid":[NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]]};
+    }else{
+        paramDic = @{@"type":moduleType,@"page":@"1"};
+    }
+    NSLog(@"%@",paramDic);
     [DataService requestWithPostUrl:@"/api/list/getItemList" params:paramDic block:^(id result) {
         if (result) {
             NSLog(@"%@",result);

@@ -25,8 +25,7 @@
 
 @implementation AddFriendViewController
 -(void)viewWillAppear:(BOOL)animated{
-//    self.tabBarController.tabBar.hidden = YES;
-    
+    self.tabBarController.tabBar.hidden = NO;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -178,7 +177,7 @@
     NIMUserRequest *request = [[NIMUserRequest alloc] init];
     NSLog(@"%@",mySearchArr);
     
-    if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+    if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
         [self showTextMessage:@"您不能添加自己为好友"];
         return;
     }

@@ -247,20 +247,11 @@
         
         NSString *mediaName = [self getVideoNameBaseCurrentTime];
         NSLog(@"mediaName: %@", mediaName);
-        [self saveVideoFromPath:info[UIImagePickerControllerMediaURL] toCachePath:[VIDEOCACHEPATH stringByAppendingPathComponent:mediaName]];
+        NSData *data = [NSData dataWithContentsOfFile:info[UIImagePickerControllerMediaURL]];
+        NSLog(@"%lu",(unsigned long)data.length);
+        
+        [self YS_saveVideoFromPath:info[UIImagePickerControllerMediaURL] toCachePath:[VIDEOCACHEPATH stringByAppendingPathComponent:mediaName]];
         [self dismissViewControllerAnimated:YES completion:nil];
-        
-//        NSURL *url = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
-//        [self.imgArray addObject:@{@"url":url,@"path":[VIDEOCACHEPATH stringByAppendingPathComponent:mediaName]}];
-        
-        [self.imgArray addObject:@{@"path":[VIDEOCACHEPATH stringByAppendingPathComponent:mediaName]}];
-        
-        [self setFrame];
-        
-        //获取封面
-//        UIImage *image =  [self getVideoPreViewImageWithPath:url];
-//        [self.imgArray addObject:image];
-//        [self setFrame];
     }
 
 }
@@ -285,15 +276,19 @@
             
         self.btn.hidden = YES;
         _PlayerVC = [[AVPlayerViewController alloc] init];
-        _PlayerVC.view.backgroundColor = [UIColor lightGrayColor];
-    
-//        AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[[self.imgArray objectAtIndex:0] objectForKey:@"url"]];
+        _PlayerVC.view.backgroundColor = [UIColor whiteColor];
+        NSData *data = [NSData dataWithContentsOfFile:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]];
+        NSLog(@"%lu",(unsigned long)data.length);
+        
         
         AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]]];
         _PlayerVC.player = [AVPlayer playerWithPlayerItem:item];
         _PlayerVC.view.frame = CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
         _PlayerVC.showsPlaybackControls = YES;
         [self.photoView addSubview:_PlayerVC.view];
+//        UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(15+_PlayerVC.view.frame.size.width/2-20, 15+_PlayerVC.view.frame.size.height/2-20, 40, 40)];
+//        beginImgView.image = [UIImage imageNamed:@"player.png"];
+//        [self.photoView addSubview:beginImgView];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
             self.photoViewHeight.constant = k_screen_width*num_rows/3;
@@ -331,29 +326,43 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH-mm-ss"];
     
     return [[dateFormatter stringFromDate:[NSDate date]] stringByAppendingString:@".MOV"];
+//    return [[dateFormatter stringFromDate:[NSDate date]] stringByAppendingString:@".mp4"];
 }
-//将视频保存到缓存路径中
-- (void)saveVideoFromPath:(NSString *)videoPath toCachePath:(NSString *)path {
+- (void)YS_saveVideoFromPath:(NSURL *)videoPath toCachePath:(NSString *)path{
     
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:VIDEOCACHEPATH]) {
-        
-        NSLog(@"路径不存在, 创建路径");
-        [fileManager createDirectoryAtPath:VIDEOCACHEPATH
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:nil];
-    } else {
-        
-        NSLog(@"路径存在");
-    }
+    //转码配置
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoPath options:nil];
+    AVAssetExportSession *exportSession= [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetLowQuality];
+    exportSession.shouldOptimizeForNetworkUse = YES;
+    exportSession.outputURL = [NSURL fileURLWithPath:path];
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        int exportStatus = exportSession.status;
+        switch (exportStatus)
+        {
+            case AVAssetExportSessionStatusFailed:
+            {
+                // log error to text view
+                NSError *exportError = exportSession.error;
+                NSLog (@"AVAssetExportSessionStatusFailed: %@", exportError);
+                break;
+            }
+            case AVAssetExportSessionStatusCompleted:
+            {
+                NSData *data = [NSData dataWithContentsOfFile:path];
+                NSLog(@"%lu",(unsigned long)data.length);
+                NSLog(@"转码成功");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // UI更新代码
+                    [self.imgArray addObject:@{@"path":path}];
+                    [self setFrame];
+                });
+                
+                
+            }
+        }
+    }];
     
-    NSError *error;
-    [fileManager copyItemAtPath:videoPath toPath:path error:&error];
-    if (error) {
-        
-        NSLog(@"文件保存到缓存失败");
-    }
 }
 
 //获取视频的第一帧截图, 返回UIImage
@@ -402,36 +411,6 @@
 */
 - (IBAction)locationBtnAction:(id)sender {
     
-//    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
-//    NSLog(@"%d",[CLLocationManager locationServicesEnabled]);
-//    if ([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
-//        self.locationManager = [[CLLocationManager alloc] init];
-//        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//        // 3、请求定位授权
-//        // 请求在使用期间授权（弹框提示用户是否允许在使用期间定位）,需添加NSLocationWhenInUseUsageDescription到info.plist
-//        [_locationManager requestWhenInUseAuthorization];
-//        // 请求在后台定位授权（弹框提示用户是否允许不在使用App时仍然定位）,需添加NSLocationAlwaysUsageDescription添加key到info.plist
-//        [_locationManager requestAlwaysAuthorization];
-//        // 4、设置定位精度
-//        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//        // 5、设置定位频率，每隔多少米定位一次
-//        _locationManager.distanceFilter = 10.0;
-//        // 6、设置代理
-//        _locationManager.delegate = self;
-//        // 7、开始定位
-//        // 注意：开始定位比较耗电，不需要定位的时候最好调用 [stopUpdatingLocation] 结束定位。
-//        [_locationManager startUpdatingLocation];
-//
-//
-//
-//
-//    }else{
-//        // 弹框提示
-//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请打开允许定位!" preferredStyle:UIAlertControllerStyleAlert];
-//        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-//        [self presentViewController:alertController animated:YES completion:nil];
-//    }
-    
     NIMLocationViewController *locationController = [[NIMLocationViewController alloc] initWithNibName:nil bundle:nil];
     locationController.business = @"定位";
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(value:) name:@"GET_LOCATION_TITLE" object:nil];
@@ -448,46 +427,6 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
-//#pragma mark - CLLocationManagerDelegate methods
-//
-//// 定位失败
-//- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-//    NSLog(@"%@",error.localizedDescription);
-//}
-//
-//// 位置更新
-//- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-//    // 获取最新定位
-//    CLLocation *location = locations.lastObject;
-//    // 打印位置信息
-//    NSLog(@"精度：%.2f, 纬度：%.2f", location.coordinate.latitude, location.coordinate.longitude);
-//
-//    if (_geocoder==nil) {
-//        _geocoder=[[CLGeocoder alloc]init];
-//    }
-//    [_geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-//
-//        CLPlacemark *placemark=[placemarks firstObject];
-//
-//        //        NSLog(@"详细信息:%@",placemark.addressDictionary);
-//        NSLog(@"位置信息:%@",placemark.name);
-//        NSLog(@"街道:%@",placemark.thoroughfare);
-//        NSLog(@"城市:%@",placemark.locality);
-//        NSLog(@"区县:%@",placemark.subLocality);
-//        NSLog(@"省份:%@",placemark.administrativeArea);
-//        NSLog(@"国家:%@",placemark.country);
-//
-//        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@",placemark.locality,placemark.subLocality,placemark.name];
-//
-////        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:placemark.subLocality message:placemark.thoroughfare preferredStyle:UIAlertControllerStyleAlert];
-////        [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-////        [self presentViewController:alertController animated:YES completion:nil];
-//
-//    }];
-//
-//    // 停止定位
-//    [_locationManager stopUpdatingLocation];
-//}
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [_textView resignFirstResponder];
 }

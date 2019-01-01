@@ -16,6 +16,9 @@
 #import "WebViewController.h"
 #import "DataService.h"
 #import "UserViewController.h"
+#import "RegistViewController2.h"
+#import "RegistViewController3.h"
+#import "PayViewController.h"
 
 
 @implementation SessionViewController
@@ -27,7 +30,6 @@
     [self checkoutLogin];
     [self refresh];
 }
-
 
 -(void)checkoutLogin{
     NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
@@ -68,24 +70,53 @@
     
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
         if (result) {
-            NSLog(@"%@",result);
-            self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
-            self.gonggaoTitleLabel.text =[self->announcementDic objectForKey:@"title"];
-            NSDictionary *userInfo = [[result objectForKey:@"data"]objectForKey:@"userInfo"];
-            //            [leftBtn setBackgroundImage:[UIImage imageNamed:@"user_info.png"] forState:UIControlStateNormal];
-            //            NSString *urlStr = domain_img([userInfo objectForKey:@"head_url"]);
-            //            [self.userImgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
-            int star_num = [[userInfo objectForKey:@"star"] intValue];
-            if (star_num == 0) {
-                star_num = 1;
+            NSString * status =[NSString stringWithFormat:@"%@",[result objectForKey:@"status"]];
+            if (status.intValue == 0) {
+                self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
+                self.gonggaoTitleLabel.text =[self->announcementDic objectForKey:@"title"];
+            }else{
+                [self showAlertViewWithDic:result];
             }
-            
-            [UIView animateWithDuration:0.3 animations:^{
-                [self.view layoutIfNeeded];
-            } completion:^(BOOL finished) {
-            }];
         }
     }];
+}
+-(void)showAlertViewWithDic:(NSDictionary *)dic{
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"提示" message:[dic objectForKey:@"message"] preferredStyle:UIAlertControllerStyleAlert];
+    
+    RegistViewController2 * regist2 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist2"];
+    RegistViewController3 * regist3 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist3"];
+    PayViewController * pay = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"pay"];
+
+    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        NSString * status = [dic objectForKey:@"status"];
+        switch ([status intValue]) {
+            case -1:
+                pay.type = @"3";
+                [self.navigationController pushViewController:pay animated:YES];
+                break;
+            case -2:
+                [self.navigationController pushViewController:regist2 animated:YES];
+                break;
+            case -3:
+                [self.navigationController pushViewController:regist3 animated:YES];
+                break;
+            case -4:
+                pay.type = @"3";
+                [self.navigationController pushViewController:pay animated:YES];
+                break;
+            case -5:
+                pay.type = @"3";
+                [self.navigationController pushViewController:pay animated:YES];
+                break;
+                
+            default:
+                break;
+        }
+        
+    }];
+    [alertController addAction:defaultAction];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 - (void)viewDidLoad {
     [self checkoutLogin];

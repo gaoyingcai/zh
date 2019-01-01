@@ -130,6 +130,7 @@
 		DFBA3C6921B2A4250001D4AA /* dongtai@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFBA3C6721B2A4250001D4AA /* dongtai@3x.png */; };
 		DFBA3C6E21B2A43C0001D4AA /* wangluo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFBA3C6C21B2A43C0001D4AA /* wangluo@3x.png */; };
 		DFD7217321889D7800B07661 /* PublishedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD7217221889D7800B07661 /* PublishedViewController.m */; };
+		DFE4A9AE21CE3B3400070F96 /* ZhanyouEnumHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE4A9AD21CE3B3400070F96 /* ZhanyouEnumHelp.m */; };
 		DFE600902176159500E1736A /* UserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE6008E2176159500E1736A /* UserCell.m */; };
 		DFE600912176159500E1736A /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFE6008F2176159500E1736A /* UserCell.xib */; };
 		DFE60096217630D100E1736A /* 新闻@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFE60095217630D100E1736A /* 新闻@2x.png */; };
@@ -337,6 +338,9 @@
 		DFBA3C6C21B2A43C0001D4AA /* wangluo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wangluo@3x.png"; sourceTree = "<group>"; };
 		DFD7217121889D7800B07661 /* PublishedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PublishedViewController.h; sourceTree = "<group>"; };
 		DFD7217221889D7800B07661 /* PublishedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PublishedViewController.m; sourceTree = "<group>"; };
+		DFE4A9AB21CE2AE100070F96 /* ZhanyouEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZhanyouEnum.h; sourceTree = "<group>"; };
+		DFE4A9AC21CE3B3400070F96 /* ZhanyouEnumHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZhanyouEnumHelp.h; sourceTree = "<group>"; };
+		DFE4A9AD21CE3B3400070F96 /* ZhanyouEnumHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZhanyouEnumHelp.m; sourceTree = "<group>"; };
 		DFE6008D2176159500E1736A /* UserCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserCell.h; sourceTree = "<group>"; };
 		DFE6008E2176159500E1736A /* UserCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
 		DFE6008F2176159500E1736A /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
@@ -680,6 +684,9 @@
 				DF5B8E29216F82C900F84CF5 /* DataService.h */,
 				DF5B8E2A216F82C900F84CF5 /* DataService.m */,
 				DF331FF12178AEF000034F3F /* ZhanyouIM-Prefix.pch */,
+				DFE4A9AB21CE2AE100070F96 /* ZhanyouEnum.h */,
+				DFE4A9AC21CE3B3400070F96 /* ZhanyouEnumHelp.h */,
+				DFE4A9AD21CE3B3400070F96 /* ZhanyouEnumHelp.m */,
 			);
 			path = "Supporting File";
 			sourceTree = "<group>";
@@ -1126,6 +1133,7 @@
 				DF0B3C552173776100B73186 /* LoginViewController.m in Sources */,
 				DF5B8E27216F82A100F84CF5 /* MainTabBarController.m in Sources */,
 				DF28F3D121777EEF00D81BF5 /* TipViewController.m in Sources */,
+				DFE4A9AE21CE3B3400070F96 /* ZhanyouEnumHelp.m in Sources */,
 				DF0E897A2199CD720067B4E1 /* TeamInfoViewController.m in Sources */,
 				DF07483D2196BF83008D9F87 /* MYSessionViewController.m in Sources */,
 				DF53A01B21A30C590003867C /* ReportViewController.m in Sources */,

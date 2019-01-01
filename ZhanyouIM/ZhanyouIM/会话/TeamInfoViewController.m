@@ -12,6 +12,7 @@
 #import "NewGroupViewController.h"
 #import "ReportViewController.h"
 #import "RecordsessionViewController.h"
+#import "UserInfoViewController.h"
 
 @interface TeamInfoViewController ()<UITextFieldDelegate>{
     float width;
@@ -84,6 +85,7 @@
             [self.addBtn addTarget:self action:@selector(addFriend) forControlEvents:UIControlEventTouchUpInside];
             [self.backView addSubview:self.addBtn];
         }else{
+            
             UIView *userInfoBackView = [[UIView alloc]initWithFrame:CGRectMake((i%6)*width +10, i/6*(width*4/3) + 10, width-20, width*5/4-20)];
             [self.backView addSubview:userInfoBackView];
             UIImageView *imgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width-20, width-20)];
@@ -103,9 +105,28 @@
             nickNameLabel.textAlignment = NSTextAlignmentCenter;
             
             
+            UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
+            button.backgroundColor = [UIColor clearColor];
+            button.frame = CGRectMake(0, 0, width-20, width*5/4-20);
+            button.tag = i;
+            [button addTarget:self action:@selector(userInfoBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+            [userInfoBackView addSubview:button];
+            
         }
     }
 }
+-(void)userInfoBtnAction:(UIButton*)button{
+    NIMTeamMember *teamNumber= [self.teamUserArray objectAtIndex:button.tag];
+    NIMUser * user = [[NIMSDK sharedSDK].userManager userInfo:teamNumber.userId];
+    
+    UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+    userInfo.phone = user.userId;
+    NSLog(@"%@",userInfo.phone);
+    userInfo.rightBtn = YES;
+    userInfo.postMessage = YES;
+    [self.navigationController pushViewController:userInfo animated:YES];
+}
+
 //添加按钮，按钮的点击事件
 -(void)addFriend
 {
@@ -183,7 +204,9 @@
 }
 
 - (IBAction)sessionRecordAction:(id)sender {
-    RecordsessionViewController *records = [[RecordsessionViewController alloc]init];
+    
+    NIMSession *session = [NIMSession session:_teamId type:NIMSessionTypeTeam];
+    RecordsessionViewController *records = [[RecordsessionViewController alloc] initWithSession:session];
     records.hideInputTextField = YES;
     [self.navigationController pushViewController:records animated:YES];
 }

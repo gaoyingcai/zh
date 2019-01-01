@@ -41,7 +41,6 @@
     [self.navigationItem setHidesBackButton:YES];
     self.tabBarController.tabBar.hidden = NO;
     [_addView setHidden:YES];
-    
     if (self.scrollView.contentOffset.x < k_screen_width/2) {
         [self friendBtnAction:nil];
     }else{
@@ -94,7 +93,7 @@
     [self getUserInfo];
     
     self.scrollView.showsHorizontalScrollIndicator=NO;
-    self.scrollView.contentSize=CGSizeMake(k_screen_width*2, k_view_height(self.scrollView));
+    self.scrollView.contentSize = CGSizeMake(k_screen_width*2, 0);
     
     for (int i=0; i<2; i++) {
         UITableView * tableView = [[UITableView alloc]initWithFrame:CGRectMake(k_screen_width*i, 0, k_screen_width, k_view_height(self.scrollView)) style:UITableViewStylePlain];
@@ -171,6 +170,9 @@
     self.friendLine.backgroundColor = [UIColor clearColor];
     [self.groupBtn setTitleColor:color_green forState:UIControlStateNormal];
     self.groupLine.backgroundColor = color_green;
+    
+    
+    
     self.scrollView.contentOffset=CGPointMake(k_screen_width, 0);
     groupArr = [NSMutableArray arrayWithArray: [[NIMSDK sharedSDK].teamManager allMyTeams]];
     if (!groupArr.count) {
@@ -219,7 +221,8 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
 
-    if (![scrollView isKindOfClass:[UITableView class]] && ![scrollView isKindOfClass:[UITableView class]]) {
+    //![scrollView isKindOfClass:[UITableView class]] &&
+    if (![scrollView isKindOfClass:[UITableView class]]) {
         if (scrollView.contentOffset.x < k_screen_width/2) {
             [self friendBtnAction:nil];
         }else{
@@ -278,7 +281,6 @@
     if (tableView.tag == 0) {
         NIMUser *user = [friendArr objectAtIndex:indexPath.row];
         NIMSession *session = [NIMSession session:user.userId type:NIMSessionTypeP2P];
-        //    NIMSessionViewController *sessionVc = [[NIMSessionViewController alloc] initWithSession:session];
         MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];
         sessionVc.phone =user.userInfo.mobile;
         self.tabBarController.tabBar.hidden = YES;
@@ -287,7 +289,6 @@
     }else{
         NIMTeam *team = [groupArr objectAtIndex:indexPath.row];
         NIMSession *session = [NIMSession session:team.teamId type:NIMSessionTypeTeam];
-        //    NIMSessionViewController *sessionVc = [[NIMSessionViewController alloc] initWithSession:session];
         MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];
 //        sessionVc.phone =user.userInfo.mobile;
         self.tabBarController.tabBar.hidden = YES;

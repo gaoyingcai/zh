@@ -30,6 +30,7 @@
 @implementation RegistViewController2
 
 - (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
     if([self.source isEqualToString:@"查找"]){
         [self.nextBtn setTitle:@"查找" forState:UIControlStateNormal];
         self.title = @"按条件查找战友";

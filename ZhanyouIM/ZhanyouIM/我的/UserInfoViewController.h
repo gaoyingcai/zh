@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 
-@property (weak, nonatomic) NSString *phone;
+@property (strong, nonatomic) NSString *phone;
 
 @property (assign, nonatomic) BOOL loginOut;
 @property (assign, nonatomic) BOOL rightBtn;

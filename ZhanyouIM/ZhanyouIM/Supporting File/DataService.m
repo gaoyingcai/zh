@@ -73,12 +73,21 @@ static AFHTTPSessionManager *manager;
     [manager POST:urlStr parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"请求成功");
         NSData *jsonData = responseObject;
-        NSString *resultStr = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"%@",resultStr);
+//        NSString *resultStr = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
         
         NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         
-        if (block&&[[NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]] isEqualToString:@"0"]) {
+        /*
+         针对获取用户信息   /api/common/getIndexData
+         -1 用户需要缴纳费用 需要跳转到缴费界面
+         -2 用户信息未填写完整 需要跳转到用户信息界面
+         -3 用户头像信息没有完整- 需要跳转到上传照片界面
+         -4 需要缴纳年费！
+         -5 无缴费记录。如已缴费，请联系客服操作！若没有缴费，请先缴纳费用！谢谢合作！
+         */
+        NSLog(@"%@",dic);
+        NSString *status = [NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]];
+        if (block && [status intValue] <=0) {
             NSLog(@"%@",dic);
             block(dic);
         }

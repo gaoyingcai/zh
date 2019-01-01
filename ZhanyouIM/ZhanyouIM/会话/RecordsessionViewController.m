@@ -14,11 +14,22 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [self.tableView reloadData];
+    self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    btn.frame = CGRectMake(0, 0, 25, 25);
+//
+//    [btn setBackgroundImage:[UIImage imageNamed:@"team_info@2x.png"] forState:UIControlStateNormal];
+//    [btn addTarget:self action:@selector(getTeamInfo) forControlEvents:UIControlEventTouchUpInside];
+//
+//    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
+    
     
     UIView * keepOutView = [[UIView alloc]initWithFrame:self.view.frame];
     keepOutView.backgroundColor = [UIColor colorWithRed:228/255.0 green:230/255.0 blue:235/255.0 alpha:1.0];
@@ -28,6 +39,12 @@
         [self.tableView reloadData];
         [keepOutView removeFromSuperview];
     });
+    
+    
+    
+}
+-(void)getFriendInfo{
+    [self getFriendInfo:_phone];
 }
 -(void)getFriendInfo:(NSString *)phone{
     UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
@@ -36,6 +53,12 @@
     userInfo.postMessage = YES;
     [self.navigationController pushViewController:userInfo animated:YES];
 }
+-(void)getTeamInfo{
+    TeamInfoViewController * teaminfo = [[UIStoryboard storyboardWithName:@"Session" bundle:nil] instantiateViewControllerWithIdentifier:@"teamInfo"];
+    teaminfo.teamId = self.session.sessionId;
+    [self.navigationController pushViewController:teaminfo animated:YES];
+}
+
 - (BOOL)onTapAvatar:(NSString *)userId{
     //记得添加 NIMMessageCellDelegate 代理，并重写该方法
     NSLog(@"点击头像");
@@ -49,6 +72,7 @@
     NSLog(@"长按头像");
     return YES;
 }
+
 
 
 /*

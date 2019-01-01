@@ -12,7 +12,7 @@
 #import <NIMSDK/NIMSDK.h>
 #import "UIImageView+WebCache.h"
 #import "DataService.h"
-#import "NIMSessionViewController.h"
+#import "MYSessionViewController.h"
 
 @interface NewGroupViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSMutableArray *initialArray;//首字母数组
@@ -184,7 +184,7 @@
         }else{
             NSLog(@"temaID == %@",teamId);
             NIMSession *session = [NIMSession session:teamId type:NIMSessionTypeTeam];
-            NIMSessionViewController *sessionVc = [[NIMSessionViewController alloc] initWithSession:session];
+            MYSessionViewController *sessionVc = [[MYSessionViewController alloc]initWithSession:session];
             self.tabBarController.tabBar.hidden = YES;
             [self.navigationController pushViewController:sessionVc animated:YES];
         }

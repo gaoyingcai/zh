@@ -10,36 +10,37 @@
 #import "DataService.h"
 #import "WXApi.h"
 
-@interface PayViewController ()
+@interface PayViewController (){
+    NSString *payMoney;
+}
+@property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
 
 @end
 
 @implementation PayViewController
-
+-(void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-}
-- (IBAction)payBtnAction:(id)sender {
-    NSLog(@"微信支付");
-    
     //获取支付金额
     NSDictionary * paramDic = @{@"field":@"reg_money"};
     [DataService requestWithPostUrl:@"api/config/getConfig" params:paramDic block:^(id result) {
         if (result) {
             NSLog(@"%@",result);
-            [self pay:[[result objectForKey:@"data"] objectForKey:@"money"]];
+            self->payMoney = [[result objectForKey:@"data"] objectForKey:@"money"];
+            self.moneyLabel.text = [NSString stringWithFormat:@"￥%@",[[result objectForKey:@"data"] objectForKey:@"money"]];
         }
     }];
 }
-
--(void)pay:(NSString*)payMoney{
+- (IBAction)payBtnAction:(id)sender {
+    NSLog(@"微信支付");
     //支付
     NSDictionary *paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],
                                @"money":payMoney,
-                               @"suid":@"0",
-                               @"info_id":@"0",
-                               @"type":@"2",
+                               @"type":self.type,
                                };
     
     [DataService requestWithPostUrl:@"/api/payment/payOrder" params:paramDic block:^(id result) {

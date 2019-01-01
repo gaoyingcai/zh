@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PayViewController : BaseViewController
 
+@property (weak, nonatomic) NSString * type;
+
 @end
 
 NS_ASSUME_NONNULL_END

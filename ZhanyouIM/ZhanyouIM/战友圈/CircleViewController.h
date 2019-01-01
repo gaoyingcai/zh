@@ -13,8 +13,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) NSString *content;
-
-
-@property (assign, nonatomic) BOOL hideTabBar;
+@property (assign, nonatomic) BOOL myDynamic;
 
 @end

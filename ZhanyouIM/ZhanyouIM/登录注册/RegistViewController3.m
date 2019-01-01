@@ -24,7 +24,7 @@
 static long btnTag = 1;
 
 - (void)viewWillAppear:(BOOL)animated{
-    
+    self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)viewDidLoad {

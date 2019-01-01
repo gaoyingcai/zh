@@ -141,7 +141,7 @@
         [self.navigationController pushViewController:aid animated:YES];
     }else if (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 1)){
         CircleViewController*circle=[[UIStoryboard storyboardWithName:@"Circle" bundle:nil] instantiateViewControllerWithIdentifier:@"circle"];
-        circle.hideTabBar = YES;
+        circle.myDynamic = YES;
         if (indexPath.row == 0) {
             circle.content = @"新闻事实";
         }else if (indexPath.row ==1){

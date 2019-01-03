@@ -87,7 +87,7 @@ static AFHTTPSessionManager *manager;
          */
         NSLog(@"%@",dic);
         NSString *status = [NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]];
-        if (block && [status intValue] <=0) {
+        if (block && [status intValue] <=1) {
             NSLog(@"%@",dic);
             block(dic);
         }

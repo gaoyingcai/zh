@@ -9,6 +9,7 @@
 #import "SeekHelpViewController.h"
 #import "UserCell.h"
 #import "DataService.h"
+#import "PublishedViewController.h"
 
 @interface SeekHelpViewController (){
     NSMutableArray *dataArray;
@@ -26,6 +27,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
+    
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
     self->dataArray = [NSMutableArray arrayWithCapacity:0];
@@ -39,6 +43,13 @@
             [self->_tableView reloadData];
         }
     }];
+}
+- (void)addMoment
+{
+    NSLog(@"新增");
+    PublishedViewController *published = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil] instantiateViewControllerWithIdentifier:@"published"];
+    published.moduleType = @"3";
+    [self.navigationController pushViewController:published animated:YES];
 }
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {

@@ -22,6 +22,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
+    [NSThread sleepForTimeInterval:3.5];
+    
     [WXApi registerApp:@"wx1f997c650f37820d"];
     
     

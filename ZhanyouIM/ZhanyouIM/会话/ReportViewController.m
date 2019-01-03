@@ -51,6 +51,8 @@
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }];
+    }else{
+        [self showTextMessage:@"请输入举报内容"];
     }
 }
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView

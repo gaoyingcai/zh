@@ -71,8 +71,6 @@
 
 -(void)sendData{
     
-    
-    
     if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
         //视频
         NSDictionary * paramDic1 =@{@"videoPath":[[self.imgArray objectAtIndex:0] objectForKey:@"path"]};
@@ -92,6 +90,8 @@
                 [self published:[result objectForKey:@"data"] s_type:@"1"];
             }
         }];
+    }else if([_textView.text isEqualToString:@"发表您的动态..."]||_textView.text.length<1){
+        [self showTextMessage:@"请输入或选择发表内容"];
     }else{
         [self published:nil s_type:@"0"];
     }

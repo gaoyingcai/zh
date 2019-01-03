@@ -9,8 +9,8 @@
 #import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface RegistViewController : BaseViewController
+@property (weak, nonatomic) IBOutlet UIButton *getSmsCodeBtn;
 
 @end
 

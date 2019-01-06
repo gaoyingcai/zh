@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PayViewController : BaseViewController
 
+
+@property (nonatomic) BOOL returnToSession;
+
 @property (weak, nonatomic) NSString * type;
 
 @end

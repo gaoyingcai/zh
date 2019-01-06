@@ -66,22 +66,28 @@
         }];
     }else{
         
-//        NSDictionary * paramDic = @{@"uid":@"3"
-//                                        ,@"phone":self.phoneTextField.text
-//                                        ,@"username":self.nameTextField.text
-//                                        ,@"team_num":self.codeDesignationTextField.text
-//                                        ,@"join_time":[self TimestampFromString:self.inDataLabel.text]
-//                                        ,@"exit_time":[self TimestampFromString:self.outLabel.text]
-//                                        ,@"place":self.addressLabel.text};
-        //
-        //
-        //    [DataService requestWithPostUrl:@"/api/login/saveinfo" params:paramDic block:^(id result) {
-        //
-        //        if (result) {
-        RegistViewController3 * regist3 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist3"];
-        [self.navigationController pushViewController:regist3 animated:YES];
-        //        }
-        //    }];
+        NSDictionary * paramDic = @{@"uid":@"3"
+                                        ,@"phone":self.phoneTextField.text
+                                        ,@"username":self.nameTextField.text
+                                        ,@"team_num":self.codeDesignationTextField.text
+                                        ,@"join_time":[self stringToTimestamp:self.inDataLabel.text]
+                                        ,@"exit_time":[self stringToTimestamp:self.outLabel.text]
+                                        ,@"place":self.addressLabel.text};
+        
+        
+            [DataService requestWithPostUrl:@"/api/login/saveinfo" params:paramDic block:^(id result) {
+        
+                if ([[result objectForKey:@"status"] intValue] == 0) {
+                    if (self->_returnToSession) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }else{
+                        RegistViewController3 * regist3 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist3"];
+                        [self.navigationController pushViewController:regist3 animated:YES];
+                    }
+                }else{
+                    [self showTextMessage:[result objectForKey:@"message"]];
+                }
+            }];
     }
 }
 

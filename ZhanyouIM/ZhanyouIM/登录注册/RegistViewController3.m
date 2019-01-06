@@ -145,15 +145,14 @@ static long btnTag = 1;
     [DataService requestWithPostUrl:@"/api/login/saveIcon" params:paramDic block:^(id result) {
         if (result) {
             NSLog(@"%@",result);
-            AfficheViewController * affiche = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"affiche"];
-            [self.navigationController pushViewController:affiche animated:YES];
+            if (self->_returnToSession) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+                AfficheViewController * affiche = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"affiche"];
+                [self.navigationController pushViewController:affiche animated:YES];
+            }
         }
     }];
-    
-    
-    
-    
-    
 }
 
 /*

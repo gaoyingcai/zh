@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
 
-
+@property (nonatomic) BOOL returnToSession;
 @property(copy,nonatomic)void(^passValueBlock)(NSArray* array);
 
 @end

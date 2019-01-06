@@ -19,7 +19,13 @@
 #import "RegistViewController2.h"
 #import "RegistViewController3.h"
 #import "PayViewController.h"
+#import "UIImageView+WebCache.h"
 
+@interface SessionViewController(){
+    NSString *userImgStr;
+}
+
+@end
 
 @implementation SessionViewController
 -(void)viewWillAppear:(BOOL)animated{
@@ -40,6 +46,7 @@
         
     }else{
         NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+        
         NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
         loginData.account = [dic objectForKey:@"accid"];
         loginData.token = [dic objectForKey:@"token"];
@@ -74,11 +81,29 @@
             if (status.intValue == 0) {
                 self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
                 self.gonggaoTitleLabel.text =[self->announcementDic objectForKey:@"title"];
+                if (self->userImgStr.length) {
+                }else{
+                    self->userImgStr = [[[result objectForKey:@"data"]objectForKey:@"userInfo"] objectForKey:@"head_url"];
+                    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+                    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(self->userImgStr)]]];
+                    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+                    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+                    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+                }
+
             }else{
                 [self showAlertViewWithDic:result];
             }
         }
     }];
+}
+- (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize{
+    UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));
+    [image drawInRect:CGRectMake(0, 0, reSize.width, reSize.height)];
+    UIImage *reSizeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return reSizeImage;
 }
 -(void)showAlertViewWithDic:(NSDictionary *)dic{
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"提示" message:[dic objectForKey:@"message"] preferredStyle:UIAlertControllerStyleAlert];
@@ -96,9 +121,11 @@
                 [self.navigationController pushViewController:pay animated:YES];
                 break;
             case -2:
+                regist2.returnToSession = YES;
                 [self.navigationController pushViewController:regist2 animated:YES];
                 break;
             case -3:
+                regist3.returnToSession = YES;
                 [self.navigationController pushViewController:regist3 animated:YES];
                 break;
             case -4:
@@ -115,7 +142,18 @@
         }
         
     }];
+    
+    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults removeObjectForKey:user_defaults_user];
+        [userDefaults synchronize];
+        LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        [self.navigationController pushViewController:login animated:YES];
+    }];
+    
     [alertController addAction:defaultAction];
+    [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 - (void)viewDidLoad {
@@ -129,11 +167,7 @@
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
     
     
-    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    leftBtn.frame = CGRectMake(0, 0, 25, 25);
-    [leftBtn setBackgroundImage:[UIImage imageNamed:@"user_info.png"] forState:UIControlStateNormal];
-    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+    
 }
 -(void)showUserInfo:(UIButton*)btn{
     UserViewController* user = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"user"];

@@ -51,6 +51,7 @@
     }];
 }
 -(void)setOrderString:(NSDictionary*)dic{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(paySuccess) name:@"ORDER_PAY_NOTIFICATION" object:nil];
     
     if ([dic objectForKey:@"partnerid"]) {
 
@@ -62,6 +63,14 @@
         request.timeStamp= [[dic objectForKey:@"timestamp"] intValue];
         request.sign= [NSString stringWithFormat:@"%@",[dic objectForKey:@"sign"]];
         [WXApi sendReq:request];
+    }
+}
+-(void)paySuccess{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ORDER_PAY_NOTIFICATION" object:nil];
+    if (_returnToSession) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

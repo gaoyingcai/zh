@@ -16,6 +16,7 @@
 
 @interface UserInfoViewController (){
     NSMutableArray* dataArray;
+    NSMutableArray *myFriendArr;
 }
 
 //"exit_time" = 1540224000;
@@ -43,6 +44,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    myFriendArr = [[NSUserDefaults standardUserDefaults] objectForKey:@"MyFriend"];
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
@@ -161,16 +164,18 @@
     UILabel * logoutLabel  = [[UILabel alloc]initWithFrame:CGRectMake(15, 1, k_screen_width - 30, 38)];
     logoutLabel.backgroundColor = color_green;
     logoutLabel.textColor = [UIColor whiteColor];
-    logoutLabel.text = @"发送消息";
+    
+    if ([myFriendArr containsObject:_phone]) {
+        logoutLabel.text = @"发送消息";
+    }else{
+        logoutLabel.text = @"添加好友";
+    }
     logoutLabel.layer.cornerRadius = 3;
     logoutLabel.layer.masksToBounds= YES;
     logoutLabel.textAlignment = NSTextAlignmentCenter;
     [cell.contentView addSubview:logoutLabel];
     
     return cell;
-    
-    
-    
     
 }
 
@@ -220,7 +225,25 @@
             self.navigationController.interactivePopGestureRecognizer.enabled = NO;
             [self.navigationController pushViewController:login animated:YES];
         }else if (_postMessage){
-            [self.navigationController popViewControllerAnimated:YES];
+            if ([myFriendArr containsObject:_phone]) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+                //添加好友
+                NIMUserRequest *request = [[NIMUserRequest alloc] init];
+                request.userId= _phone;                            //封装用户ID
+                request.operation= NIMUserOperationRequest;
+                //封装验证方式
+                request.operation= NIMUserOperationAdd;
+                //封装验证方式
+                request.message         = @"请求添加好友";
+                //封装自定义验证消息
+                [[NIMSDK sharedSDK].userManager requestFriend:request completion:^(NSError * _Nullable error) {
+                    if (error != nil) {
+                        [self showTextMessage:[NSString stringWithFormat:@"%@",error]];
+                    }
+                }];
+            }
+            
         }
         
         

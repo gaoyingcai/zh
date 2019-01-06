@@ -66,8 +66,6 @@
                 [self.view layoutIfNeeded];
             } completion:^(BOOL finished) {
             }];
-
-
         }
     }];
 
@@ -161,6 +159,12 @@
     if (!friendArr.count) {
         [self addQueshengImageToView:friendTableView imageName:@"zhanyou@2x.png"hidden:NO];
     }else{
+        NSMutableArray * myFriendArray = [NSMutableArray arrayWithCapacity:0];
+        for (NIMUser *user in friendArr) {
+            [myFriendArray addObject:user.userId];
+        }
+        
+        [[NSUserDefaults standardUserDefaults]setObject:myFriendArray forKey:@"MyFriend"];
         [self addQueshengImageToView:friendTableView imageName:@"zhanyou@2x.png"hidden:YES];
     }
     [friendTableView reloadData];

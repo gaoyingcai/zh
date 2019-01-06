@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) CIDetector *detector;
 
+@property (nonatomic) BOOL returnToSession;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

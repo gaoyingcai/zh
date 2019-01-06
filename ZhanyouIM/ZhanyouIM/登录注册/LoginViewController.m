@@ -57,6 +57,7 @@
                 [self showTextMessage:[NSString stringWithFormat:@"%@",[result objectForKey:@"message"]]];
                 return;
             }
+            NSLog(@"%@",result);
             NSDictionary * resultDic =@{@"accid":[[result objectForKey:@"data"] objectForKey:@"accid"],@"token":[[result objectForKey:@"data"] objectForKey:@"token"],@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"],@"phone":self.numberTextField.text};
             
             NSString *account = [[result objectForKey:@"data"] objectForKey:@"accid"];

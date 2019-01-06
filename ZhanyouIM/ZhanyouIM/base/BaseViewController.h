@@ -36,6 +36,7 @@
 
 -(NSString *) md5: (NSString *) inPutText;
 
+-(BOOL)checkout:(id)result;
 
 -(void)addQueshengImageToView:(UIView*)supView imageName:(NSString*)imageName hidden:(BOOL)hidden;
 @end

@@ -37,7 +37,7 @@
     if ([self isValidateMobile:self.phoneTextField.text]) {
         NSDictionary * dic = @{@"phone":self.phoneTextField.text,@"templatecode":@"SMS_126620263"};
         [DataService requestWithPostUrl:@"/api/login/getSmsCode" params:dic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 [self showTextMessage:@"发送成功"];
                 [self getVerifyCode:self->_getSmsCodeBtn];
             }else{
@@ -80,27 +80,23 @@
 
 - (IBAction)registBtnAction:(UIButton *)sender {
     
-//    if ([self isValidateMobile:self.phoneTextField.text] && self.smsCode.text.length>0 && self.passwordTextField.text.length>=8) {
-//        NSDictionary * paramDic = @{@"phone":self.phoneTextField.text,@"password":self.passwordTextField.text,@"vercode":self.smsCode.text};
-////        NSDictionary * paramDic = @{@"phone":@"18132442523",@"password":@"1234567890",@"vercode":@"4255"};
-//        [DataService requestWithPostUrl:@"/api/login/regist" params:paramDic block:^(id result) {
-//            if (result) {
+    if ([self isValidateMobile:self.phoneTextField.text] && self.smsCode.text.length>0 && self.passwordTextField.text.length>=6) {
+        NSDictionary * paramDic = @{@"phone":self.phoneTextField.text,@"password":[self md5:self.passwordTextField.text],@"vercode":self.smsCode.text};
+        [DataService requestWithPostUrl:@"/api/login/regist" params:paramDic block:^(id result) {
+            if ([self checkout:result]) {
                 RegistViewController2 * regist2 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist2"];
                     regist2.phone = self.phoneTextField.text;
-    regist2.source = @"注册";
+                NSDictionary * resultDic =@{@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"]};
+                [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
+                regist2.source = @"注册";
                 [self.navigationController pushViewController:regist2 animated:YES];
-//            }else{
-//                [self showTextMessage:@"注册失败"];
-//            }
-//        }];
-//    }
-    
-    
-    
-    
-    
-    
-
+            }else{
+                [self showTextMessage:[result objectForKey:@"message"]];
+            }
+        }];
+    }else{
+        [self showTextMessage:@"密码不得小于6位"];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

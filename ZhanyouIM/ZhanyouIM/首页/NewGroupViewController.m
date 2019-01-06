@@ -164,7 +164,7 @@
         NSArray *imageArray = @[image];
         NSDictionary * paramDic = @{@"imageArray":imageArray,@"fileName":@"card.jpg"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"result");
                 [self pushNewTeamWithName:nameStr imageUrl:[NSString stringWithFormat:@"%@",[[result objectForKey:@"data"] objectAtIndex:0]]];
             }
@@ -196,9 +196,9 @@
 }
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
-    tableView.sectionIndexTrackingBackgroundColor= [UIColor redColor];//待考证
-    tableView.sectionIndexColor = [UIColor greenColor];
-    tableView.sectionIndexBackgroundColor = [UIColor lightGrayColor];
+    tableView.sectionIndexTrackingBackgroundColor= [UIColor whiteColor];//待考证
+    tableView.sectionIndexColor = [UIColor whiteColor];
+    tableView.sectionIndexBackgroundColor = [UIColor whiteColor];
     tableView.sectionIndexMinimumDisplayRowCount = 20;//tableview总行数大于多少才显示索引
     
     static NSString *reuseIdentifier = @"HOMEBASE";

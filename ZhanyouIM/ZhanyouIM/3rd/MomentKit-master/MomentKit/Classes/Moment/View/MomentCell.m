@@ -183,9 +183,9 @@ CGFloat maxLimitHeight = 0;
          [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img(moment.userThumbPath)]];
         [pinglunView addSubview:imageView];
         
-        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(40, 3, width-55, 27)];
+        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(40, 0, width-55, 34)];
         label.layer.borderWidth = 1;
-        label.layer.borderColor = [UIColor darkGrayColor].CGColor;
+        label.layer.borderColor = [UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1.0].CGColor;
         label.layer.masksToBounds = YES;
         label.backgroundColor = [UIColor whiteColor];
         

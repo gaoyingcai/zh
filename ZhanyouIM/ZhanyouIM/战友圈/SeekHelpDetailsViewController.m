@@ -62,7 +62,7 @@
         imgView.frame=CGRectMake(i*width +10, i*width +10+top, width, height);
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.layer.masksToBounds = YES;
-        [imgView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imgArray objectAtIndex:i] objectForKey:@"path_source"])]];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imgArray objectAtIndex:i] objectForKey:@"path_source_img"])]];
         [self.backView addSubview:imgView];
     }
     
@@ -85,7 +85,7 @@
     
     NSDictionary * paramDic = @{@"id":[NSString stringWithFormat:@"%d",_commentId]};
     [DataService requestWithPostUrl:@"api/list/getItem" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self initViewWith:[[result objectForKey:@"data"] objectAtIndex:0]];
         }
@@ -142,7 +142,7 @@
 - (IBAction)helpBtnAction:(id)sender {
     NSDictionary * paramDic = @{@"field":@"sup_money"};
     [DataService requestWithPostUrl:@"api/config/getConfig" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self alert:[[result objectForKey:@"data"] objectForKey:@"money"]];
         }
@@ -168,7 +168,7 @@
                           };
     
     [DataService requestWithPostUrl:@"/api/payment/payOrder" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self setOrderString:[result objectForKey:@"data"]];
         }

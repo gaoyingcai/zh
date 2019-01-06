@@ -51,12 +51,7 @@
         [self showTextMessage:@"请输入密码"];
     }
     [DataService requestWithPostUrl:@"api/login/login" params:paramDic block:^(id result) {
-        if (result) {
-            NSString *status = [NSString stringWithFormat:@"%@",[result objectForKey:@"status"]];
-            if ([status intValue] == 1) {
-                [self showTextMessage:[NSString stringWithFormat:@"%@",[result objectForKey:@"message"]]];
-                return;
-            }
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             NSDictionary * resultDic =@{@"accid":[[result objectForKey:@"data"] objectForKey:@"accid"],@"token":[[result objectForKey:@"data"] objectForKey:@"token"],@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"],@"phone":self.numberTextField.text};
             
@@ -72,6 +67,9 @@
             
             [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
             [self.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            [self showTextMessage:[NSString stringWithFormat:@"%@",[result objectForKey:@"message"]]];
+            return;
         }
     }];
     

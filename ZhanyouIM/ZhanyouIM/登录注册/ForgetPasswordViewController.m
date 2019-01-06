@@ -24,23 +24,26 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    _getSmsCodeBtn.layer.cornerRadius = 2.0;//2.0是圆角的弧度，根据需求自己更改
+    _getSmsCodeBtn.layer.cornerRadius = 5.0;//2.0是圆角的弧度，根据需求自己更改
     _getSmsCodeBtn.layer.borderColor = color_lightGray.CGColor;//设置边框颜色
-    _getSmsCodeBtn.layer.borderWidth = 1.0f;//设置边框宽度
+    _getSmsCodeBtn.layer.borderWidth = 2.0f;//设置边框宽度
 }
 
 - (IBAction)getSmsCodeAction:(UIButton *)sender {
     
     if ([self isValidateMobile:self.mobileNumTextField.text]) {
-        NSDictionary * dic = @{@"phone":self.mobileNumTextField.text,@"templatecode":@"SMS_126620263"};
+        NSDictionary * dic = @{@"phone":self.mobileNumTextField.text,@"templatecode":@"SMS_126620262"};
         [DataService requestWithPostUrl:@"/api/login/getSmsCode" params:dic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 [self showTextMessage:@"发送成功"];
                 [self getVerifyCode:self->_getSmsCodeBtn];
             }else{
-                [self showTextMessage:@"发送失败"];
+                [self showTextMessage:[result objectForKey:@"message"]];
+                
             }
         }];
+    }else{
+        [self showTextMessage:@"请输入正确手机号"];
     }
 }
 //获取验证码
@@ -57,7 +60,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self->_getSmsCodeBtn setTitle:@"重新获取" forState:UIControlStateNormal];
                 self->_getSmsCodeBtn.userInteractionEnabled = YES;
-                [self->_getSmsCodeBtn setTitleColor:color_green forState:UIControlStateNormal];
+//                [self->_getSmsCodeBtn setTitleColor:color_green forState:UIControlStateNormal];
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -76,13 +79,15 @@
     if ([self isValidateMobile:self.mobileNumTextField.text] && self.smsCodeTextField.text.length == 4 &&self.passWordTextField.text.length) {
         NSDictionary * dic = @{@"phone":self.mobileNumTextField.text,@"vcode":self.smsCodeTextField.text,@"new_pwd":[self md5:self.passWordTextField.text]};
         [DataService requestWithPostUrl:@"/api/login/setpwdbyphone" params:dic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 [self showTextMessage:@"修改成功"];
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
-                [self showHUD:[NSString stringWithFormat:@"修改失败"]];
+                [self showTextMessage:[result objectForKey:@"message"]];
             }
         }];
+    }else{
+        [self showTextMessage:@"请输入正确信息"];
     }
 }
 

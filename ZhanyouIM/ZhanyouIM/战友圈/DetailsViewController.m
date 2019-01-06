@@ -51,7 +51,7 @@
     
     NSDictionary * paramDic = @{@"id":[NSString stringWithFormat:@"%d",_commentId]};
     [DataService requestWithPostUrl:@"api/list/getItem" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self initTestInfo:[result objectForKey:@"data"]];
         }
@@ -90,8 +90,23 @@
         moment.singleWidth = 500;
         moment.singleHeight = 315;
         NSMutableArray * array = [NSMutableArray arrayWithArray:[momentDic objectForKey:@"path"]];
-        moment.fileCount = array.count;
-        moment.imageArray = array;
+        if (array.count == 2) {
+            NSDictionary *dic1 = [array objectAtIndex:0];
+            NSDictionary *dic2 = [array objectAtIndex:1];
+            if ([[dic1 allKeys] containsObject:@"path_source"]) {
+                moment.fileCount = 1;
+                moment.imageArray = [NSMutableArray arrayWithObject:dic1];
+            }else if ([[dic2 allKeys] containsObject:@"path_source"]){
+                moment.fileCount = 1;
+                moment.imageArray = [NSMutableArray arrayWithObject:dic2];
+            }else{
+                moment.fileCount = 2;
+                moment.imageArray = array;
+            }
+        }else{
+            moment.fileCount = array.count;
+            moment.imageArray = array;
+        }
         moment.text = [momentDic objectForKey:@"content"];
         moment.commentList = commentList;
         NSString *locationStr = [momentDic objectForKey:@"location"];
@@ -189,7 +204,7 @@
 
     NSDictionary * paramDic= @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"info_id":[NSString stringWithFormat:@"%d",_commentId],@"content":textField.text};
     [DataService requestWithPostUrl:@"/api/trend/comment" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self->textField resignFirstResponder];
             [self loadDetailsData];
@@ -255,6 +270,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = [UIColor whiteColor];
     }
+    [tableView  setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     cell.pinglunView = YES;
     cell.commentNum = -1;
     cell.moment = [self.momentList objectAtIndex:indexPath.row];

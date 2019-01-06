@@ -284,15 +284,15 @@
                                     <outlet property="delegate" destination="B6u-9M-vjA" id="yrP-90-S1u"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JcP-Tm-V0B">
-                                <rect key="frame" x="0.0" y="627" width="375" height="40"/>
-                                <color key="backgroundColor" red="1" green="0.1880750783" blue="0.1212999749" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JcP-Tm-V0B">
+                                <rect key="frame" x="0.0" y="577" width="375" height="90"/>
+                                <color key="backgroundColor" red="0.1647058824" green="0.63137254899999995" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="7ds-Ti-qDY"/>
+                                    <constraint firstAttribute="height" constant="90" id="7ds-Ti-qDY"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="帮助他">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                                <state key="normal" title=" 购买" image="aixin.png">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="helpBtnAction:" destination="clZ-3O-5W3" eventType="touchUpInside" id="aLn-6b-HfN"/>
@@ -328,6 +328,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="aixin.png" width="22" height="22"/>
         <image name="next.png" width="22" height="22"/>
     </resources>
 </document>

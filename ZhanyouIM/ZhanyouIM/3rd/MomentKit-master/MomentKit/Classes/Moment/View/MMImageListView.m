@@ -88,8 +88,8 @@
         CGFloat imageY = rowNum * (kImageWidth + kImagePadding);
         CGRect frame = CGRectMake(imageX, imageY, kImageWidth, kImageWidth);
         
-        NSLog(@"img/video url == %@",domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source"]));
-        if ([domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source"])containsString:@".mp4"]) {
+        NSDictionary * dic = [imageArray objectAtIndex:i];
+        if ([[dic allKeys]containsObject:@"path_source"]) {
             
             if (count == 1) {
                 frame = CGRectMake(0, 0, k_screen_width*9/32, k_screen_width/2);
@@ -129,7 +129,7 @@
             NSLog(@"%@",domain_img([imageArray objectAtIndex:i]));
             
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imagebackView.frame.size.width, imagebackView.frame.size.width)];
-            [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source"])]];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])]];
             [imagebackView addSubview:imageView];
         }
     }
@@ -143,8 +143,9 @@
     _previewView = [[MMImagePreviewView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIApplication *app = [UIApplication sharedApplication];
     [app.keyWindow addSubview:_previewView];
-    
-    if ([domain_img([[_moment.imageArray objectAtIndex:0]objectForKey:@"path_source"])containsString:@".mp4"]){
+    NSDictionary * dic = [_moment.imageArray objectAtIndex:0];
+//    if ([domain_img([[_moment.imageArray objectAtIndex:0]objectForKey:@"path_source"])containsString:@".mp4"]){
+    if ([[dic allKeys]containsObject:@"path_source"]){
         
         NSString *urlStr = domain_img([[_moment.imageArray objectAtIndex:0]objectForKey:@"path_source"]);
 //        AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:[AVPlayer playerWithURL:[NSURL URLWithString:urlStr]]];
@@ -173,8 +174,6 @@
         scrollView.contentRect = convertRect;
         // 单击
         [scrollView setTapBigView:^(MMScrollView *scrollView){
-            [self->_PlayerVC.player pause];
-            self->_PlayerVC= nil;
 //            [playerLayer.player pause];
 //            playerLayer.player = nil;
             [self singleTapBigViewCallback:scrollView];
@@ -288,7 +287,7 @@
 
 - (void)longPresssBigViewCallback:(MMScrollView *)scrollView
 {
-    
+    NSLog(@"长按");
 }
 //获取视频的第一帧返回y图片
 - (UIImage*) getVideoPreViewImageWithPath:(NSURL *)videoPath

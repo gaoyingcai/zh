@@ -69,6 +69,10 @@
         self.delegate = self;
         // 显示的图片
         [self addSubview:self.imageView];
+        
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(singleTapGestureCallback:)];
+        [self addGestureRecognizer:tapGesturRecognizer];
+        
         // 双击
         UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapGestureCallback:)];
         doubleTap.numberOfTapsRequired = 2;

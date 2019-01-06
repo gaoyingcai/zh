@@ -21,9 +21,7 @@
 #import "PayViewController.h"
 #import "UIImageView+WebCache.h"
 
-@interface SessionViewController(){
-    NSString *userImgStr;
-}
+@interface SessionViewController()
 
 @end
 
@@ -33,8 +31,11 @@
     [self.view sendSubviewToBack:_addView];
     self.tabBarController.tabBar.hidden = NO;
     self.navigationController.navigationBar.hidden = NO;
+    
     [self checkoutLogin];
     [self refresh];
+    
+    
 }
 
 -(void)checkoutLogin{
@@ -45,13 +46,22 @@
         [self.navigationController pushViewController:login animated:YES];
         
     }else{
-        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            if (![[[NIMSDK sharedSDK] loginManager] isLogined]) {
+                dispatch_queue_t queue = dispatch_queue_create("login", DISPATCH_QUEUE_SERIAL);
+                dispatch_async(queue, ^{
+                    NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+                    NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
+                    loginData.account = [dic objectForKey:@"accid"];
+                    loginData.token = [dic objectForKey:@"token"];
+                    [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
+                    [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
+                });
+            }else{
+                [self getUserInfo];
+            }
+        });
         
-        NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
-        loginData.account = [dic objectForKey:@"accid"];
-        loginData.token = [dic objectForKey:@"token"];
-        [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
-        [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
     }
 }
 - (void)onLogin:(NIMLoginStep)step{
@@ -72,29 +82,51 @@
         NSLog(@"已经退出登录");
     }
 }
-
+-(BOOL)checkout:(id)result{
+    NSString * status =[NSString stringWithFormat:@"%@",[result objectForKey:@"status"]];
+    if ([status intValue]==0) {
+        return YES;
+    }
+    return NO;
+}
 -(void)getUserInfo{
     
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
-        if (result) {
-            NSString * status =[NSString stringWithFormat:@"%@",[result objectForKey:@"status"]];
-            if (status.intValue == 0) {
-                self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
+        if ([self checkout:result]) {
+            
+            self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
+            if (self->announcementDic) {
+                self.tableView.frame = CGRectMake(0, 109, self.view.bounds.size.width, self.view.bounds.size.height-109);
                 self.gonggaoTitleLabel.text =[self->announcementDic objectForKey:@"title"];
-                if (self->userImgStr.length) {
+                CGSize size = [self.gonggaoTitleLabel.text sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:18.0f]}];
+                if (size.width+40 <self.view.frame.size.width) {
+                    self.imgBottom.constant = (self.view.bounds.size.width - size.width)/2;
                 }else{
-                    self->userImgStr = [[[result objectForKey:@"data"]objectForKey:@"userInfo"] objectForKey:@"head_url"];
-                    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                    leftBtn.frame = CGRectMake(0, 0, 36, 36);
-                    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(self->userImgStr)]]];
-                    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-                    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-                    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+                    self.imgBottom.constant = 12;
                 }
-
-            }else{
-                [self showAlertViewWithDic:result];
             }
+            
+            
+            
+            
+            NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]];
+            if (![[dic allKeys]containsObject:@"userImg"]) {
+                NSString *userImgStr = [[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"head_url"];
+                
+                [dic setObject:userImgStr forKey:@"userImg"];
+                [[NSUserDefaults standardUserDefaults]setObject:dic forKey:user_defaults_user];
+                UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                leftBtn.frame = CGRectMake(0, 0, 36, 36);
+                leftBtn.layer.cornerRadius = 18;
+                leftBtn.layer.masksToBounds = YES;
+                UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+                [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+                [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+                [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+            }
+            
+        }else{
+            [self showAlertViewWithDic:result];
         }
     }];
 }
@@ -166,6 +198,18 @@
     [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
     
+    NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+    if ([[dic allKeys]containsObject:@"userImg"]) {
+        UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        leftBtn.frame = CGRectMake(0, 0, 36, 36);
+        leftBtn.layer.cornerRadius = 18;
+        leftBtn.layer.masksToBounds = YES;
+        NSString *userImgStr = [dic objectForKey:@"userImg"];
+        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+        [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+        [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+    }
     
     
 }

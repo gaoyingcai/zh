@@ -19,6 +19,10 @@
 -(void)viewWillAppear:(BOOL)animated{
     [self.tableView reloadData];
     self.tabBarController.tabBar.hidden = YES;
+    if (self.navigationController.viewControllers.count>1) {
+        UIViewController *homeController = self.navigationController.viewControllers.firstObject;
+        self.navigationController.viewControllers = @[homeController,self];
+    }
 }
 
 - (void)viewDidLoad {

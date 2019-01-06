@@ -38,8 +38,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-//    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 84, self.view.bounds.size.width, self.view.bounds.size.height-84) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+//    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 109, self.view.bounds.size.width, self.view.bounds.size.height-109) style:UITableViewStylePlain];
     [self.view addSubview:self.tableView];
     self.tableView.delegate         = self;
     self.tableView.dataSource       = self;

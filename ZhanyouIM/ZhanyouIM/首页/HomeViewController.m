@@ -50,7 +50,7 @@
 -(void)getUserInfo{
 
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
             NSDictionary *userInfo = [[result objectForKey:@"data"]objectForKey:@"userInfo"];
@@ -82,11 +82,23 @@
     [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
     
-    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    leftBtn.frame = CGRectMake(0, 0, 25, 25);
-    [leftBtn setBackgroundImage:[UIImage imageNamed:@"user_info.png"] forState:UIControlStateNormal];
+//    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    leftBtn.frame = CGRectMake(0, 0, 25, 25);
+//    [leftBtn setBackgroundImage:[UIImage imageNamed:@"user_info.png"] forState:UIControlStateNormal];
+//    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+
+    
+    NSMutableDictionary * userDic =[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user];
+    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+    leftBtn.layer.cornerRadius = 18;
+    leftBtn.layer.masksToBounds = YES;
+    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img([userDic objectForKey:@"userImg"])]]];
+    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
     [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+    
     
     [self getUserInfo];
     
@@ -108,6 +120,13 @@
     }
     friendTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     groupTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+}
+- (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize{
+    UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));
+    [image drawInRect:CGRectMake(0, 0, reSize.width, reSize.height)];
+    UIImage *reSizeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return reSizeImage;
 }
 -(void)showUserInfo:(UIButton*)btn{
     UserViewController* userView = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"user"];
@@ -241,6 +260,8 @@
     //去缓存池找名叫reuseIdentifier的cell
     //这里换成自己定义的cell
     HomeCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //如果缓存池中没有,那么创建一个新的cell
     if (!cell) {
         //这里换成自己定义的cell,并调用类方法加载xib文件
@@ -287,6 +308,8 @@
         NIMSession *session = [NIMSession session:user.userId type:NIMSessionTypeP2P];
         MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];
         sessionVc.phone =user.userInfo.mobile;
+        NSLog(@"%@",user.userId);
+        NSLog(@"%@",user.userInfo.mobile);
         self.tabBarController.tabBar.hidden = YES;
         [self.navigationController pushViewController:sessionVc animated:YES];
 

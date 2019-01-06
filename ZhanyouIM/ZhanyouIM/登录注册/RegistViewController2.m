@@ -56,9 +56,9 @@
         NSData *paramArrData=[NSJSONSerialization dataWithJSONObject:paramArr options:NSJSONWritingPrettyPrinted error:nil];
         NSString *paramArrDataJson=[[NSString alloc]initWithData:paramArrData encoding:NSUTF8StringEncoding];
         
-        NSDictionary * paramDic =@{@"uid":@"3",@"condition":paramArrDataJson};
+        NSDictionary * paramDic =@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"condition":paramArrDataJson};
         [DataService requestWithPostUrl:@"/api/user/searchFirend" params:paramDic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"%@",result);
                 if(self.passValueBlock) self.passValueBlock([[result objectForKey:@"data"] objectForKey:@"list"]);
                 [self.navigationController popViewControllerAnimated:YES];
@@ -66,7 +66,7 @@
         }];
     }else{
         
-        NSDictionary * paramDic = @{@"uid":@"3"
+        NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]
                                         ,@"phone":self.phoneTextField.text
                                         ,@"username":self.nameTextField.text
                                         ,@"team_num":self.codeDesignationTextField.text

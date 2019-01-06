@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIButton * btn;
 @property (nonatomic,strong) NSMutableArray * imgArray;
 
+
+
 @end
 
 NS_ASSUME_NONNULL_END

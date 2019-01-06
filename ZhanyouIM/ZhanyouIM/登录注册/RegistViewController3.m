@@ -108,7 +108,7 @@ static long btnTag = 1;
     if (btnTag == 1) {
         NSDictionary * paramDic = @{@"imageArray":imageArray,@"fileName":@"card.jpg"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"result");
                 [self->imgUrlDic setObject:[[result objectForKey:@"data"]objectAtIndex:0] forKey:@"informationUrl"];
                 self.informationImgView.image = image;
@@ -117,7 +117,7 @@ static long btnTag = 1;
     }else{
         NSDictionary * paramDic = @{@"imageArray":imageArray,@"fileName":@"card.jpg"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"result");
                 [self->imgUrlDic setObject:[[result objectForKey:@"data"]objectAtIndex:0] forKey:@"personalUrl"];
                 self.personalImgView.image = image;
@@ -140,10 +140,10 @@ static long btnTag = 1;
         return;
     }
     
-    NSDictionary * paramDic = @{@"uid":@"3",@"card_url":[imgUrlDic objectForKey:@"personalUrl"],@"head_url":[imgUrlDic objectForKey:@"informationUrl"]};
+    NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"card_url":[imgUrlDic objectForKey:@"personalUrl"],@"head_url":[imgUrlDic objectForKey:@"informationUrl"]};
     
     [DataService requestWithPostUrl:@"/api/login/saveIcon" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             if (self->_returnToSession) {
                 [self.navigationController popViewControllerAnimated:YES];

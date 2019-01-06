@@ -13,10 +13,14 @@
 #import "LoginViewController.h"
 #import "NIMSDK/NIMSDK.h"
 #import "ReportViewController.h"
+#import "MYSessionViewController.h"
+#import "AddFriendReqViewController.h"
 
 @interface UserInfoViewController (){
     NSMutableArray* dataArray;
     NSMutableArray *myFriendArr;
+    NSString *userImgStr;
+    NSString *userNameStr;
 }
 
 //"exit_time" = 1540224000;
@@ -58,14 +62,16 @@
     }
 
     [DataService requestWithPostUrl:@"/api/user/getUserInfo" params:@{@"phone":_phone} block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
 //            self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
 //            self->userName = [[result objectForKey:@"data"]objectForKey:@"username"];
+            self->userImgStr =[[result objectForKey:@"data"]objectForKey:@"head_url"];
+            self->userNameStr =[[result objectForKey:@"data"]objectForKey:@"username"];
             if (self->dataArray == nil) {
                 self->dataArray = [NSMutableArray arrayWithObjects:
-                             @[@{@"text":@"头像",@"info":domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"])}],
-                             @[@{@"text":@"姓名",@"info":[[result objectForKey:@"data"]objectForKey:@"username"]},
+                                   @[@{@"text":@"头像",@"info":domain_img(self->userImgStr)}],
+                                   @[@{@"text":@"姓名",@"info":self->userNameStr},
                                @{@"text":@"籍贯",@"info":[[result objectForKey:@"data"]objectForKey:@"place"]},
                                @{@"text":@"手机号",@"info":[[result objectForKey:@"data"]objectForKey:@"phone"]}],
                              @[@{@"text":@"番号",@"info":[[result objectForKey:@"data"]objectForKey:@"team_num"]},
@@ -94,10 +100,6 @@
         }];
     }]] ;
     
-    
-    
-    
-    
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }]];
     
@@ -113,6 +115,7 @@
         if (!cell) {
             cell = [UserCell userInfoCell1];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell.userImg sd_setImageWithURL:[NSURL URLWithString:[[[dataArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row]objectForKey:@"info"]]];
         return cell;
     }else if (indexPath.section == 1 ||indexPath.section ==2){
@@ -121,6 +124,7 @@
         if (!cell) {
             cell = [UserCell userInfoCell2];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.userinfoTextLabel.text =[[[dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:@"text"];
         if ([[[[dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:@"info"] isKindOfClass:[NSNull class]]) {
             cell.userInfoLabel.text = @"空";
@@ -139,6 +143,7 @@
         if (!cell) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = color_lightGray;
         
         UILabel * logoutLabel  = [[UILabel alloc]initWithFrame:CGRectMake(15, 1, k_screen_width - 30, 50)];
@@ -159,6 +164,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = color_lightGray;
     
     UILabel * logoutLabel  = [[UILabel alloc]initWithFrame:CGRectMake(15, 1, k_screen_width - 30, 38)];
@@ -196,7 +202,7 @@
     if (indexPath.section == 0) {
         return 100;
     }
-    return 40;
+    return 50;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath{
@@ -226,22 +232,18 @@
             [self.navigationController pushViewController:login animated:YES];
         }else if (_postMessage){
             if ([myFriendArr containsObject:_phone]) {
-                [self.navigationController popViewControllerAnimated:YES];
+                
+                NIMSession *session = [NIMSession session:_phone type:NIMSessionTypeP2P];
+                MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];
+                sessionVc.phone =_phone;
+                self.tabBarController.tabBar.hidden = YES;
+                [self.navigationController pushViewController:sessionVc animated:YES];
             }else{
-                //添加好友
-                NIMUserRequest *request = [[NIMUserRequest alloc] init];
-                request.userId= _phone;                            //封装用户ID
-                request.operation= NIMUserOperationRequest;
-                //封装验证方式
-                request.operation= NIMUserOperationAdd;
-                //封装验证方式
-                request.message         = @"请求添加好友";
-                //封装自定义验证消息
-                [[NIMSDK sharedSDK].userManager requestFriend:request completion:^(NSError * _Nullable error) {
-                    if (error != nil) {
-                        [self showTextMessage:[NSString stringWithFormat:@"%@",error]];
-                    }
-                }];
+                AddFriendReqViewController * add = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"addFri"];
+                add.userImgUrl = userImgStr;
+                add.userNameStr = userNameStr;
+                add.userNumStr = _phone;
+                [self.navigationController pushViewController:add animated:YES];
             }
             
         }

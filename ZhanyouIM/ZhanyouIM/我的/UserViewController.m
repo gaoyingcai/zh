@@ -50,7 +50,7 @@
     
     
     [DataService requestWithPostUrl:@"/api/user/getUserInfo" params:@{@"phone":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"]} block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
             self->userName = [[result objectForKey:@"data"]objectForKey:@"username"];
@@ -79,6 +79,7 @@
             //这里换成自己定义的cell,并调用类方法加载xib文件
             cell = [UserCell userCell1];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         //给cell赋值
         cell.starImgViewContraint.constant = k_star_width * star_num;
         cell.userNameLabel.text = userName;
@@ -97,6 +98,7 @@
         //这里换成自己定义的cell,并调用类方法加载xib文件
         cell = [UserCell userCell2];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //给cell赋值
     cell.userCellTextLabel.text =[[[dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:@"name"];
     cell.userCellImg.image = [UIImage imageNamed:[[[dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:@"img"]];
@@ -122,7 +124,7 @@
     if (indexPath.section == 0) {
         return 100;
     }
-    return 40;
+    return 50;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath{

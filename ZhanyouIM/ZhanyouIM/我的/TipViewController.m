@@ -33,7 +33,7 @@
     
     NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"p":@"1"};
     [DataService requestWithPostUrl:@"/api/self/report" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->totalCount = [[[result objectForKey:@"data"] objectForKey:@"count"] integerValue];
             self->dataArray = [[result objectForKey:@"data"] objectForKey:@"list"];

@@ -14,9 +14,6 @@
 #import "NIMLocationViewController.h"
 
 
-#define VIDEOCACHEPATH [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoCache"]
-
-
 
 @interface PublishedViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextViewDelegate>{
     float width;
@@ -48,6 +45,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
+    
     width = (k_screen_width-40)/3;
     [UIView animateWithDuration:0.3 animations:^{
         self.photoViewHeight.constant = k_screen_width/3;
@@ -59,7 +59,9 @@
     [self setButton];
     sourceArray = [NSMutableArray arrayWithCapacity:0];
     
-    
+    if ([_moduleType intValue] == 3) {
+        _textView.text = @"发布求助内容";
+    }
     
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
     
@@ -75,7 +77,7 @@
         //视频
         NSDictionary * paramDic1 =@{@"videoPath":[[self.imgArray objectAtIndex:0] objectForKey:@"path"]};
         [DataService requestWithUploadVideoUrl:@"/api/upload/upload" params:paramDic1 block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"%@",result);
                 [self published:[result objectForKey:@"data"] s_type:@"2"];
             }
@@ -85,14 +87,15 @@
         //图片
         NSDictionary * paramDic1 =@{@"imageArray":self.imgArray,@"fileName":@"file"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic1 block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 NSLog(@"%@",result);
                 [self published:[result objectForKey:@"data"] s_type:@"1"];
             }
         }];
-    }else if([_textView.text isEqualToString:@"发表您的动态..."]||_textView.text.length<1){
+    }else if([_textView.text isEqualToString:@"发表您的动态..."]||_textView.text.length<1 ||[_textView.text isEqualToString:@"发表您的动态..."]){
         [self showTextMessage:@"请输入或选择发表内容"];
-    }else{
+    }
+    else{
         [self published:nil s_type:@"0"];
     }
     
@@ -120,7 +123,7 @@
                                ,@"location":self.locationLabel.text
                                 };
     [DataService requestWithPostUrl:@"/api/trend/publish" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self.navigationController popViewControllerAnimated:YES];
         }
@@ -144,18 +147,29 @@
     NSLog(@"添加图片");
     UIAlertController*alertyController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self dakaixiangce:YES];
+        [self dakaixiangce:YES luzhi:YES];
     }];
-    UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照/录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self dakaixiangce:NO];
-    }];
+    
+    
+    if (self.imgArray.count>0 && ![self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+        UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dakaixiangce:NO luzhi:NO];
+        }];
+        [alertyController addAction:xiangjiAction];
+    }else{
+        UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照/录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dakaixiangce:NO luzhi:YES];
+        }];
+        [alertyController addAction:xiangjiAction];
+    }
+    
 //    UIAlertAction*startVideoAction=[UIAlertAction actionWithTitle:@"录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 //        [self dakaixiangce:NO];
 //    }];
     UIAlertAction*quxiaoAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     
     [alertyController addAction:xiangceAction];
-    [alertyController addAction:xiangjiAction];
+    
     [alertyController addAction:quxiaoAction];
 //    [alertyController addAction:startVideoAction];
     [self presentViewController:alertyController animated:YES completion:nil];
@@ -174,7 +188,7 @@
 //
 //}
 
--(void)dakaixiangce:(BOOL)xiangce{
+-(void)dakaixiangce:(BOOL)xiangce luzhi:(BOOL)luzhi{
     self.detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
     /*
      //获取方式1：通过相册（呈现全部相册），UIImagePickerControllerSourceTypePhotoLibrary
@@ -198,10 +212,13 @@
     if (xiangce) {
         picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
         picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
-    }else{
+    }else if(luzhi){
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie",@"public.image", nil];
         picker.videoMaximumDuration = 10.0f;//30秒
+    }else{
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];
     }
 
     picker.delegate = self;
@@ -229,7 +246,7 @@
     
 }
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-    
+    NSLog(@"%@",info);
     if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:@"public.image"]) {
         //拿到图片
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
@@ -250,7 +267,7 @@
         NSData *data = [NSData dataWithContentsOfFile:info[UIImagePickerControllerMediaURL]];
         NSLog(@"%lu",(unsigned long)data.length);
         
-        [self YS_saveVideoFromPath:info[UIImagePickerControllerMediaURL] toCachePath:[VIDEOCACHEPATH stringByAppendingPathComponent:mediaName]];
+        [self YS_saveVideoFromPath:info[UIImagePickerControllerMediaURL] toCachePath:[NSTemporaryDirectory() stringByAppendingPathComponent:mediaName]];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 
@@ -277,7 +294,9 @@
         self.btn.hidden = YES;
         _PlayerVC = [[AVPlayerViewController alloc] init];
         _PlayerVC.view.backgroundColor = [UIColor whiteColor];
-        NSData *data = [NSData dataWithContentsOfFile:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]];
+        NSLog(@"%@",self.imgArray);
+        NSString *videoPathString = [[self.imgArray objectAtIndex:0] objectForKey:@"path"];
+        NSData *data = [NSData dataWithContentsOfFile:videoPathString];
         NSLog(@"%lu",(unsigned long)data.length);
         
         
@@ -286,9 +305,6 @@
         _PlayerVC.view.frame = CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
         _PlayerVC.showsPlaybackControls = YES;
         [self.photoView addSubview:_PlayerVC.view];
-//        UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(15+_PlayerVC.view.frame.size.width/2-20, 15+_PlayerVC.view.frame.size.height/2-20, 40, 40)];
-//        beginImgView.image = [UIImage imageNamed:@"player.png"];
-//        [self.photoView addSubview:beginImgView];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
             self.photoViewHeight.constant = k_screen_width*num_rows/3;
@@ -312,7 +328,7 @@
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    if ([self.textView.text isEqualToString:@"发表您的动态..."]) {
+    if ([self.textView.text isEqualToString:@"发表您的动态..."]||[self.textView.text isEqualToString:@"发布求助内容"]) {
         textView.text=@"";
         _textView.textColor = [UIColor blackColor];
     }
@@ -323,7 +339,7 @@
 - (NSString *)getVideoNameBaseCurrentTime {
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH-mm-ss"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
     
     return [[dateFormatter stringFromDate:[NSDate date]] stringByAppendingString:@".MOV"];
 //    return [[dateFormatter stringFromDate:[NSDate date]] stringByAppendingString:@".mp4"];
@@ -336,6 +352,8 @@
     exportSession.shouldOptimizeForNetworkUse = YES;
     exportSession.outputURL = [NSURL fileURLWithPath:path];
     exportSession.outputFileType = AVFileTypeMPEG4;
+    NSLog(@"videoPath == %@",videoPath);
+    NSLog(@"path == %@",path);
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         int exportStatus = exportSession.status;
         switch (exportStatus)
@@ -357,30 +375,24 @@
                     [self.imgArray addObject:@{@"path":path}];
                     [self setFrame];
                 });
-                
-                
             }
         }
     }];
-    
 }
 
 //获取视频的第一帧截图, 返回UIImage
 //需要导入AVFoundation.h
+//获取视频的第一帧返回y图片
 - (UIImage*) getVideoPreViewImageWithPath:(NSURL *)videoPath
 {
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoPath options:nil];
-    
     AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     gen.appliesPreferredTrackTransform = YES;
-    
     CMTime time= CMTimeMakeWithSeconds(0.0, 600);
     NSError *error= nil;
-    
     CMTime actualTime;
     CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
     UIImage *img= [[UIImage alloc] initWithCGImage:image];
-    
     return img;
 }
 
@@ -425,6 +437,9 @@
     self.locationLabel.text = [sender.userInfo objectForKey:@"location"];
     //注意关闭通知，否则下次监听还会收到这次的通知
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"QZ" object:nil userInfo:@{@"type":[NSString stringWithFormat:@"%@",_moduleType]}];
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

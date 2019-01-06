@@ -46,7 +46,7 @@
                                     @"report_uid":_reportId
                                     };
         [DataService requestWithPostUrl:@"/api/user/report" params:paramDic block:^(id result) {
-            if (result) {
+            if ([self checkout:result]) {
                 [self showTextMessage:@"举报成功"];
                 [self.navigationController popViewControllerAnimated:YES];
             }

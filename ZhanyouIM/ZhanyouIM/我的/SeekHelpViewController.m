@@ -37,7 +37,7 @@
     
     NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]};
     [DataService requestWithPostUrl:@"/api/self/supportMsg" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->dataArray = [result objectForKey:@"data"];
             [self->_tableView reloadData];
@@ -73,7 +73,7 @@
     NSString * str = [NSString stringWithFormat:@"%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"status"]];
     if ([str isEqualToString:@"0"]) {
         cell.seekStatusLabel.text = @"正在审核";
-        cell.seekStatusLabel.textColor = [UIColor yellowColor];
+        cell.seekStatusLabel.textColor = [UIColor colorWithRed:150/255.0 green:220/255.0 blue:163/255.0 alpha:1];
     }else if ([str isEqualToString:@"1"]){
         cell.seekStatusLabel.text =@"通过";
         cell.seekStatusLabel.textColor = color_green;

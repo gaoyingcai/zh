@@ -33,7 +33,7 @@
     
     NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]};
     [DataService requestWithPostUrl:@"/api/self/support" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
 //            self->totalCount = [[[result objectForKey:@"data"] objectForKey:@"count"] integerValue];
             self->dataArray = [result objectForKey:@"data"];
@@ -70,7 +70,7 @@
     return dataArray.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 40;
+    return 50;
 }
 /*
 #pragma mark - Navigation

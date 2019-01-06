@@ -25,7 +25,7 @@
     self.callLabel.layer.borderColor = [UIColor whiteColor].CGColor;
     
     [DataService requestWithGetUrl:@"/api/config/getService" params:nil block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self.phoneLabel.text = [[result objectForKey:@"data"] objectForKey:@"phone"];
 //            self.phoneLabel.text = @"17326822629";

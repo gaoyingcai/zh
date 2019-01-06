@@ -418,6 +418,15 @@
     }
     
 }
+
+-(BOOL)checkout:(id)result{
+    NSString * status =[NSString stringWithFormat:@"%@",[result objectForKey:@"status"]];
+    if ([status intValue]==0) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -65,9 +65,6 @@ static NSString *moduleType;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
 }
-- (void)initUIForUserInfo{
-    
-}
 
 
 #pragma mark - 构建UI
@@ -165,7 +162,7 @@ static NSString *moduleType;
     }
     NSLog(@"%@",paramDic);
     [DataService requestWithPostUrl:@"/api/list/getItemList" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self initMoment:[[result objectForKey:@"data"]objectForKey:@"list"]];
         }
@@ -180,7 +177,6 @@ static NSString *moduleType;
     
     if (!self.dataArray.count) {
         [self addQueshengImageToView:self.view imageName:@"dongtai@2x.png" hidden:NO];
-        return;
     }else{
         [self addQueshengImageToView:self.view imageName:@"dongtai@2x.png" hidden:YES];
         for (NSDictionary * dic in resultArray) {
@@ -192,8 +188,23 @@ static NSString *moduleType;
             moment.singleWidth = 500;
             moment.singleHeight = 315;
             NSMutableArray * array = [NSMutableArray arrayWithArray:[dic objectForKey:@"path"]];
-            moment.fileCount = array.count;
-            moment.imageArray = array;
+            if (array.count == 2) {
+                NSDictionary *dic1 = [array objectAtIndex:0];
+                NSDictionary *dic2 = [array objectAtIndex:1];
+                if ([[dic1 allKeys] containsObject:@"path_source"]) {
+                    moment.fileCount = 1;
+                    moment.imageArray = [NSMutableArray arrayWithObject:dic1];
+                }else if ([[dic2 allKeys] containsObject:@"path_source"]){
+                    moment.fileCount = 1;
+                    moment.imageArray = [NSMutableArray arrayWithObject:dic2];
+                }else{
+                    moment.fileCount = 2;
+                    moment.imageArray = array;
+                }
+            }else{
+                moment.fileCount = array.count;
+                moment.imageArray = array;
+            }
             moment.text = [dic objectForKey:@"content"];
             NSString *locationStr = [dic objectForKey:@"location"];
             if (![locationStr isKindOfClass:[NSNull class]]) {
@@ -238,8 +249,30 @@ static NSString *moduleType;
 {
     NSLog(@"新增");
     PublishedViewController *published = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil] instantiateViewControllerWithIdentifier:@"published"];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reload:) name:@"QZ" object:nil];
     published.moduleType = moduleType;
     [self.navigationController pushViewController:published animated:YES];
+}
+-(void)reload:(NSNotification*)sender{
+    NSLog(@"%@",sender.userInfo);
+    //注意关闭通知，否则下次监听还会收到这次的通知
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    NSString *str = [sender.userInfo objectForKey:@"type"];
+    
+    switch ([str intValue]) {
+        case 1:
+            [self newsBtnAction:nil];
+            break;
+        case 2:
+            [self aidBtnAction:nil];
+            break;
+        case 3:
+            [self seekHelpBtnAction:nil];
+            break;
+        default:
+            break;
+    }
+    
 }
 
 #pragma mark - UITableViewDataSource
@@ -257,7 +290,6 @@ static NSString *moduleType;
 {
     static NSString *identifier = @"MomentCell";
     MomentCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-//    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -268,7 +300,7 @@ static NSString *moduleType;
     }else{
         cell.commentNum = [[[self.dataArray objectAtIndex:indexPath.row]objectForKey:@"comment_num"] intValue];
     }
-    
+    NSLog(@"momentArray ==%@",self.momentArray);
     cell.moment = [self.momentArray objectAtIndex:indexPath.row];
 //    cell.textLabel.text = [NSString stringWithFormat:@"测试%ld",(long)indexPath.row];
     return cell;

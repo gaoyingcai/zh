@@ -12,6 +12,7 @@
 #import "RegistViewController2.h"
 #import "UIImageView+WebCache.h"
 #import <NIMSDK/NIMSDK.h>
+#import "UserInfoViewController.h"
 
 @interface AddFriendViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSMutableArray *searchMeArr;
@@ -86,7 +87,7 @@
     NSDictionary * paramDic = [NSDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user]];
 
     [DataService requestWithPostUrl:@"api/user/findMe" params:@{@"uid":[paramDic objectForKey:@"uid"]} block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@", result);
             self->searchMeArr = [NSMutableArray arrayWithArray:[[result objectForKey:@"data"]objectForKey:@"list"]];
             
@@ -143,7 +144,7 @@
         cell = [HomeCell homeAddCell];
     }
     //给cell赋值
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (tableView.tag == 0) {
         cell.nameLabel.text =[[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"username"];
         cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -174,24 +175,58 @@
     return 60;
 }
 -(void)addBtnAction:(UIButton*)btn{
-    NIMUserRequest *request = [[NIMUserRequest alloc] init];
-    NSLog(@"%@",mySearchArr);
     
-    if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
-        [self showTextMessage:@"您不能添加自己为好友"];
-        return;
+    NSLog(@"%@",mySearchArr);
+    if (mySearchArr.count) {
+        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+            [self showTextMessage:@"您不能添加自己为好友"];
+            return;
+        }
+        UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+        userInfo.phone = [[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"];
+        userInfo.rightBtn = NO;
+        userInfo.postMessage = YES;
+        [self.navigationController pushViewController:userInfo animated:YES];
+    }else if(searchMeArr.count){
+        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+            [self showTextMessage:@"您不能添加自己为好友"];
+            return;
+        }
+        UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+        userInfo.phone = [[searchMeArr objectAtIndex:btn.tag] objectForKey:@"phone"];
+        userInfo.rightBtn = NO;
+        userInfo.postMessage = YES;
+        [self.navigationController pushViewController:userInfo animated:YES];
     }
     
-    request.userId          = [[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"];                            //封装用户ID
-    request.operation       = NIMUserOperationRequest;                    //封装验证方式
-//    request.operation       = NIMUserOperationAdd;                    //封装验证方式
-    request.message         = @"请求添加好友";                                 //封装自定义验证消息
-    [[NIMSDK sharedSDK].userManager requestFriend:request completion:^(NSError * _Nullable error) {
-        if (error != nil) {
-            [self showTextMessage:[NSString stringWithFormat:@"%@",error]];
-        }
-    }];
+    
+    
 
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSLog(@"%@",mySearchArr);
+    if (mySearchArr.count) {
+        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
+            [self showTextMessage:@"您不能添加自己为好友"];
+            return;
+        }
+        UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+        userInfo.phone = [[mySearchArr objectAtIndex:indexPath.row] objectForKey:@"phone"];
+        userInfo.rightBtn = NO;
+        userInfo.postMessage = YES;
+        [self.navigationController pushViewController:userInfo animated:YES];
+    }else if(searchMeArr.count){
+        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
+            [self showTextMessage:@"您不能添加自己为好友"];
+            return;
+        }
+        UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+        userInfo.phone = [[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"];
+        userInfo.rightBtn = NO;
+        userInfo.postMessage = YES;
+        [self.navigationController pushViewController:userInfo animated:YES];
+    }
 }
 
 //-(void)accessBtnAction:(UIButton*)btn{

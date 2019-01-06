@@ -28,7 +28,7 @@
     //获取支付金额
     NSDictionary * paramDic = @{@"field":@"reg_money"};
     [DataService requestWithPostUrl:@"api/config/getConfig" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->payMoney = [[result objectForKey:@"data"] objectForKey:@"money"];
             self.moneyLabel.text = [NSString stringWithFormat:@"￥%@",[[result objectForKey:@"data"] objectForKey:@"money"]];
@@ -44,7 +44,7 @@
                                };
     
     [DataService requestWithPostUrl:@"/api/payment/payOrder" params:paramDic block:^(id result) {
-        if (result) {
+        if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self setOrderString:[result objectForKey:@"data"]];
         }

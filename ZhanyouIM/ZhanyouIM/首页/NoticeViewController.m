@@ -71,6 +71,11 @@ static int MaxNotificationCount =10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"homeBadge" object:nil userInfo:nil];
+
+    
     // Do any additional setup after loading the view.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
@@ -80,6 +85,7 @@ static int MaxNotificationCount =10;
     
     id<NIMSystemNotificationManager> systemNotificationManager = [[NIMSDK sharedSDK] systemNotificationManager];
     [systemNotificationManager addDelegate:self];
+    
     NSArray *notifications = [systemNotificationManager fetchSystemNotifications:nil limit:MaxNotificationCount];
     
     if ([notifications count])
@@ -128,8 +134,9 @@ static int MaxNotificationCount =10;
     }
     //给cell赋值
     NIMSystemNotification * notifation = [_notificationArr objectAtIndex:indexPath.row];
-    NIMUser *user = [[NIMSDK sharedSDK].userManager userInfo:notifation.targetID];
+    NIMUser *user = [[NIMSDK sharedSDK].userManager userInfo:notifation.sourceID];
     cell.nameLabel.text =user.userInfo.nickName;
+    cell.checkTextLabel.text = notifation.postscript;
     cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
     cell.imgView.layer.masksToBounds =YES;
     [cell.imgView sd_setImageWithURL:[NSURL URLWithString:domain_img(user.userInfo.avatarUrl)]];

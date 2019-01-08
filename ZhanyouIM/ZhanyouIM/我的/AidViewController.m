@@ -37,8 +37,16 @@
             NSLog(@"%@",result);
 //            self->totalCount = [[[result objectForKey:@"data"] objectForKey:@"count"] integerValue];
             self->dataArray = [result objectForKey:@"data"];
+            
+            
+            if (!self->dataArray.count) {
+                [self addQueshengImageToView:self->_tableView imageName:@"neirong@2x.png" hidden:NO];
+            }else{
+                [self addQueshengImageToView:self->_tableView imageName:@"neirong@2x.png" hidden:YES];
+            }
+        
             self->totalCount = self->dataArray.count;
-                               
+            
             [self->_tableView reloadData];
         }
     }];
@@ -55,6 +63,7 @@
         cell = [UserCell aidCell];
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.aidNameLabel.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"];
     cell.aidSumLabel.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:@"money"];
     cell.aidDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row] objectForKey:@"add_time"]];
@@ -70,7 +79,7 @@
     return dataArray.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
+    return 60;
 }
 /*
 #pragma mark - Navigation

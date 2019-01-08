@@ -39,14 +39,6 @@ static NSString *moduleType;
     }else{
         self.tabBarController.tabBar.hidden = NO;
     }
-    
-    if ([self.content isEqualToString:@"新闻事实"]) {
-        [self newsBtnAction:nil];
-    }else if([self.content isEqualToString:@"创业"]){
-        [self aidBtnAction:nil];
-    }else if ([self.content isEqualToString:@"求助"]){
-        [self seekHelpBtnAction:nil];
-    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -55,7 +47,19 @@ static NSString *moduleType;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
+    if (!_myDynamic) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
+    }
+    
+    if ([self.content isEqualToString:@"新闻事实"]) {
+        [self newsBtnAction:nil];
+    }else if([self.content isEqualToString:@"创业"]){
+        [self aidBtnAction:nil];
+    }else if ([self.content isEqualToString:@"求助"]){
+        [self seekHelpBtnAction:nil];
+    }else{
+        [self newsBtnAction:nil];
+    }
     
     if (_content.length>0) {
         self.title = _content;
@@ -189,13 +193,15 @@ static NSString *moduleType;
             moment.singleHeight = 315;
             NSMutableArray * array = [NSMutableArray arrayWithArray:[dic objectForKey:@"path"]];
             if (array.count == 2) {
-                NSDictionary *dic1 = [array objectAtIndex:0];
-                NSDictionary *dic2 = [array objectAtIndex:1];
+                NSMutableDictionary *dic1 = [array objectAtIndex:0];
+                NSMutableDictionary *dic2 = [array objectAtIndex:1];
                 if ([[dic1 allKeys] containsObject:@"path_source"]) {
                     moment.fileCount = 1;
+                    [dic1 setValuesForKeysWithDictionary:dic2];
                     moment.imageArray = [NSMutableArray arrayWithObject:dic1];
                 }else if ([[dic2 allKeys] containsObject:@"path_source"]){
                     moment.fileCount = 1;
+                    [dic2 setValuesForKeysWithDictionary:dic1];
                     moment.imageArray = [NSMutableArray arrayWithObject:dic2];
                 }else{
                     moment.fileCount = 2;

@@ -19,6 +19,7 @@
 #import "MYSessionViewController.h"
 #import "WebViewController.h"
 #import "UserViewController.h"
+#import "AppDelegate.h"
 
 @interface HomeViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,NIMLoginManagerDelegate>{
     
@@ -68,19 +69,18 @@
             }];
         }
     }];
-
-
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 25, 25);
-    [btn setBackgroundImage:[UIImage imageNamed:@"tianjia@2x.png"] forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"homeBadge" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"homeBadge" object:nil userInfo:nil];
+
+    
     
 //    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 //    leftBtn.frame = CGRectMake(0, 0, 25, 25);
@@ -94,8 +94,14 @@
     leftBtn.frame = CGRectMake(0, 0, 36, 36);
     leftBtn.layer.cornerRadius = 18;
     leftBtn.layer.masksToBounds = YES;
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img([userDic objectForKey:@"userImg"])]]];
-    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img([userDic objectForKey:@"userImg"])]]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+        });
+        
+    });
     [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
     
@@ -120,6 +126,18 @@
     }
     friendTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     groupTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+}
+-(void)setBadge:(NSNotification*)sender{
+    self.navigationItem.rightBarButtonItem = nil;
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 25, 25);
+    if (sender.userInfo) {
+        [btn setBackgroundImage:[UIImage imageNamed:@"tianjia_badge@2x.png"] forState:UIControlStateNormal];
+    }else{
+        [btn setBackgroundImage:[UIImage imageNamed:@"tianjia@2x.png"] forState:UIControlStateNormal];
+    }
+    [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
 }
 - (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize{
     UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));

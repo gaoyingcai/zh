@@ -95,7 +95,7 @@
             if (error) {
                 [self showTextMessage:@"删除失败"];
             }else{
-                [self.navigationController popViewControllerAnimated:YES];
+                [self.navigationController popToRootViewControllerAnimated:YES];
             }
         }];
     }]] ;
@@ -216,20 +216,19 @@
         
         if (_loginOut) {
             
-            
-            [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
+            if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
+                [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
+                    NSLog(@"%@",error);
+                }];
+            }else{
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                [userDefaults removeObjectForKey:user_defaults_user];
+                [userDefaults synchronize];
+                LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+                self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+                [self.navigationController pushViewController:login animated:YES];
 
-                NSLog(@"%@",error);
-            }];
-            
-            
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            //        NSDictionary *dic = [userDefaults dictionaryRepresentation];
-            [userDefaults removeObjectForKey:user_defaults_user];
-            [userDefaults synchronize];
-            LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-            [self.navigationController pushViewController:login animated:YES];
+            }
         }else if (_postMessage){
             if ([myFriendArr containsObject:_phone]) {
                 

@@ -34,9 +34,8 @@
     //添加好友
     NIMUserRequest *request = [[NIMUserRequest alloc] init];
     request.userId= self.userNum.text;                            //封装用户ID
-    request.operation= NIMUserOperationRequest;
     //封装验证方式
-    request.operation= NIMUserOperationAdd;
+    request.operation= NIMUserOperationRequest;
     //封装验证方式
     request.message         = self.requestInfo.text;
     //封装自定义验证消息

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -60,8 +60,8 @@
                             <constraint firstAttribute="width" secondItem="Cou-j2-Etn" secondAttribute="height" multiplier="36:35" id="cQQ-1a-oAI"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nK4-Bu-daS">
-                        <rect key="frame" x="56.5" y="12" width="125" height="35.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nK4-Bu-daS">
+                        <rect key="frame" x="56.5" y="12" width="125" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -118,18 +118,28 @@
                             <constraint firstItem="W2U-hv-dsw" firstAttribute="centerY" secondItem="0Jc-nW-oXd" secondAttribute="centerY" id="qJz-bz-Jub"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请求添加为好友" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gfo-Bd-Mme">
+                        <rect key="frame" x="56.5" y="30" width="113" height="17.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="Wve-Sl-NiG" firstAttribute="leading" secondItem="Gfo-Bd-Mme" secondAttribute="trailing" constant="12" id="0IX-hY-Owa"/>
                     <constraint firstItem="nK4-Bu-daS" firstAttribute="width" secondItem="7iG-Ou-xRT" secondAttribute="width" multiplier="1:3" id="3Cw-LN-ymc"/>
                     <constraint firstAttribute="trailing" secondItem="0Jc-nW-oXd" secondAttribute="trailing" id="9Ko-kR-kZb"/>
+                    <constraint firstItem="Gfo-Bd-Mme" firstAttribute="top" secondItem="nK4-Bu-daS" secondAttribute="bottom" id="EMw-v5-yiS"/>
                     <constraint firstItem="0Jc-nW-oXd" firstAttribute="top" secondItem="7iG-Ou-xRT" secondAttribute="top" id="EtQ-vH-vXI"/>
                     <constraint firstItem="nK4-Bu-daS" firstAttribute="top" secondItem="7iG-Ou-xRT" secondAttribute="top" constant="12" id="GOS-wP-BzZ"/>
                     <constraint firstItem="0Jc-nW-oXd" firstAttribute="leading" secondItem="nK4-Bu-daS" secondAttribute="trailing" id="IPs-Dn-7T4"/>
+                    <constraint firstItem="Gfo-Bd-Mme" firstAttribute="leading" secondItem="Cou-j2-Etn" secondAttribute="trailing" constant="8" id="MdO-ix-CaT"/>
                     <constraint firstItem="Cou-j2-Etn" firstAttribute="top" secondItem="7iG-Ou-xRT" secondAttribute="top" constant="12" id="RYb-fd-L3e"/>
+                    <constraint firstItem="Gfo-Bd-Mme" firstAttribute="height" secondItem="nK4-Bu-daS" secondAttribute="height" id="XAd-XA-1FA"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Wve-Sl-NiG" secondAttribute="bottom" id="Yc4-SO-uJf"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Wve-Sl-NiG" secondAttribute="trailing" id="ZJP-wj-HC2"/>
-                    <constraint firstAttribute="bottom" secondItem="nK4-Bu-daS" secondAttribute="bottom" constant="12" id="cX0-Hb-J6a"/>
                     <constraint firstAttribute="bottom" secondItem="0Jc-nW-oXd" secondAttribute="bottom" id="gtV-IC-Bus"/>
+                    <constraint firstItem="nK4-Bu-daS" firstAttribute="height" secondItem="Cou-j2-Etn" secondAttribute="height" multiplier="1:2" id="hlo-W2-yFS"/>
                     <constraint firstItem="Wve-Sl-NiG" firstAttribute="top" secondItem="7iG-Ou-xRT" secondAttribute="topMargin" id="oN6-19-gxV"/>
                     <constraint firstItem="Wve-Sl-NiG" firstAttribute="leading" secondItem="nK4-Bu-daS" secondAttribute="trailing" id="s45-fC-Av1"/>
                     <constraint firstItem="nK4-Bu-daS" firstAttribute="leading" secondItem="Cou-j2-Etn" secondAttribute="trailing" constant="8" id="sIu-fN-E8u"/>
@@ -139,6 +149,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="accessBtn" destination="W2U-hv-dsw" id="OCl-2S-EUi"/>
+                <outlet property="checkTextLabel" destination="Gfo-Bd-Mme" id="mPA-9d-bwu"/>
                 <outlet property="imgView" destination="Cou-j2-Etn" id="InG-5b-S1a"/>
                 <outlet property="nameLabel" destination="nK4-Bu-daS" id="IRG-o3-7ar"/>
                 <outlet property="refusedBtn" destination="t3K-FQ-zKG" id="pKh-mH-gM6"/>

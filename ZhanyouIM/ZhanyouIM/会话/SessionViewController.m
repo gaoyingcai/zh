@@ -20,8 +20,11 @@
 #import "RegistViewController3.h"
 #import "PayViewController.h"
 #import "UIImageView+WebCache.h"
+#import "AppDelegate.h"
 
-@interface SessionViewController()
+@interface SessionViewController(){
+    UIImageView * imageView; //缺省图片
+}
 
 @end
 
@@ -31,10 +34,8 @@
     [self.view sendSubviewToBack:_addView];
     self.tabBarController.tabBar.hidden = NO;
     self.navigationController.navigationBar.hidden = NO;
-    
+
     [self checkoutLogin];
-    [self refresh];
-    
     
 }
 
@@ -44,42 +45,9 @@
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [self.navigationController pushViewController:login animated:YES];
-        
     }else{
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            if (![[[NIMSDK sharedSDK] loginManager] isLogined]) {
-                dispatch_queue_t queue = dispatch_queue_create("login", DISPATCH_QUEUE_SERIAL);
-                dispatch_async(queue, ^{
-                    NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
-                    NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
-                    loginData.account = [dic objectForKey:@"accid"];
-                    loginData.token = [dic objectForKey:@"token"];
-                    [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
-                    [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
-                });
-            }else{
-                [self getUserInfo];
-            }
-        });
-        
-    }
-}
-- (void)onLogin:(NIMLoginStep)step{
-    NSLog(@"%ld",(long)step);
-    if (step == NIMLoginStepLoginOK) {
         [self getUserInfo];
-        NSLog(@"登录成功");
-    }else if (step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection || step == NIMLoginStepNetChanged){
-        
-        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
-        NSString *account = [dic objectForKey:@"accid"];
-        NSString *token   = [dic objectForKey:@"token"];
-        [[[NIMSDK sharedSDK] loginManager] login:account
-                                           token:token
-                                      completion:^(NSError *error) {
-                                          NSLog(@"%@",error);
-                                      }];
-        NSLog(@"已经退出登录");
+        [self loginIM];
     }
 }
 -(BOOL)checkout:(id)result{
@@ -93,42 +61,59 @@
     
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
-            
             self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
             if (self->announcementDic) {
-                self.tableView.frame = CGRectMake(0, 109, self.view.bounds.size.width, self.view.bounds.size.height-109);
-                self.gonggaoTitleLabel.text =[self->announcementDic objectForKey:@"title"];
-                CGSize size = [self.gonggaoTitleLabel.text sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:18.0f]}];
-                if (size.width+40 <self.view.frame.size.width) {
-                    self.imgBottom.constant = (self.view.bounds.size.width - size.width)/2;
-                }else{
-                    self.imgBottom.constant = 12;
-                }
+                self.tableView.frame = CGRectMake(0, 129, self.view.bounds.size.width, self.view.bounds.size.height-129);
             }
-            
+
             
             
             
             NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]];
-            if (![[dic allKeys]containsObject:@"userImg"]) {
-                NSString *userImgStr = [[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"head_url"];
-                
-                [dic setObject:userImgStr forKey:@"userImg"];
-                [[NSUserDefaults standardUserDefaults]setObject:dic forKey:user_defaults_user];
-                UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                leftBtn.frame = CGRectMake(0, 0, 36, 36);
-                leftBtn.layer.cornerRadius = 18;
-                leftBtn.layer.masksToBounds = YES;
-                UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
-                [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-                [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-                [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
-            }
             
+            
+//            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"] objectForKey:@"userInfo"]];
+//            NSDictionary * resultDic =@{@"accid":[dic objectForKey:@"accid"],
+//                                        @"token":[dic objectForKey:@"token"],
+//                                        @"uid":[dic objectForKey:@"uid"],
+//                                        @"phone":[dic objectForKey:@"head_url"],
+//                                        @"userImg":[dic objectForKey:@"head_url"]
+//                                        };
+            
+            
+//            [self setLeftBtnWithImgStr:[dic objectForKey:@"head_url"]];
+//            [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
+            if (![[dic allKeys]containsObject:@"userImg"]) {
+                
+                NSString *userImgStr = [[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"head_url"];
+                [dic setObject:userImgStr forKey:@"userImg"];
+                [self setLeftBtnWithImgStr:userImgStr];
+            }
+            [dic setObject:[[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"phone"] forKey:@"phone"];
+            [[NSUserDefaults standardUserDefaults]setObject:dic forKey:user_defaults_user];
         }else{
             [self showAlertViewWithDic:result];
         }
     }];
+}
+-(void)setLeftBtnWithImgStr:(NSString*)userImgStr{
+    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+    leftBtn.layer.cornerRadius = 18;
+    leftBtn.layer.masksToBounds = YES;
+//    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+//    [leftBtn setBackgroundImage:img forState:UIControlStateNormal];
+    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+        });
+    });
+    
+    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+    
 }
 - (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize{
     UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));
@@ -189,30 +174,62 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 - (void)viewDidLoad {
-    [self checkoutLogin];
+//    [self checkoutLogin];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 25, 25);
-    [btn setBackgroundImage:[UIImage imageNamed:@"tianjia@2x.png"] forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"sessionBadge" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:nil];
+
+    id<NIMSystemNotificationManager> systemNotificationManager = [[NIMSDK sharedSDK] systemNotificationManager];
+    [systemNotificationManager addDelegate:self];
     
     NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
     if ([[dic allKeys]containsObject:@"userImg"]) {
-        UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        leftBtn.frame = CGRectMake(0, 0, 36, 36);
-        leftBtn.layer.cornerRadius = 18;
-        leftBtn.layer.masksToBounds = YES;
-        NSString *userImgStr = [dic objectForKey:@"userImg"];
-        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
-        [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-        [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-        [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+        [self setLeftBtnWithImgStr:[dic objectForKey:@"userImg"]];
     }
+}
+- (void)onReceiveSystemNotification:(NIMSystemNotification *)notification{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:@{@"a":@"1"}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"homeBadge" object:nil userInfo:@{@"a":@"1"}];
+}
+-(void)setBadge:(NSNotification*)sender{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.navigationItem.rightBarButtonItem = nil;
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 25, 25);
+    if (sender.userInfo) {
+        app.showBadge = YES;
+        [btn setBackgroundImage:[UIImage imageNamed:@"tianjia_badge@2x.png"] forState:UIControlStateNormal];
+    }else{
+        app.showBadge = NO;
+        [btn setBackgroundImage:[UIImage imageNamed:@"tianjia@2x.png"] forState:UIControlStateNormal];
+    }
+    [btn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
     
     
 }
+//添加缺省页
+-(void)addQueshengImageToView:(UIView*)supView imageName:(NSString*)imageName hidden:(BOOL)hidden{
+    if (hidden) {
+        [imageView removeFromSuperview];
+        imageView = nil;
+    }else{
+        if (imageView == nil) {
+            imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, supView.frame.size.width, supView.frame.size.height)];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            imageView.image = [UIImage imageNamed:imageName];
+            [supView addSubview:imageView];
+        }else{
+            [supView addSubview:imageView];
+        }
+    }
+    
+}
+
+
 -(void)showUserInfo:(UIButton*)btn{
     UserViewController* user = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"user"];
 //    userInfo.phone = [[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"];
@@ -262,7 +279,6 @@
     mySession.phone = recent.session.sessionId;
     [self.navigationController pushViewController:mySession animated:YES];
     
-    
 }
 - (IBAction)announcementBtnAction:(id)sender {
     NSLog(@"公告");
@@ -288,6 +304,67 @@
     }
     [backView removeFromSuperview];
     backView =nil;
+}
+
+
+-(void)loginIM{
+    
+    //登出
+//    [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
+//        NSLog(@"%@",error);
+//    }];
+//
+    if (![[[NIMSDK sharedSDK] loginManager] isLogined]) {
+        NSArray * array = [[[NIMSDK sharedSDK] loginManager] currentLoginClients];
+        for (NIMLoginClient *client in array) {
+            [[[NIMSDK sharedSDK] loginManager]kickOtherClient:client completion:^(NSError * _Nullable error) {
+                NSLog(@"踢人失败:%@",error);
+            }];
+        }
+    
+        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+        NSLog(@"%@",dic);
+//        NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
+//        loginData.account = [dic objectForKey:@"accid"];
+//        loginData.token = [dic objectForKey:@"token"];
+//        [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
+        [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
+        
+        
+        NSString *account = [dic objectForKey:@"accid"];
+        NSString *token   = [dic objectForKey:@"token"];
+        [[[NIMSDK sharedSDK] loginManager] login:account
+                                           token:token
+                                      completion:^(NSError *error) {
+                                          if (error) {
+                                              LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+                                              NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                                              [userDefaults removeObjectForKey:user_defaults_user];
+                                              [userDefaults synchronize];
+                                              self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+                                              [self.navigationController pushViewController:login animated:YES];
+                                              NSLog(@"已经退出登录");
+                                          }
+                                      }];
+    }
+    
+}
+- (void)onLogin:(NIMLoginStep)step{
+    NSLog(@"appdelete == %ld",(long)step);
+    if (step == NIMLoginStepLoginOK) {
+        NSLog(@"登录成功");
+        [self refresh];
+        
+    }else if (step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
+        
+        LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults removeObjectForKey:user_defaults_user];
+        [userDefaults synchronize];
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        [self.navigationController pushViewController:login animated:YES];
+        NSLog(@"已经退出登录");
+    }
 }
 
 

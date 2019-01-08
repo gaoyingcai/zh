@@ -101,6 +101,7 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [_passwordTextField resignFirstResponder];
+    [_smsCode resignFirstResponder];
     [_phoneTextField resignFirstResponder];
 }
 

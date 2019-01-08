@@ -46,24 +46,29 @@
     
     if ([self.source isEqualToString:@"查找"]) {
         
-        NSArray * paramArr =@[@{@"username":self.nameTextField.text
-                              ,@"phone":self.phoneTextField.text
-                              ,@"team_num":self.codeDesignationTextField.text
-                              ,@"join_time":[self stringToTimestamp:self.inDataLabel.text]
-                              ,@"exit_time":[self stringToTimestamp:self.outLabel.text]
-                                ,@"place":self.addressLabel.text}];
-        
-        NSData *paramArrData=[NSJSONSerialization dataWithJSONObject:paramArr options:NSJSONWritingPrettyPrinted error:nil];
-        NSString *paramArrDataJson=[[NSString alloc]initWithData:paramArrData encoding:NSUTF8StringEncoding];
-        
-        NSDictionary * paramDic =@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"condition":paramArrDataJson};
-        [DataService requestWithPostUrl:@"/api/user/searchFirend" params:paramDic block:^(id result) {
-            if ([self checkout:result]) {
-                NSLog(@"%@",result);
-                if(self.passValueBlock) self.passValueBlock([[result objectForKey:@"data"] objectForKey:@"list"]);
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        }];
+        if (self.nameTextField.text.length <1 && self.phoneTextField.text.length <1 && self.codeDesignationTextField.text.length <1 && self.inDataLabel.text.length <2 &&self.outLabel.text.length <2 && self.addressLabel.text.length <1) {
+            [self showTextMessage:@"至少选择或填写一项信息"];
+            
+        }else{
+            NSArray * paramArr =@[@{@"username":self.nameTextField.text
+                                    ,@"phone":self.phoneTextField.text
+                                    ,@"team_num":self.codeDesignationTextField.text
+                                    ,@"join_time":[self stringToTimestamp:self.inDataLabel.text]
+                                    ,@"exit_time":[self stringToTimestamp:self.outLabel.text]
+                                    ,@"place":self.addressLabel.text}];
+            
+            NSData *paramArrData=[NSJSONSerialization dataWithJSONObject:paramArr options:NSJSONWritingPrettyPrinted error:nil];
+            NSString *paramArrDataJson=[[NSString alloc]initWithData:paramArrData encoding:NSUTF8StringEncoding];
+            
+            NSDictionary * paramDic =@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"condition":paramArrDataJson};
+            [DataService requestWithPostUrl:@"/api/user/searchFirend" params:paramDic block:^(id result) {
+                if ([self checkout:result]) {
+                    NSLog(@"%@",result);
+                    if(self.passValueBlock) self.passValueBlock([[result objectForKey:@"data"] objectForKey:@"list"]);
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+        }
     }else{
         
         NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]

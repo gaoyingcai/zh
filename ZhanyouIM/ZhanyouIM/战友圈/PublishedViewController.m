@@ -18,6 +18,7 @@
 @interface PublishedViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextViewDelegate>{
     float width;
     NSMutableArray *sourceArray;
+    NSMutableArray *resultArray;
 
 }
 //@property (nonatomic, strong) CLLocationManager* locationManager;
@@ -74,14 +75,30 @@
 -(void)sendData{
     
     if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+        
+        resultArray = [NSMutableArray arrayWithCapacity:0];
+        
         //视频
         NSDictionary * paramDic1 =@{@"videoPath":[[self.imgArray objectAtIndex:0] objectForKey:@"path"]};
         [DataService requestWithUploadVideoUrl:@"/api/upload/upload" params:paramDic1 block:^(id result) {
             if ([self checkout:result]) {
                 NSLog(@"%@",result);
-                [self published:[result objectForKey:@"data"] s_type:@"2"];
+                [self->resultArray addObject:[result objectForKey:@"data"]];
+//                [self published:[result objectForKey:@"data"] s_type:@"2"];
+                [self published:self->resultArray s_type:@"2"];
             }
 
+        }];
+        
+        //图片
+        NSDictionary * paramDic2 =@{@"imageArray":@[[[self.imgArray objectAtIndex:0] objectForKey:@"img"]],@"fileName":@"file"};
+        [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic2 block:^(id result) {
+            if ([self checkout:result]) {
+                NSLog(@"%@",result);
+                [self->resultArray addObject:[result objectForKey:@"data"]];
+//                [self published:[result objectForKey:@"data"] s_type:@"2"];
+                [self published:self->resultArray s_type:@"2"];
+            }
         }];
     }else if(self.imgArray.count>0){
         //图片
@@ -106,6 +123,9 @@
         _textView.text = @"";
     }
     NSString * finalStr = @"";
+    if ([s_type isEqualToString:@"2"]&&imagePathArray.count<2) {
+        return;
+    }
     if (imagePathArray.count) {
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:imagePathArray options:NSJSONWritingPrettyPrinted error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -146,9 +166,7 @@
 {
     NSLog(@"添加图片");
     UIAlertController*alertyController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self dakaixiangce:YES luzhi:YES];
-    }];
+    
     
     
     if (self.imgArray.count>0 && ![self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
@@ -156,19 +174,27 @@
             [self dakaixiangce:NO luzhi:NO];
         }];
         [alertyController addAction:xiangjiAction];
+        
+        UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dakaixiangce:YES luzhi:NO];
+        }];
+        [alertyController addAction:xiangceAction];
     }else{
         UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照/录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self dakaixiangce:NO luzhi:YES];
         }];
         [alertyController addAction:xiangjiAction];
+        
+        UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dakaixiangce:YES luzhi:YES];
+        }];
+        [alertyController addAction:xiangceAction];
     }
     
 //    UIAlertAction*startVideoAction=[UIAlertAction actionWithTitle:@"录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 //        [self dakaixiangce:NO];
 //    }];
     UIAlertAction*quxiaoAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    
-    [alertyController addAction:xiangceAction];
     
     [alertyController addAction:quxiaoAction];
 //    [alertyController addAction:startVideoAction];
@@ -210,8 +236,13 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     
     if (xiangce) {
-        picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+        if (luzhi) {
+            picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+            picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+        }else{
+            picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+            picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];
+        }
     }else if(luzhi){
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie",@"public.image", nil];
@@ -372,7 +403,13 @@
                 NSLog(@"转码成功");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // UI更新代码
-                    [self.imgArray addObject:@{@"path":path}];
+                    
+                    //拿到图片
+                    UIImage *image = [self getVideoPreViewImageWithPath:videoPath];
+                    //图片保存到本程序沙盒
+                    NSString *imagePathStr = [NSHomeDirectory() stringByAppendingString:@"/Documents/suolue.png"];
+                    [UIImageJPEGRepresentation(image, 1.0) writeToFile:imagePathStr atomically:YES];
+                    [self.imgArray addObject:@{@"path":path,@"img":image}];
                     [self setFrame];
                 });
             }

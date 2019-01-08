@@ -15,7 +15,9 @@
 #import "NIMKit.h"
 
 
-@interface NIMSessionListViewController ()
+@interface NIMSessionListViewController (){
+    UIImageView *imageView;
+}
 
 @end
 
@@ -34,22 +36,43 @@
     [[NIMSDK sharedSDK].loginManager removeDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
+//添加缺省页
+-(void)addQueshengImageToView:(UIView*)supView imageName:(NSString*)imageName hidden:(BOOL)hidden{
+    if (hidden) {
+        [imageView removeFromSuperview];
+        imageView = nil;
+    }else{
+        if (imageView == nil) {
+            imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, supView.frame.size.width, supView.frame.size.height)];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            imageView.image = [UIImage imageNamed:imageName];
+            [supView addSubview:imageView];
+        }else{
+            [supView addSubview:imageView];
+        }
+    }
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
 //    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 109, self.view.bounds.size.width, self.view.bounds.size.height-109) style:UITableViewStylePlain];
+    self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
+    self.tableView.backgroundColor =[UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
     [self.view addSubview:self.tableView];
     self.tableView.delegate         = self;
     self.tableView.dataSource       = self;
     self.tableView.tableFooterView  = [[UIView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
+    
+    self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
+
     if (!self.recentSessions.count) {
         _recentSessions = [NSMutableArray array];
     }
-
+    
     [[NIMSDK sharedSDK].conversationManager addDelegate:self];
     [[NIMSDK sharedSDK].loginManager addDelegate:self];
     
@@ -66,8 +89,10 @@
 - (void)refresh{
     if (!self.recentSessions.count) {
         self.tableView.hidden = YES;
+        [self addQueshengImageToView:self.view imageName:@"neirong@2x.png" hidden:NO];
     }else{
         self.tableView.hidden = NO;
+        [self addQueshengImageToView:self.view imageName:@"neirong@2x.png" hidden:YES];
     }
     [self.tableView reloadData];
 }

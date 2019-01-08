@@ -839,6 +839,9 @@
                                 <state key="normal" title="拒绝">
                                     <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="noAgreeAtnAction:" destination="Boj-hY-bna" eventType="touchUpInside" id="On0-Q5-MLh"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zdi-sM-SbB">
                                 <rect key="frame" x="303" y="627" width="60" height="40"/>

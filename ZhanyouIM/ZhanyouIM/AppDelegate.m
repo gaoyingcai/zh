@@ -12,7 +12,7 @@
 #import <NIMSDK/NIMSDKOption.h>
 
 
-@interface AppDelegate ()<NIMSystemNotificationManagerDelegate>
+@interface AppDelegate ()<NIMSystemNotificationManagerDelegate,NIMLoginManagerDelegate>
 
 @end
 
@@ -22,7 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-//    [NSThread sleepForTimeInterval:3.5];
+//
     
     [WXApi registerApp:@"wx1f997c650f37820d"];
     
@@ -57,16 +57,13 @@
     //全局监听好友请求
 //    [[NIMSDK sharedSDK].systemNotificationManager addDelegate:self];
     
-    
-    
     self.window=[[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     self.window.backgroundColor=[UIColor whiteColor];
     MainTabBarController*tabBar=[[MainTabBarController alloc]init];
     self.window.rootViewController=tabBar;
     [self.window makeKeyAndVisible];
     
-    
-    
+//    [NSThread sleepForTimeInterval:3.5];
     return YES;
 }
 

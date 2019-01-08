@@ -48,7 +48,7 @@
                      @[@{@"name":@"我的客服",@"img":@"客服.png"},
                        @{@"name":@"设置",   @"img":@"设置.png"}], nil];}
     
-    
+    NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user]);
     [DataService requestWithPostUrl:@"/api/user/getUserInfo" params:@{@"phone":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"]} block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);

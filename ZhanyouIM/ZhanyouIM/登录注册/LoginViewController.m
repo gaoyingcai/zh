@@ -55,14 +55,14 @@
             NSLog(@"%@",result);
             NSDictionary * resultDic =@{@"accid":[[result objectForKey:@"data"] objectForKey:@"accid"],@"token":[[result objectForKey:@"data"] objectForKey:@"token"],@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"],@"phone":self.numberTextField.text};
             
-            NSString *account = [[result objectForKey:@"data"] objectForKey:@"accid"];
-            NSString *token   = [[result objectForKey:@"data"] objectForKey:@"token"];
-            [[[NIMSDK sharedSDK] loginManager] login:account
-                                               token:token
-                                          completion:^(NSError *error) {
-                                              NSLog(@"%@",error);
-                                          }];
-            [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
+//            NSString *account = [[result objectForKey:@"data"] objectForKey:@"accid"];
+//            NSString *token   = [[result objectForKey:@"data"] objectForKey:@"token"];
+//            [[[NIMSDK sharedSDK] loginManager] login:account
+//                                               token:token
+//                                          completion:^(NSError *error) {
+//                                              NSLog(@"%@",error);
+//                                          }];
+//            [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
     
             
             [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
@@ -84,23 +84,23 @@
 }
 
 
-- (void)onLogin:(NIMLoginStep)step{
-    NSLog(@"%ld",(long)step);
-    if (step == NIMLoginStepLoginOK) {
-        NSLog(@"登录成功");
-    }else if (step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection || step == NIMLoginStepNetChanged){
-        
-        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
-        NSString *account = [dic objectForKey:@"accid"];
-        NSString *token   = [dic objectForKey:@"token"];
-        [[[NIMSDK sharedSDK] loginManager] login:account
-                                           token:token
-                                      completion:^(NSError *error) {
-                                          NSLog(@"%@",error);
-                                      }];
-        NSLog(@"已经退出登录");
-    }
-}
+//- (void)onLogin:(NIMLoginStep)step{
+//    NSLog(@"%ld",(long)step);
+//    if (step == NIMLoginStepLoginOK) {
+//        NSLog(@"登录成功");
+//    }else if (step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection || step == NIMLoginStepNetChanged){
+//
+//        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+//        NSString *account = [dic objectForKey:@"accid"];
+//        NSString *token   = [dic objectForKey:@"token"];
+//        [[[NIMSDK sharedSDK] loginManager] login:account
+//                                           token:token
+//                                      completion:^(NSError *error) {
+//                                          NSLog(@"%@",error);
+//                                      }];
+//        NSLog(@"已经退出登录");
+//    }
+//}
 -(void)viewWillDisappear:(BOOL)animated{
     self.navigationController.navigationBar.hidden = NO;
     self.tabBarController.tabBar.hidden = NO;

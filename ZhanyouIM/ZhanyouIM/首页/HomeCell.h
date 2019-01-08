@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *refusedBtn;
 
 
+@property (weak, nonatomic) IBOutlet UILabel *checkTextLabel;
 
 
 

@@ -10,14 +10,14 @@
 #import "BaseViewController.h"
 #import "NIMSessionListViewController.h"
 
-@interface SessionViewController : NIMSessionListViewController<NIMLoginManagerDelegate>{
+
+@interface SessionViewController : NIMSessionListViewController<NIMLoginManagerDelegate,NIMSystemNotificationManagerDelegate>
+{
     UIView *backView;
     NSMutableDictionary * announcementDic;
 }
 
-@property (weak, nonatomic) IBOutlet UILabel *gonggaoTitleLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *gonggaoTitleLabel;
 @property (weak, nonatomic) IBOutlet UIView *addView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imgBottom;
-
 
 @end

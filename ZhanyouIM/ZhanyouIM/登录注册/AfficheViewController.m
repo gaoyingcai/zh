@@ -19,6 +19,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+
+- (IBAction)noAgreeAtnAction:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+
 - (IBAction)agreeBtnAction:(id)sender {
     PayViewController * pay = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"pay"];
     pay.type = @"1";

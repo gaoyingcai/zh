@@ -21,6 +21,7 @@
     NSMutableArray *sourceArray;
     NSMutableArray *resultArray;
     BOOL isVideo;
+    BOOL SelectMedia;
 }
 //@property (nonatomic, strong) CLLocationManager* locationManager;
 @property(nonatomic,strong)CLGeocoder *geocoder;
@@ -47,7 +48,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    SelectMedia = NO;
     
     width = (k_screen_width-40)/3;
     [UIView animateWithDuration:0.3 animations:^{
@@ -246,7 +247,7 @@
     }
     
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    
+    SelectMedia= YES;
     if (xiangce) {
         if (luzhi) {
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
@@ -319,7 +320,7 @@
 //添加图片之后按钮移动
 -(void)setFrame
 {
-    
+    SelectMedia =NO;
 //    for (UIView *view in self.photoView.subviews) {
 //        if ([view isKindOfClass:[MMImageListView class]]) {
 //            [view removeFromSuperview];
@@ -545,7 +546,9 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 -(void)viewWillDisappear:(BOOL)animated{
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"QZ" object:nil userInfo:@{@"type":[NSString stringWithFormat:@"%@",_moduleType]}];
+    if (!SelectMedia) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"QZ" object:nil userInfo:@{@"type":[NSString stringWithFormat:@"%@",_moduleType]}];
+    }
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

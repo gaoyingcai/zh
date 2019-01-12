@@ -22,6 +22,8 @@
 @property (nonatomic,copy) NSString *replyUserName;
 // 发布时间戳
 @property (nonatomic,assign) long long time;
+// 发布者id
+@property (nonatomic,copy)NSString *userPhone;
 // 关联动态的PK
 //@property (nonatomic,assign) int pk;
 

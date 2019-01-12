@@ -41,7 +41,7 @@
                 [self showTextMessage:@"发送成功"];
                 [self getVerifyCode:self->_getSmsCodeBtn];
             }else{
-                [self showTextMessage:@"发送失败"];
+                [self showTextMessage:[result objectForKey:@"message"]];
             }
         }];
     }
@@ -50,13 +50,19 @@
 -(void)getVerifyCode:(UIButton *)sender{
     __block NSInteger timeout = 60; //倒计时时间
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
     if (!timer) {
         timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
+    }else{
+        dispatch_cancel(timer);
+        timer = nil;
+        timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
     }
+        
     dispatch_source_set_timer(timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
     dispatch_source_set_event_handler(timer, ^{
         if (timeout <= 0) {
-            dispatch_source_cancel(self->timer);
+//            dispatch_source_cancel(self->timer);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self->_getSmsCodeBtn setTitle:@"重新获取" forState:UIControlStateNormal];
                 self->_getSmsCodeBtn.userInteractionEnabled = YES;
@@ -75,19 +81,18 @@
     });
     dispatch_resume(timer);
 }
-
-
-
 - (IBAction)registBtnAction:(UIButton *)sender {
     
     if ([self isValidateMobile:self.phoneTextField.text] && self.smsCode.text.length>0 && self.passwordTextField.text.length>=6) {
         NSDictionary * paramDic = @{@"phone":self.phoneTextField.text,@"password":[self md5:self.passwordTextField.text],@"vercode":self.smsCode.text};
         [DataService requestWithPostUrl:@"/api/login/regist" params:paramDic block:^(id result) {
             if ([self checkout:result]) {
+        
+                [self setUserInfo:@{@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"]}];
+                [self setUserIMInfo:[[result objectForKey:@"data"] objectForKey:@"info"]];
+                
                 RegistViewController2 * regist2 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist2"];
-                    regist2.phone = self.phoneTextField.text;
-                NSDictionary * resultDic =@{@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"]};
-                [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
+                regist2.phone = self.phoneTextField.text;
                 regist2.source = @"注册";
                 [self.navigationController pushViewController:regist2 animated:YES];
             }else{

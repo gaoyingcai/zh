@@ -11,6 +11,7 @@
 #import "Moment.h"
 #import "Comment.h"
 #import "DataService.h"
+#import "UserInfoViewController.h"
 
 
 @interface DetailsViewController ()<MomentCellDelegate>{
@@ -69,9 +70,10 @@
         // 评论
         for (int i = 0; i < commentResultList.count; i ++) {
             Comment *comment = [[Comment alloc] init];
-            comment.userName = [[commentResultList objectAtIndex:i] objectForKey:@"username"];
+            comment.userName = [NSString stringWithFormat:@"%@",[[commentResultList objectAtIndex:i] objectForKey:@"username"]];
             comment.userImage = [[commentResultList objectAtIndex:i] objectForKey:@"head_url"];
             comment.text = [[commentResultList objectAtIndex:i] objectForKey:@"content"];
+            comment.userPhone =[[commentResultList objectAtIndex:i] objectForKey:@"phone"];
             NSString * addTime = [[commentResultList objectAtIndex:i] objectForKey:@"add_time"];
             if (![addTime isKindOfClass:[NSNull class]]&&![addTime isEqualToString:@"<null>"]){
                 comment.time = [addTime longLongValue];
@@ -84,20 +86,22 @@
         }
         
         Moment *moment = [[Moment alloc] init];
-        moment.userName = [momentDic objectForKey:@"username"];
+        moment.userName = [NSString stringWithFormat:@"%@",[momentDic objectForKey:@"username"]];
         moment.userThumbPath = [momentDic objectForKey:@"head_url"];
         moment.time = [[momentDic objectForKey:@"add_time"] longLongValue];
         moment.singleWidth = 500;
         moment.singleHeight = 315;
         NSMutableArray * array = [NSMutableArray arrayWithArray:[momentDic objectForKey:@"path"]];
         if (array.count == 2) {
-            NSDictionary *dic1 = [array objectAtIndex:0];
-            NSDictionary *dic2 = [array objectAtIndex:1];
+            NSMutableDictionary *dic1 = [array objectAtIndex:0];
+            NSMutableDictionary *dic2 = [array objectAtIndex:1];
             if ([[dic1 allKeys] containsObject:@"path_source"]) {
                 moment.fileCount = 1;
+                [dic1 setValuesForKeysWithDictionary:dic2];
                 moment.imageArray = [NSMutableArray arrayWithObject:dic1];
             }else if ([[dic2 allKeys] containsObject:@"path_source"]){
                 moment.fileCount = 1;
+                [dic2 setValuesForKeysWithDictionary:dic1];
                 moment.imageArray = [NSMutableArray arrayWithObject:dic2];
             }else{
                 moment.fileCount = 2;
@@ -125,12 +129,23 @@
 {
     NSLog(@"新增");
 }
-
+-(void)getFriendInfo:(NSString *)phone{
+    UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+    userInfo.phone = phone;
+    userInfo.rightBtn = YES;
+    userInfo.postMessage = YES;
+    [self.navigationController pushViewController:userInfo animated:YES];
+}
 #pragma mark - MomentCellDelegate
 // 点击用户头像
 - (void)didClickProfile:(MomentCell *)cell
 {
     NSLog(@"击用户头像");
+    
+    NSDictionary *dic = [self->dataArray objectAtIndex:cell.tag];
+    [self getFriendInfo:[dic objectForKey:@"accid"]];
+    
+    
 }
 
 // 点赞
@@ -202,7 +217,7 @@
         return;
     }
 
-    NSDictionary * paramDic= @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"info_id":[NSString stringWithFormat:@"%d",_commentId],@"content":textField.text};
+    NSDictionary * paramDic= @{@"uid":[[self getUserinfo] objectForKey:@"uid"],@"info_id":[NSString stringWithFormat:@"%d",_commentId],@"content":textField.text};
     [DataService requestWithPostUrl:@"/api/trend/comment" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
@@ -242,6 +257,7 @@
 - (void)didSelectComment:(Comment *)comment
 {
     NSLog(@"点击评论");
+    [self getFriendInfo:comment.userPhone];
 }
 
 // 点击高亮文字
@@ -271,8 +287,15 @@
         cell.backgroundColor = [UIColor whiteColor];
     }
     [tableView  setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    cell.pinglunView = YES;
+    
+    if (_myDynamic) {
+        cell.pinglunView = NO;
+    }else{
+        cell.pinglunView = YES;
+    }
     cell.commentNum = -1;
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.moment = [self.momentList objectAtIndex:indexPath.row];
     cell.delegate = self;
     return cell;

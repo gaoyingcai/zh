@@ -91,7 +91,7 @@
                 vc.navigationBar.barTintColor = [UIColor whiteColor];
                 vc.barItemTextColor = [UIColor blackColor];
                 vc.navigationBar.barStyle = UIBarStyleDefault;
-                vc.allowPickingVideo = [_mediaTypes containsObject:(NSString *)kUTTypeMovie];
+                vc.allowPickingVideo = [self->_mediaTypes containsObject:(NSString *)kUTTypeMovie];
                 if(handler) handler(vc);
             }
         });

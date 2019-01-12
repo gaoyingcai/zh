@@ -46,7 +46,7 @@
 //    session.title=@"会话";
 //    circle.title=@"战友圈";
 //    user.title=@"我的";
-    
+    circle.myDynamic = NO;
     UINavigationController*navSession=[[UINavigationController alloc]initWithRootViewController:session];
     UINavigationController*navAdd=[[UINavigationController alloc]initWithRootViewController:add];
     UINavigationController*navHome=[[UINavigationController alloc]initWithRootViewController:home];

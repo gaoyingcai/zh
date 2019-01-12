@@ -24,23 +24,6 @@ static int MaxNotificationCount =10;
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
-    
-    
-    
-//    _notificationArr = [NSMutableArray arrayWithArray:[[NIMSDK sharedSDK].systemNotificationManager fetchSystemNotifications:nil limit:10]];
-//
-//
-//    NIMSystemNotificationFilter *fielter =[[NIMSystemNotificationFilter alloc]init];
-//    NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
-//    [array addObject: [NSNumber numberWithInt:5]];
-//    fielter.notificationTypes = array;
-//
-//    [[NIMSDK sharedSDK].systemNotificationManager fetchSystemNotifications:nil limit:10 filter: fielter];
-//    NSLog(@"%@",_notificationArr);
-    
-    
-    
-    
 }
 
 - (void)loadMore:(id)sender
@@ -75,7 +58,6 @@ static int MaxNotificationCount =10;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"homeBadge" object:nil userInfo:nil];
 
-    
     // Do any additional setup after loading the view.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
@@ -88,14 +70,36 @@ static int MaxNotificationCount =10;
     
     NSArray *notifications = [systemNotificationManager fetchSystemNotifications:nil limit:MaxNotificationCount];
     
+    
     if ([notifications count])
     {
-        [_notificationArr addObjectsFromArray:notifications];
         if (![[notifications firstObject] read])
         {
             _shouldMarkAsRead = YES;
         }
+        
+        NSMutableArray * repeatNotifations = [NSMutableArray arrayWithCapacity:0];
+        for (int i =0; i<notifications.count; i++) {
+            NIMSystemNotification * notifation1 = notifications[i];
+            NIMUserAddAttachment *attachment1 = (NIMUserAddAttachment*)notifation1.attachment;
+            if (i+1<notifications.count) {
+                for (int j = i+1; j< notifications.count; j++) {
+                    NIMSystemNotification * notifation2 = notifications[i];
+                    NIMUserAddAttachment *attachment2 = (NIMUserAddAttachment*)notifation2.attachment;
+                    if (notifation1.sourceID == notifation2.sourceID&& attachment1.operationType == attachment2.operationType) {
+                        [repeatNotifations addObject:notifation1];
+                        notifation2.read = YES;
+                    }
+                }
+            }
+        }
+        [_notificationArr addObjectsFromArray:notifications];
+        [_notificationArr removeObjectsInArray:repeatNotifations];
     }
+    
+   
+    
+    
     
     if (notifications.count >= MaxNotificationCount) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -135,6 +139,31 @@ static int MaxNotificationCount =10;
     //给cell赋值
     NIMSystemNotification * notifation = [_notificationArr objectAtIndex:indexPath.row];
     NIMUser *user = [[NIMSDK sharedSDK].userManager userInfo:notifation.sourceID];
+    NSLog(@"%@",notifation.targetID);
+    NSLog(@"%@",notifation.sourceID);
+    NIMUserAddAttachment *attachment = (NIMUserAddAttachment*)notifation.attachment;
+    NSLog(@"%ld",(long)attachment.operationType);
+    switch (attachment.operationType) {
+        case 3:
+            [cell.accessBtn setTitle:@"已同意" forState:UIControlStateNormal];
+            [cell.accessBtn setTitleColor:RGBACOLOR(153, 153, 153, 1) forState:UIControlStateNormal];
+            cell.accessBtn.backgroundColor = [UIColor clearColor];
+            cell.accessBtnRight.constant -= 41;
+            cell.accessBtn.userInteractionEnabled = NO;
+            cell.refusedBtn.hidden = YES;
+            break;
+        case 4:
+            [cell.refusedBtn setTitle:@"已拒绝" forState:UIControlStateNormal];
+            [cell.refusedBtn setTitleColor:RGBACOLOR(153, 153, 153, 1) forState:UIControlStateNormal];
+            cell.refusedBtn.backgroundColor = [UIColor clearColor];
+            cell.refusedBtnRight.constant += 41;
+            cell.refusedBtn.userInteractionEnabled = NO;
+            cell.accessBtn.hidden = YES;
+            break;
+        default:
+            break;
+    }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.nameLabel.text =user.userInfo.nickName;
     cell.checkTextLabel.text = notifation.postscript;
     cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -202,16 +231,16 @@ static int MaxNotificationCount =10;
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
-//#pragma mark - SystemNotificationCell
-//- (void)onAccept:(NIMSystemNotification *)notification
-//{
-//
-//}
-//
-//- (void)onRefuse:(NIMSystemNotification *)notification
-//{
-//
-//}
+#pragma mark - SystemNotificationCell
+- (void)onAccept:(NIMSystemNotification *)notification
+{
+    NSLog(@"%@",notification);
+}
+
+- (void)onRefuse:(NIMSystemNotification *)notification
+{
+    NSLog(@"%@",notification);
+}
 
 /*
 #pragma mark - Navigation

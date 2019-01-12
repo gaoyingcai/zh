@@ -23,6 +23,11 @@
 #import "UIImageView+WebCache.h"
 #import "NIMLocationViewController.h"
 #import "NIMKitLocationPoint.h"
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
+
+#define WIDTH [UIScreen mainScreen].bounds.size.width
+#define HEIGHT [UIScreen mainScreen].bounds.size.height
 
 @interface NIMSessionViewController ()<NIMMediaManagerDelegate,NIMInputDelegate>
 
@@ -37,6 +42,9 @@
 @property (nonatomic,strong)  NIMSessionConfigurator *configurator;
 
 @property (nonatomic,weak)    id<NIMSessionInteractor> interactor;
+
+@property (nonatomic,strong)  AVPlayerViewController * PlayerVC;
+
 
 @end
 
@@ -583,6 +591,10 @@
 //关闭显示
 - (void)closeShow:(UIButton *)button
 {
+    if (self.PlayerVC) {
+        [self.PlayerVC.player pause];
+        self.PlayerVC = nil;
+    }
     UIApplication *app = [UIApplication sharedApplication];
     UIView *view = [app.keyWindow.subviews objectAtIndex:1];
     [view removeFromSuperview];
@@ -593,29 +605,57 @@
 - (void)singleTapSmallViewVideoPlayer:(NIMMessage *)message
 {
     UIApplication *app = [UIApplication sharedApplication];
-    
-    UIView *playerView = [[UIView alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    playerView.backgroundColor = [UIColor blackColor];
-    
+//    UIView *playerView = [[UIView alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+//    playerView.backgroundColor = [UIColor blackColor];
+//    [app.keyWindow addSubview:playerView];
+//    [self.view addSubview:self.PlayerVC.view];
+    [app.keyWindow addSubview:self.PlayerVC.view];
     NSData *jsonData = [message.messageObject.description dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:nil];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[dic objectForKey:@"url"]]];
+    _PlayerVC.player = [AVPlayer playerWithURL:url];
+    [self.PlayerVC.player play];
     
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:[AVPlayer playerWithURL:url]];
-    playerLayer.masksToBounds= YES;
-    playerLayer.borderColor = [UIColor blackColor].CGColor;
-    playerLayer.frame = [[UIScreen mainScreen] bounds];
+//    UIView *playerView = [[UIView alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+//    playerView.backgroundColor = [UIColor blackColor];
+//
+//    NSData *jsonData = [message.messageObject.description dataUsingEncoding:NSUTF8StringEncoding];
+//    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+//                                                        options:NSJSONReadingMutableContainers
+//                                                          error:nil];
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[dic objectForKey:@"url"]]];
+//
+//
+//
+//    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:[AVPlayer playerWithURL:url]];
+//    playerLayer.masksToBounds= YES;
+//    playerLayer.borderColor = [UIColor blackColor].CGColor;
+//    playerLayer.frame = [[UIScreen mainScreen] bounds];
+//
+//    [playerView.layer addSublayer:playerLayer];
+//    [app.keyWindow addSubview:playerView];
+//
     
-    [playerView.layer addSublayer:playerLayer];
-    [app.keyWindow addSubview:playerView];
-    
-    UIButton *button = [[UIButton alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, HEIGHT*1/5, WIDTH, HEIGHT*2/3)];
+//    UIButton *button = [[UIButton alloc]initWithFrame:[UIScreen mainScreen].bounds];
     [button addTarget:self action:@selector(closeShow:) forControlEvents:UIControlEventTouchUpInside];
     [app.keyWindow addSubview:button];
-    
-    [playerLayer.player play];
+//
+//    [playerLayer.player play];
+}
+//WithUrl:(NSString *) urlStr
+-(AVPlayerViewController*)PlayerVC{
+    if (!_PlayerVC) {
+        _PlayerVC = [[AVPlayerViewController alloc] init];
+//        NSURL * url = [NSURL URLWithString:@"http://v.cctv.com/flash/mp4video6/TMS/2011/01/05/cf752b1c12ce452b3040cab2f90bc265_h264818000nero_aac32-1.mp4"];
+//        _PlayerVC.player = [AVPlayer playerWithURL:url];
+//        _PlayerVC.view.frame = self.view.frame;
+        _PlayerVC.view.frame = [[UIScreen mainScreen] bounds];
+        _PlayerVC.showsPlaybackControls = YES;
+    }
+    return _PlayerVC;
 }
 #pragma mark -打开地图
 -(void)openMap{
@@ -830,8 +870,9 @@
 - (void)changeLeftBarBadge:(NSInteger)unreadCount
 {
     NIMCustomLeftBarView *leftBarView = (NIMCustomLeftBarView *)self.navigationItem.leftBarButtonItem.customView;
-    leftBarView.badgeView.badgeValue = @(unreadCount).stringValue;
-    leftBarView.badgeView.hidden = !unreadCount;
+//    leftBarView.badgeView.badgeValue = @(unreadCount).stringValue;
+//    leftBarView.badgeView.hidden = !unreadCount;
+//    leftBarView.badgeView.hidden = YES;
 }
 
 

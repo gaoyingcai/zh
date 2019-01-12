@@ -127,10 +127,10 @@
             </objects>
             <point key="canvasLocation" x="-548" y="46"/>
         </scene>
-        <!--我的-->
+        <!--详细资料-->
         <scene sceneID="2Ug-5s-oFQ">
             <objects>
-                <viewController storyboardIdentifier="userInfo" title="我的" id="RQx-iT-w4c" customClass="UserInfoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="userInfo" title="详细资料" id="RQx-iT-w4c" customClass="UserInfoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AmD-f2-Xbu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

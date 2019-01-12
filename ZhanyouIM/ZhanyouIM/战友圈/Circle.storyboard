@@ -284,32 +284,15 @@
                                     <outlet property="delegate" destination="B6u-9M-vjA" id="yrP-90-S1u"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JcP-Tm-V0B">
-                                <rect key="frame" x="0.0" y="577" width="375" height="90"/>
-                                <color key="backgroundColor" red="0.1647058824" green="0.63137254899999995" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="90" id="7ds-Ti-qDY"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
-                                <state key="normal" title=" 购买" image="aixin.png">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="helpBtnAction:" destination="clZ-3O-5W3" eventType="touchUpInside" id="aLn-6b-HfN"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="98j-4h-z8f" firstAttribute="trailing" secondItem="XSd-8g-TTD" secondAttribute="trailing" constant="12" id="9lL-hy-duA"/>
-                            <constraint firstItem="JcP-Tm-V0B" firstAttribute="bottom" secondItem="98j-4h-z8f" secondAttribute="bottom" id="ASh-uI-8UR"/>
                             <constraint firstItem="N4O-lv-zB2" firstAttribute="leading" secondItem="98j-4h-z8f" secondAttribute="leading" id="GiA-aM-qzd"/>
                             <constraint firstItem="N4O-lv-zB2" firstAttribute="top" secondItem="98j-4h-z8f" secondAttribute="top" id="Jxi-dp-kNP"/>
                             <constraint firstItem="98j-4h-z8f" firstAttribute="trailing" secondItem="N4O-lv-zB2" secondAttribute="trailing" id="LYX-7s-cux"/>
-                            <constraint firstItem="JcP-Tm-V0B" firstAttribute="trailing" secondItem="98j-4h-z8f" secondAttribute="trailing" id="h3s-kF-HvZ"/>
                             <constraint firstItem="XSd-8g-TTD" firstAttribute="leading" secondItem="98j-4h-z8f" secondAttribute="leading" constant="12" id="ncH-ti-Qfe"/>
                             <constraint firstItem="XSd-8g-TTD" firstAttribute="top" secondItem="N4O-lv-zB2" secondAttribute="bottom" constant="8" id="qhA-NT-NCa"/>
-                            <constraint firstItem="JcP-Tm-V0B" firstAttribute="leading" secondItem="98j-4h-z8f" secondAttribute="leading" id="x1Y-BW-BVp"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="98j-4h-z8f"/>
                     </view>
@@ -328,7 +311,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="aixin.png" width="22" height="22"/>
         <image name="next.png" width="22" height="22"/>
     </resources>
 </document>

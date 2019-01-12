@@ -49,11 +49,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    myFriendArr = [[NSUserDefaults standardUserDefaults] objectForKey:@"MyFriend"];
+//    myFriendArr = [[NSUserDefaults standardUserDefaults] objectForKey:@"MyFriend"];
+    
+    NSMutableArray *friendArr = [NSMutableArray arrayWithArray:[NIMSDK sharedSDK].userManager.myFriends];
+    myFriendArr = [NSMutableArray arrayWithCapacity:0];
+    for (NIMUser *user in friendArr) {
+        [myFriendArr addObject:user.userId];
+    }
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
-    if (_rightBtn) {
+    NSDictionary * dic = [self getUserinfo];
+    
+    if (_rightBtn &&![[dic objectForKey:@"phone"]isEqualToString:_phone]) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 25, 25);
         [btn setBackgroundImage:[UIImage imageNamed:@"更多@2x.png"] forState:UIControlStateNormal];
@@ -67,7 +75,7 @@
 //            self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
 //            self->userName = [[result objectForKey:@"data"]objectForKey:@"username"];
             self->userImgStr =[[result objectForKey:@"data"]objectForKey:@"head_url"];
-            self->userNameStr =[[result objectForKey:@"data"]objectForKey:@"username"];
+            self->userNameStr =[NSString stringWithFormat:@"%@",[[result objectForKey:@"data"]objectForKey:@"username"]];
             if (self->dataArray == nil) {
                 self->dataArray = [NSMutableArray arrayWithObjects:
                                    @[@{@"text":@"头像",@"info":domain_img(self->userImgStr)}],
@@ -171,9 +179,11 @@
     logoutLabel.backgroundColor = color_green;
     logoutLabel.textColor = [UIColor whiteColor];
     
+    
     if ([myFriendArr containsObject:_phone]) {
         logoutLabel.text = @"发送消息";
     }else{
+        self.navigationItem.rightBarButtonItem = nil;
         logoutLabel.text = @"添加好友";
     }
     logoutLabel.layer.cornerRadius = 3;
@@ -186,7 +196,18 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if (_loginOut||_postMessage) {
+//
+
+//    &&
+    if ((_loginOut||_postMessage)) {
+        NSDictionary * dic = [self getUserinfo];
+//        if ([[dic objectForKey:@"phone"]isEqualToString:_phone]) {
+//            logoutLabel.text = @"退出登录";
+//        }else
+
+        if ([[dic objectForKey:@"phone"]isEqualToString:_phone]&&_postMessage) {
+            return 3;
+        }
         return 4;
     }
     return 3;
@@ -215,22 +236,27 @@
     if (indexPath.section == 3) {
         
         if (_loginOut) {
-            
+        
             if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
                 [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
                     NSLog(@"%@",error);
                 }];
-            }else{
-                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                [userDefaults removeObjectForKey:user_defaults_user];
-                [userDefaults synchronize];
+            }
+        [[[NIMSDK sharedSDK] loginManager] addDelegate:nil];
+
+        
+//        }else{
+                [self deleteAllUserInfo];
                 LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
                 self.navigationController.interactivePopGestureRecognizer.enabled = NO;
                 [self.navigationController pushViewController:login animated:YES];
 
-            }
+//            }
         }else if (_postMessage){
-            if ([myFriendArr containsObject:_phone]) {
+            
+            NSDictionary * dic = [self getUserinfo];
+            if ([[dic objectForKey:@"phone"]isEqualToString:_phone]) {
+            }else if ([myFriendArr containsObject:_phone]) {
                 
                 NIMSession *session = [NIMSession session:_phone type:NIMSessionTypeP2P];
                 MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];
@@ -244,10 +270,7 @@
                 add.userNumStr = _phone;
                 [self.navigationController pushViewController:add animated:YES];
             }
-            
         }
-        
-        
     }
 }
 

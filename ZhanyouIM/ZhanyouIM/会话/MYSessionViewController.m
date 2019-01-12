@@ -41,6 +41,19 @@
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:btn]];
     
     
+    
+//    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+//    [leftBtn setTitle:@"< 会话" forState:UIControlStateNormal];
+//    [leftBtn addTarget:self action:@selector(returnVC) forControlEvents:UIControlEventTouchUpInside];
+//    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+    
+    
+    
+    
+    
+    
+    
     UIView * keepOutView = [[UIView alloc]initWithFrame:self.view.frame];
     keepOutView.backgroundColor = [UIColor colorWithRed:228/255.0 green:230/255.0 blue:235/255.0 alpha:1.0];
     [self.view addSubview:keepOutView];
@@ -53,6 +66,9 @@
     
     
 }
+//-(void)returnVC{
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 -(void)getFriendInfo{
     [self getFriendInfo:_phone];
 }
@@ -79,7 +95,7 @@
 - (BOOL)onLongPressCell:(NIMMessage *)message
                  inView:(UIView *)view {
     //同上，重写该方法进行自定义操作
-    NSLog(@"长按头像");
+    NSLog(@"长按消息");
     return YES;
 }
 

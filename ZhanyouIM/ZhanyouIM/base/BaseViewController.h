@@ -20,9 +20,22 @@
 -(BOOL)isValidatePassword:(NSString *)password;
 - (BOOL)isValidateMobile:(NSString *)mobile;
 - (BOOL)isValidateIdentityCard:(NSString *)IDCardNumberl;
+
+
+
 -(BOOL)isLogin;
--(void)setUserInfo:(NSMutableDictionary*)dic;
+-(void)setUserInfo:(NSDictionary*)dic;
 -(NSMutableDictionary*)getUserinfo;
+
+-(void)setUserIMInfo:(NSDictionary*)dic;
+-(NSDictionary*)getUserIMInfo;
+-(void)deleteAllUserInfo;
+
+
+
+
+
+
 - (CGSize)labelAutoCalculateRectWith:(NSString *)text FontSize:(CGFloat)fontSize MaxSize:(CGSize)maxSize;
 -(void)addAlertControllerToView:(UIViewController*)view actionArray:(NSArray*)actionArray;
 

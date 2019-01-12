@@ -36,7 +36,7 @@
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         blurView.frame = self.bounds;
-        [self addSubview:blurView];
+        [self.contentView addSubview:blurView];
 
         self.backgroundColor  = [UIColor whiteColor];
         self.layer.cornerRadius = 14.f;
@@ -92,8 +92,10 @@
         
         NSBundle *bundle = [NSBundle bundleForClass:[NIMKitProgressHUD class]];
         NSURL *url = [bundle URLForResource:@"SVProgressHUD" withExtension:@"bundle"];
+//        NSURL *url = [bundle URLForResource:@"NIMKitResource" withExtension:@"bundle"];
         NSBundle *imageBundle = [NSBundle bundleWithURL:url];
         
+        //angle-mask  bk_angle_mask
         NSString *path = [imageBundle pathForResource:@"angle-mask" ofType:@"png"];
         
         maskLayer.contents = (__bridge id)[[UIImage imageWithContentsOfFile:path] CGImage];

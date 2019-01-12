@@ -23,6 +23,7 @@
     NSString *userImgStr;
     NSString *userName;
     int star_num;
+    int heart_num;
 }
 @end
 
@@ -48,8 +49,8 @@
                      @[@{@"name":@"我的客服",@"img":@"客服.png"},
                        @{@"name":@"设置",   @"img":@"设置.png"}], nil];}
     
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user]);
-    [DataService requestWithPostUrl:@"/api/user/getUserInfo" params:@{@"phone":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"]} block:^(id result) {
+    NSLog(@"%@",[self getUserinfo]);
+    [DataService requestWithPostUrl:@"/api/user/getUserInfo" params:@{@"phone":[[self getUserinfo] objectForKey:@"phone"]} block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
@@ -57,9 +58,7 @@
             [self->_tableView reloadData];
             
             self->star_num = [[[result objectForKey:@"data"] objectForKey:@"star"] intValue];
-            if (self->star_num == 0) {
-                self->star_num = 1;
-            }
+            self->heart_num = [[[result objectForKey:@"data"] objectForKey:@"love"] intValue];
         }
     }];
     
@@ -80,8 +79,23 @@
             cell = [UserCell userCell1];
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        
+        for (int i =0; i<star_num+heart_num; i++) {
+            if (i<star_num) {
+                UIImageView * imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"star.png"]];
+                
+                imageView.frame = CGRectMake(i*(15+10), 0, 15, 15);
+                [cell.starImgBackView addSubview:imageView];
+            }else{
+                UIImageView * imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"heart.png"]];
+                imageView.frame = CGRectMake(i*(15+10), 0, 15, 15);
+                [cell.starImgBackView addSubview:imageView];
+            }
+        }
+        
         //给cell赋值
-        cell.starImgViewContraint.constant = k_star_width * star_num;
+//        cell.starImgViewContraint.constant = k_star_width * star_num;
         cell.userNameLabel.text = userName;
         [cell.userImg sd_setImageWithURL:[NSURL URLWithString:userImgStr]];
         //返回当前cell
@@ -131,7 +145,7 @@
     if (indexPath.section == 0 || (indexPath.section == 3 && indexPath.row == 1 )) {
         
         UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
-        userInfo.phone = [[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"];
+        userInfo.phone = [[self getUserinfo] objectForKey:@"phone"];
         if (indexPath.section == 0){
             userInfo.loginOut =NO;
         }else{

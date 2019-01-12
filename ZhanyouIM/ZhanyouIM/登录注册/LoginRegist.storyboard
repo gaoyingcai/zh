@@ -618,12 +618,6 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iuc-N5-CK9">
-                                                <rect key="frame" x="0.0" y="52" width="300" height="143"/>
-                                                <connections>
-                                                    <action selector="getImgBtnAction:" destination="6oO-Kx-Swy" eventType="touchUpInside" id="O6q-Va-TQd"/>
-                                                </connections>
-                                            </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="相机.png" translatesAutoresizingMaskIntoConstraints="NO" id="2jz-Ml-hab">
                                                 <rect key="frame" x="0.0" y="52" width="300" height="143"/>
                                                 <userDefinedRuntimeAttributes>
@@ -633,6 +627,12 @@
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                             </imageView>
+                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iuc-N5-CK9">
+                                                <rect key="frame" x="0.0" y="52" width="300" height="143"/>
+                                                <connections>
+                                                    <action selector="getImgBtnAction:" destination="6oO-Kx-Swy" eventType="touchUpInside" id="O6q-Va-TQd"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>

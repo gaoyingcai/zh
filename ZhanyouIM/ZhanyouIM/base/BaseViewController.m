@@ -47,15 +47,14 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     //只有导航的根控制器不需要右滑的返回的功能。
     NSLog(@"%@",self.navigationController.viewControllers);
-    self.tabBarController.tabBar.hidden=YES;
-
+//    self.tabBarController.tabBar.hidden=YES;
     if (self.navigationController.viewControllers.count <= 1) {
         return NO;
     }
     [self popoverPresentationController];
-
     return YES;
 }
+
 
 //-(void)setSlidBack{
 //    //1.获取系统interactivePopGestureRecognizer对象的target对象
@@ -108,22 +107,54 @@
 //    [self.navigationController popViewControllerAnimated:YES];
 //
 //}
+
+
 //判断登录状态
 -(BOOL)isLogin{
-    if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@"userInfo"] objectForKey:@"login"]isEqualToString:@"1"])
-    {
-        return 1;
+    NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+    if (dic == nil) {
+        return NO;
     }
-    return 0;
+    return YES;
 }
 //设置用户信息
--(void)setUserInfo:(NSMutableDictionary*)dic{
-    [[NSUserDefaults standardUserDefaults]setObject:dic forKey:@"userInfo"];
+-(void)setUserInfo:(NSDictionary*)dic{
+    NSMutableDictionary *parmDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([[parmDic allKeys]containsObject:@"id"]) {
+        [parmDic setObject:[parmDic objectForKey:@"id"] forKey:@"uid"];
+    }
+    NSMutableDictionary * userInfoDic = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]];
+    if (userInfoDic ==nil) {
+        [[NSUserDefaults standardUserDefaults]setObject:parmDic forKey:user_defaults_user];
+    }else{
+        [userInfoDic addEntriesFromDictionary:[NSMutableDictionary dictionaryWithDictionary:parmDic]];
+        [[NSUserDefaults standardUserDefaults]setObject:userInfoDic forKey:user_defaults_user];
+    }
 }
-//返回用户信息
+//返回用户信息 (uid,head_url,love,star,phone,place,username)
 -(NSMutableDictionary*)getUserinfo{
-    return [[NSUserDefaults standardUserDefaults]objectForKey:@"userInfo"];
+    return [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
 }
+
+
+//保存用户云信信息
+-(void)setUserIMInfo:(NSDictionary*)dic{
+    [[NSUserDefaults standardUserDefaults]setObject:dic forKey:user_defaults_user_IM];
+}
+//返回用户云信信息  (accid, token)
+-(NSDictionary*)getUserIMInfo{
+    return [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+}
+//清空本地缓存的用户所有信息
+-(void)deleteAllUserInfo{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:user_defaults_user];
+    [userDefaults removeObjectForKey:user_defaults_user_IM];
+    [userDefaults synchronize];
+}
+
+
+
 //显示hud加载提示
 - (void)showHUD:(NSString *)title
 {

@@ -22,20 +22,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
-}
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
-    
-    
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.tableView.backgroundColor = color_lightGray;
     self->dataArray = [NSMutableArray arrayWithCapacity:0];
-    
-    
-    NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]};
+    NSDictionary * paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"]};
     [DataService requestWithPostUrl:@"/api/self/supportMsg" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
@@ -43,6 +31,15 @@
             [self->_tableView reloadData];
         }
     }];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
+    
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.backgroundColor = color_lightGray;
 }
 - (void)addMoment
 {

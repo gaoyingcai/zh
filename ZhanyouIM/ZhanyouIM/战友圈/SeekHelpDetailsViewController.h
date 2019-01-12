@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UITableView *billTableView;
 
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *buyBottom;
 
 
 

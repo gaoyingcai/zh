@@ -9,11 +9,15 @@
 #import "PayViewController.h"
 #import "DataService.h"
 #import "WXApi.h"
+#import "UIViewController+BackButtonHandler.h"
 
 @interface PayViewController (){
     NSString *payMoney;
+//    BOOL isCanSideBack;
 }
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
+
+@property (nonatomic) BOOL isCanSideBack;
 
 @end
 
@@ -38,9 +42,10 @@
 - (IBAction)payBtnAction:(id)sender {
     NSLog(@"微信支付");
     //支付
-    NSDictionary *paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],
+    NSDictionary *paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"],
                                @"money":payMoney,
                                @"type":self.type,
+                               @"suid":@"0"
                                };
     
     [DataService requestWithPostUrl:@"/api/payment/payOrder" params:paramDic block:^(id result) {
@@ -67,13 +72,59 @@
 }
 -(void)paySuccess{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ORDER_PAY_NOTIFICATION" object:nil];
-    if (_returnToSession) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }else{
+//    if (_returnToSession) {
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }else{
         [self.navigationController popToRootViewControllerAnimated:YES];
-    }
+//    }
 }
 
+-(BOOL)navigationShouldPopOnBackButton{
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"巨资投入,请战友共同维护!" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+    
+//    NSMutableAttributedString *alertControllerStr = [[NSMutableAttributedString alloc] initWithString:@"确定"];
+//    [alertControllerStr addAttribute:NSForegroundColorAttributeName value:color_green range:NSMakeRange(0, 2)];
+//    [alertControllerStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17] range:NSMakeRange(0, 2)];
+//
+//
+//    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@",alertControllerStr] style:UIActionSheetStyleDefault handler:nil];
+//    [defaultAction setValue:alertControllerStr forKey:@"attributedTitle"];
+
+    
+    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }];
+    
+    [alertController addAction:defaultAction];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+    return YES;
+}
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self resetSideBack];
+}
+/**
+ *恢复边缘返回
+ */
+- (void)resetSideBack {
+    
+    self.isCanSideBack=YES;
+    //开启ios右滑返回
+    if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+    }
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isCanSideBack = NO;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    return self.isCanSideBack;
+}
 /*
 #pragma mark - Navigation
 

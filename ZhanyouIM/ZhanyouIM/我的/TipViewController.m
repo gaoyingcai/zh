@@ -31,7 +31,7 @@
     
     self->dataArray = [NSMutableArray arrayWithCapacity:0];
     
-    NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"p":@"1"};
+    NSDictionary * paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"],@"p":@"1"};
     [DataService requestWithPostUrl:@"/api/self/report" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
@@ -51,8 +51,8 @@
         cell = [UserCell tipCell];
     }
     
-    cell.tipNameLabel.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"];
-    cell.tipNameLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row] objectForKey:@"add_time"]];
+    cell.tipNameLabel.text = [NSString stringWithFormat:@"举报对象:%@",[[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"]];
+    cell.tipDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row] objectForKey:@"add_time"]];
     
     
     return cell;
@@ -63,7 +63,7 @@
     return dataArray.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 40;
+    return 50;
 }
 
 /*

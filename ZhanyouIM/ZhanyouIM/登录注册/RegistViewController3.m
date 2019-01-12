@@ -140,7 +140,7 @@ static long btnTag = 1;
         return;
     }
     
-    NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],@"card_url":[imgUrlDic objectForKey:@"personalUrl"],@"head_url":[imgUrlDic objectForKey:@"informationUrl"]};
+    NSDictionary * paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"],@"card_url":[imgUrlDic objectForKey:@"informationUrl"],@"head_url":[imgUrlDic objectForKey:@"personalUrl"]};
     
     [DataService requestWithPostUrl:@"/api/login/saveIcon" params:paramDic block:^(id result) {
         if ([self checkout:result]) {

@@ -24,12 +24,18 @@
 
 - (void)initSubviews
 {
-    self.badgeView = [NIMBadgeView viewWithBadgeTip:@""];
-    self.badgeView.frame = CGRectMake(0, 8, 0, 0);
-    self.badgeView.hidden = YES;
-    self.frame = CGRectMake(0.0, 0.0, 50.0, 44.f);
-    self.backgroundColor = [UIColor clearColor];
-    [self addSubview:self.badgeView];
+//    self.badgeView = [NIMBadgeView viewWithBadgeTip:@""];
+//    self.badgeView.frame = CGRectMake(0, 8, 0, 0);
+//    self.badgeView.hidden = YES;
+//    self.frame = CGRectMake(0.0, 0.0, 50.0, 44.f);
+//    self.backgroundColor = [UIColor clearColor];
+//    [self addSubview:self.badgeView];
+    
+    UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
+//    @"会话"
+    label.text = @"";
+    self.frame = CGRectMake(0.0, 0.0, 60.0, 44.f);
+    [self addSubview:label];
 }
 
 - (void)layoutSubviews{

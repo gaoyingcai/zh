@@ -28,6 +28,7 @@
 
 - (IBAction)agreeBtnAction:(id)sender {
     PayViewController * pay = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"pay"];
+    pay.returnToSession = NO;
     pay.type = @"1";
     [self.navigationController pushViewController:pay animated:YES];
 }

@@ -124,8 +124,15 @@ static AFHTTPSessionManager *manager;
 
         NSArray *imageArray = [params objectForKey:@"imageArray"];
         for (int i = 0; i < imageArray.count; i++) {
-            UIImage *image = imageArray[i];
-            NSData *data = UIImageJPEGRepresentation(image,1.0);
+            UIImage *sourceImage = imageArray[i];
+            NSLog(@"%f",sourceImage.size.width);
+            NSLog(@"%f",sourceImage.size.height);
+            NSLog(@"%f",sourceImage.scale);
+            UIImage *image = [self compressImage:sourceImage toTargetWidth:640];
+            NSLog(@"%f",image.size.width);
+            NSLog(@"%f",image.size.height);
+            NSLog(@"%f",image.scale);
+            NSData *data = UIImageJPEGRepresentation(image,1);
             // 4) 使用系统时间生成一个文件名
             NSString *fileName = [NSString stringWithFormat:@"%@%d.jpg", dateStr,i + 1];
             NSString *name = [NSString stringWithFormat:@"%@%d", [params objectForKey:@"fileName"],i];
@@ -154,8 +161,6 @@ static AFHTTPSessionManager *manager;
             NSLog(@"%@",dic);
             block(dic);
         }
-
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
         //请求失败
@@ -163,6 +168,29 @@ static AFHTTPSessionManager *manager;
         
     }];
 
+}
+
+//压缩图片
+/*
+ “压” 是指文件体积变小，但是像素数不变，长宽尺寸不变，那么质量可能下降。
+ UIImageJPEGRepresentation
+ 
+ “缩” 是指文件的尺寸变小，也就是像素数减少，而长宽尺寸变小，文件体积同样会减小。
+ */
++ (UIImage*)compressImage:(UIImage*)sourceImage toTargetWidth:(CGFloat)targetWidth {
+    CGSize imageSize = sourceImage.size;
+    if(imageSize.width>targetWidth) {
+        CGFloat width = imageSize.width;
+        CGFloat height = imageSize.height;
+        CGFloat targetHeight = (targetWidth / width) * height;
+        UIGraphicsBeginImageContext(CGSizeMake(targetWidth, targetHeight));
+        [sourceImage drawInRect:CGRectMake(0,0, targetWidth, targetHeight)];
+        UIImage*newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return newImage;
+    }else{
+        return sourceImage;
+    }
 }
 
 

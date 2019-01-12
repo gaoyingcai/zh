@@ -40,14 +40,14 @@
 }
 
 -(void)checkoutLogin{
-    NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+    NSDictionary * dic = [self getLocalUserinfo];
     if (dic == nil) {
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [self.navigationController pushViewController:login animated:YES];
     }else{
+        [self manualLoginIM];
         [self getUserInfo];
-        [self loginIM];
     }
 }
 -(BOOL)checkout:(id)result{
@@ -59,38 +59,24 @@
 }
 -(void)getUserInfo{
     
-    [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
+    [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[self getLocalUserinfo] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
-            self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
-            if (self->announcementDic) {
+            NSDictionary *noticeDic = [[result objectForKey:@"data"]objectForKey:@"notice"];
+            if ([[NSString stringWithFormat:@"%@",[noticeDic objectForKey:@"status"]] isEqualToString:@"1"]) {
+                self.noticeBackView.hidden = NO;
+                self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:noticeDic];
                 self.tableView.frame = CGRectMake(0, 129, self.view.bounds.size.width, self.view.bounds.size.height-129);
+            }else{
+                self.noticeBackView.hidden = NO;
+                self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:noticeDic];
+                self.tableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+                self.noticeBackView.hidden = YES;
             }
-
             
-            
-            
-            NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]];
-            
-            
-//            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"] objectForKey:@"userInfo"]];
-//            NSDictionary * resultDic =@{@"accid":[dic objectForKey:@"accid"],
-//                                        @"token":[dic objectForKey:@"token"],
-//                                        @"uid":[dic objectForKey:@"uid"],
-//                                        @"phone":[dic objectForKey:@"head_url"],
-//                                        @"userImg":[dic objectForKey:@"head_url"]
-//                                        };
-            
-            
-//            [self setLeftBtnWithImgStr:[dic objectForKey:@"head_url"]];
-//            [[NSUserDefaults standardUserDefaults]setObject:resultDic forKey:user_defaults_user];
-            if (![[dic allKeys]containsObject:@"userImg"]) {
-                
-                NSString *userImgStr = [[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"head_url"];
-                [dic setObject:userImgStr forKey:@"userImg"];
-                [self setLeftBtnWithImgStr:userImgStr];
-            }
-            [dic setObject:[[[result objectForKey:@"data"] objectForKey:@"userInfo"]objectForKey:@"phone"] forKey:@"phone"];
-            [[NSUserDefaults standardUserDefaults]setObject:dic forKey:user_defaults_user];
+            NSDictionary *userInfoDic=[[result objectForKey:@"data"]objectForKey:@"userInfo"];
+            [self setUserInfo:userInfoDic];
+            NSString *userImgStr = [userInfoDic objectForKey:@"head_url"];
+            [self setLeftBtnWithImgStr:userImgStr];
         }else{
             [self showAlertViewWithDic:result];
         }
@@ -101,15 +87,15 @@
     leftBtn.frame = CGRectMake(0, 0, 36, 36);
     leftBtn.layer.cornerRadius = 18;
     leftBtn.layer.masksToBounds = YES;
-//    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
-//    [leftBtn setBackgroundImage:img forState:UIControlStateNormal];
-    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(queue, ^{
-        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-        });
-    });
+//    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
+//    dispatch_async(queue, ^{
+//        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+//        });
+//    });
+    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
     
     [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
@@ -161,9 +147,7 @@
     }];
     
     UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults removeObjectForKey:user_defaults_user];
-        [userDefaults synchronize];
+        [self deleteAllUserInfo];
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [self.navigationController pushViewController:login animated:YES];
@@ -179,14 +163,15 @@
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"sessionBadge" object:nil];
     
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(autoLoginIM) name:@"IMAutoLoginOut" object:nil];
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:nil];
 
     id<NIMSystemNotificationManager> systemNotificationManager = [[NIMSDK sharedSDK] systemNotificationManager];
     [systemNotificationManager addDelegate:self];
     
-    NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
-    if ([[dic allKeys]containsObject:@"userImg"]) {
-        [self setLeftBtnWithImgStr:[dic objectForKey:@"userImg"]];
+    if ([[[self getLocalUserinfo] allKeys]containsObject:@"userImg"]) {
+        [self setLeftBtnWithImgStr:[[self getLocalUserinfo] objectForKey:@"userImg"]];
     }
 }
 - (void)onReceiveSystemNotification:(NIMSystemNotification *)notification{
@@ -291,11 +276,10 @@
      */
     WebViewController *webView = [[WebViewController alloc]init];
     webView.title = [announcementDic objectForKey:@"title"];
-    webView.webViewStr = [announcementDic objectForKey:@"notice_url"];
+    NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
+    webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
     //    webView.webViewStr = @"https://www.baidu.com/";
     [self.navigationController pushViewController:webView animated:YES];
-    
-    
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -306,65 +290,146 @@
     backView =nil;
 }
 
+//-(void)autoLoginIM{
+//    NSDictionary * dic =[self getUserIMInfo];
+//    NSString *account = [dic objectForKey:@"accid"];
+//    NSString *token   = [dic objectForKey:@"token"];
+//    NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
+//    loginData.account = account;
+//    loginData.token = token;
+//    [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
+//}
+//- (void)onAutoLoginFailed:(NSError *)error{
+//    [self showLogAlert];
+//}
 
--(void)loginIM{
+//手动登录云信
+-(void)manualLoginIM{
+    NSDictionary * dic =[self getUserIMInfo];
+    NSString *account = [dic objectForKey:@"accid"];
+    NSString *token   = [dic objectForKey:@"token"];
     
-    //登出
-//    [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
-//        NSLog(@"%@",error);
-//    }];
-//
-    if (![[[NIMSDK sharedSDK] loginManager] isLogined]) {
-        NSArray * array = [[[NIMSDK sharedSDK] loginManager] currentLoginClients];
-        for (NIMLoginClient *client in array) {
-            [[[NIMSDK sharedSDK] loginManager]kickOtherClient:client completion:^(NSError * _Nullable error) {
-                NSLog(@"踢人失败:%@",error);
-            }];
-        }
-    
-        NSDictionary * dic =[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
-        NSLog(@"%@",dic);
-//        NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
-//        loginData.account = [dic objectForKey:@"accid"];
-//        loginData.token = [dic objectForKey:@"token"];
-//        [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
-        [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
-        
-        
-        NSString *account = [dic objectForKey:@"accid"];
-        NSString *token   = [dic objectForKey:@"token"];
-        [[[NIMSDK sharedSDK] loginManager] login:account
-                                           token:token
-                                      completion:^(NSError *error) {
-                                          if (error) {
-                                              LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-                                              NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                                              [userDefaults removeObjectForKey:user_defaults_user];
-                                              [userDefaults synchronize];
-                                              self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-                                              [self.navigationController pushViewController:login animated:YES];
-                                              NSLog(@"已经退出登录");
-                                          }
-                                      }];
+    NSArray * clientArray = [[[NIMSDK sharedSDK]loginManager] currentLoginClients];
+    for (NIMLoginClient *client in clientArray) {
+        [[[NIMSDK sharedSDK]loginManager]kickOtherClient:client completion:nil];
     }
     
+    [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
+    [[[NIMSDK sharedSDK] loginManager] login:account token:token completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"手动登录失败:%@",error);
+        }
+    }];
 }
 - (void)onLogin:(NIMLoginStep)step{
     NSLog(@"appdelete == %ld",(long)step);
     if (step == NIMLoginStepLoginOK) {
         NSLog(@"登录成功");
-        [self refresh];
-        
-    }else if (step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
-        
-        LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults removeObjectForKey:user_defaults_user];
-        [userDefaults synchronize];
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-        [self.navigationController pushViewController:login animated:YES];
-        NSLog(@"已经退出登录");
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }else if(step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
+        NSLog(@"云信登录失败  -----%ld", (long)step);
+        [self showLogAlert];
     }
+}
+- (void)onKick:(NIMKickReason)code clientType:(NIMLoginClientType)clientType{
+    [self showLogAlert];
+}
+-(void)showLogAlert{
+    
+    if ([self isLogin]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的账号在其他设备登录,请重新登录" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIViewController *currentVC = [self getCurrentVC];
+            //        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            //        [userDefaults removeObjectForKey:user_defaults_user];
+            //        [userDefaults synchronize];
+            [self deleteAllUserInfo];
+            
+            if (currentVC.presentingViewController) {
+                [currentVC dismissViewControllerAnimated:NO completion:^{
+                    if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
+                        UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
+                        [navi popToRootViewControllerAnimated:NO];
+                    }
+                }];
+            } else {
+                [currentVC.navigationController popToRootViewControllerAnimated:NO];
+            }
+            
+            UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+            rootTab.selectedIndex = 0;
+            
+            LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+            [self.navigationController pushViewController:login animated:YES];
+            
+        }];
+        [alertController addAction:action];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    
+}
+- (UIViewController *)getCurrentVC{
+    UIViewController *result = nil;
+    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
+    if (window.windowLevel != UIWindowLevelNormal){
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows){
+            if (tmpWin.windowLevel == UIWindowLevelNormal){
+                window = tmpWin;
+                break;
+            }
+        }
+    }
+    UIView *frontView = [[window subviews] objectAtIndex:0];
+    id nextResponder = [frontView nextResponder];
+    if ([nextResponder isKindOfClass:[UIViewController class]])
+        result = nextResponder;
+    else
+        result = window.rootViewController;
+    return result;
+    
+}
+
+
+
+
+//判断登录状态
+-(BOOL)isLogin{
+    NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+    if (dic == nil) {
+        return NO;
+    }
+    return YES;
+}
+//设置用户信息
+-(void)setUserInfo:(NSDictionary*)dic{
+    NSMutableDictionary *parmDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([[parmDic allKeys]containsObject:@"id"]) {
+        [parmDic setObject:[parmDic objectForKey:@"id"] forKey:@"uid"];
+    }
+    NSMutableDictionary * userInfoDic = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]];
+    if (userInfoDic ==nil) {
+        [[NSUserDefaults standardUserDefaults]setObject:parmDic forKey:user_defaults_user];
+    }else{
+        [userInfoDic addEntriesFromDictionary:[NSMutableDictionary dictionaryWithDictionary:parmDic]];
+        [[NSUserDefaults standardUserDefaults]setObject:userInfoDic forKey:user_defaults_user];
+    }
+}
+//返回用户信息 (uid,head_url,love,star,phone,place,username)
+-(NSMutableDictionary*)getLocalUserinfo{
+    return [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+}
+//返回用户云信信息  (accid, token)
+-(NSDictionary*)getUserIMInfo{
+    return [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user_IM];
+}
+//清空本地缓存的用户所有信息
+-(void)deleteAllUserInfo{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:user_defaults_user];
+    [userDefaults removeObjectForKey:user_defaults_user_IM];
+    [userDefaults synchronize];
 }
 
 

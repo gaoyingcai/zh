@@ -19,5 +19,6 @@
 
 //@property (weak, nonatomic) IBOutlet UILabel *gonggaoTitleLabel;
 @property (weak, nonatomic) IBOutlet UIView *addView;
+@property (weak, nonatomic) IBOutlet UIView *noticeBackView;
 
 @end

@@ -19,7 +19,7 @@
     NSMutableArray *mySearchArr;
     UITableView * searchMeTableView;
     UITableView * mySearchTableView;
-
+    BOOL showMysearch;
 }
 
 @end
@@ -27,13 +27,24 @@
 @implementation AddFriendViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
+    
+//    if (self.scrollView.contentOffset.x<k_screen_width) {
+//        [self searcMeAction:nil];
+//    }
+    if (showMysearch) {
+        [self setMySearchBtnStatus];
+        showMysearch = NO;
+    }else{
+        [self searcMeAction:nil];
+    }
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 //    self.searchBar.subviews[0].backgroundColor = [UIColor whiteColor];
 //    [_searchBar.layer setBorderColor:[UIColor whiteColor].CGColor];
-    
+    showMysearch = NO;
     UIView *firstSubView = self.searchBar.subviews.firstObject;
     firstSubView.backgroundColor = [UIColor clearColor];
     UIView *backgroundImageView = [firstSubView.subviews firstObject];
@@ -66,6 +77,7 @@
 
 - (IBAction)searchBtnAction:(id)sender {
     
+    showMysearch =YES;
     RegistViewController2 * regist2 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist2"];
     regist2.source = @"查找";
     
@@ -83,10 +95,7 @@
     self.mySearchLine.backgroundColor = [UIColor clearColor];
     self.scrollView.contentOffset=CGPointMake(0, 0);
     
-    
-    NSDictionary * paramDic = [NSDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user]];
-
-    [DataService requestWithPostUrl:@"api/user/findMe" params:@{@"uid":[paramDic objectForKey:@"uid"]} block:^(id result) {
+    [DataService requestWithPostUrl:@"api/user/findMe" params:@{@"uid":[[self getUserinfo] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@", result);
             self->searchMeArr = [NSMutableArray arrayWithArray:[[result objectForKey:@"data"]objectForKey:@"list"]];
@@ -118,7 +127,9 @@
 
 }
 - (IBAction)mySearchAction:(id)sender {
+    [self setMySearchBtnStatus];
     [self searchBtnAction:nil];
+    
     
 }
 
@@ -178,17 +189,20 @@
     
     NSLog(@"%@",mySearchArr);
     if (mySearchArr.count) {
-        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+        if ([[[self getUserinfo] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
             [self showTextMessage:@"您不能添加自己为好友"];
             return;
         }
+        showMysearch =YES;
         UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
         userInfo.phone = [[mySearchArr objectAtIndex:btn.tag] objectForKey:@"phone"];
         userInfo.rightBtn = NO;
         userInfo.postMessage = YES;
+        [mySearchArr removeObjectAtIndex:btn.tag];
+        [mySearchTableView reloadData];
         [self.navigationController pushViewController:userInfo animated:YES];
     }else if(searchMeArr.count){
-        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
+        if ([[[self getUserinfo] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:btn.tag] objectForKey:@"phone"]]) {
             [self showTextMessage:@"您不能添加自己为好友"];
             return;
         }
@@ -196,31 +210,33 @@
         userInfo.phone = [[searchMeArr objectAtIndex:btn.tag] objectForKey:@"phone"];
         userInfo.rightBtn = NO;
         userInfo.postMessage = YES;
+        [searchMeArr removeObjectAtIndex:btn.tag];
+        [searchMeTableView reloadData];
         [self.navigationController pushViewController:userInfo animated:YES];
     }
-    
-    
-    
-
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSLog(@"%@",mySearchArr);
     if (mySearchArr.count) {
-        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
+        if ([[[self getUserinfo] objectForKey:@"phone"] isEqualToString:[[mySearchArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
             [self showTextMessage:@"您不能添加自己为好友"];
             return;
         }
+        showMysearch = YES;
         UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
         userInfo.phone = [[mySearchArr objectAtIndex:indexPath.row] objectForKey:@"phone"];
         userInfo.rightBtn = NO;
         userInfo.postMessage = YES;
+        [mySearchArr removeObjectAtIndex:indexPath.row];
+        [mySearchTableView reloadData];
         [self.navigationController pushViewController:userInfo animated:YES];
     }else if(searchMeArr.count){
-        if ([[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
+        if ([[[self getUserinfo] objectForKey:@"phone"] isEqualToString:[[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"]]) {
             [self showTextMessage:@"您不能添加自己为好友"];
             return;
         }
+        showMysearch = YES;
         UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
         userInfo.phone = [[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"];
         userInfo.rightBtn = NO;

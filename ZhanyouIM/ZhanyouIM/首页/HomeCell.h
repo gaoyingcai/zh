@@ -19,7 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *accessBtn;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *accessBtnRight;
+
+
 @property (weak, nonatomic) IBOutlet UIButton *refusedBtn;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *refusedBtnRight;
 
 
 @property (weak, nonatomic) IBOutlet UILabel *checkTextLabel;

@@ -180,7 +180,9 @@ CGFloat maxLimitHeight = 0;
         [_commentView addSubview:pinglunView];
         
         UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 34, 34)];
-         [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img(moment.userThumbPath)]];
+        
+        NSDictionary * dic = [[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([dic objectForKey:@"head_url"])]];
         [pinglunView addSubview:imageView];
         
         UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(40, 0, width-55, 34)];
@@ -318,7 +320,7 @@ CGFloat maxLimitHeight = 0;
     [self addSubview:imageView];
     
     UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(44, 19, k_screen_width-kRightMargin-12 - 44, 20)];
-    label.text = comment.userName;
+    label.text = [NSString stringWithFormat:@"%@",comment.userName];
     [self addSubview:label];
     
     _linkLabel.attributedText = kMLLinkLabelAttributedText(comment);
@@ -344,8 +346,7 @@ CGFloat maxLimitHeight = 0;
 #pragma mark - 点击
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    self.backgroundColor = kHLBgColor;
-    
+//    self.backgroundColor = kHLBgColor;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

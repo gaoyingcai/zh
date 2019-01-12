@@ -31,7 +31,7 @@
     self->dataArray = [NSMutableArray arrayWithCapacity:0];
     
     
-    NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]};
+    NSDictionary * paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"]};
     [DataService requestWithPostUrl:@"/api/self/support" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
@@ -64,8 +64,8 @@
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.aidNameLabel.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"];
-    cell.aidSumLabel.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:@"money"];
+    cell.aidNameLabel.text = [NSString stringWithFormat:@"资助对象:%@",[[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"]];
+    cell.aidSumLabel.text = [NSString stringWithFormat:@"%@ 元",[[dataArray objectAtIndex:indexPath.row] objectForKey:@"money"]];
     cell.aidDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row] objectForKey:@"add_time"]];
 
     return cell;

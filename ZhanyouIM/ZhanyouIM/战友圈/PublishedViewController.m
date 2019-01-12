@@ -12,6 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 //#import <CoreLocation/CoreLocation.h>
 #import "NIMLocationViewController.h"
+#import "MMImageListView.h"
 
 
 
@@ -19,7 +20,7 @@
     float width;
     NSMutableArray *sourceArray;
     NSMutableArray *resultArray;
-
+    BOOL isVideo;
 }
 //@property (nonatomic, strong) CLLocationManager* locationManager;
 @property(nonatomic,strong)CLGeocoder *geocoder;
@@ -48,7 +49,6 @@
     // Do any additional setup after loading the view.
     
     
-    
     width = (k_screen_width-40)/3;
     [UIView animateWithDuration:0.3 animations:^{
         self.photoViewHeight.constant = k_screen_width/3;
@@ -74,12 +74,14 @@
 
 -(void)sendData{
     
-    if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
-        
+    [self showHUD:nil];
+//    if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+    if (self.imgArray.count>0 && isVideo) {
+    
         resultArray = [NSMutableArray arrayWithCapacity:0];
         
         //视频
-        NSDictionary * paramDic1 =@{@"videoPath":[[self.imgArray objectAtIndex:0] objectForKey:@"path"]};
+        NSDictionary * paramDic1 =@{@"videoPath":[[self.imgArray objectAtIndex:0] objectForKey:@"path_source"]};
         [DataService requestWithUploadVideoUrl:@"/api/upload/upload" params:paramDic1 block:^(id result) {
             if ([self checkout:result]) {
                 NSLog(@"%@",result);
@@ -91,7 +93,7 @@
         }];
         
         //图片
-        NSDictionary * paramDic2 =@{@"imageArray":@[[[self.imgArray objectAtIndex:0] objectForKey:@"img"]],@"fileName":@"file"};
+        NSDictionary * paramDic2 =@{@"imageArray":@[[[self.imgArray objectAtIndex:0] objectForKey:@"path_source_img_local"]],@"fileName":@"file"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic2 block:^(id result) {
             if ([self checkout:result]) {
                 NSLog(@"%@",result);
@@ -101,8 +103,12 @@
             }
         }];
     }else if(self.imgArray.count>0){
+        NSMutableArray * dataArray = [NSMutableArray arrayWithCapacity:0];
+        for (NSDictionary * dic in self.imgArray) {
+            [dataArray addObject:[dic objectForKey:@"local_img"]];
+        }
         //图片
-        NSDictionary * paramDic1 =@{@"imageArray":self.imgArray,@"fileName":@"file"};
+        NSDictionary * paramDic1 =@{@"imageArray":dataArray,@"fileName":@"file"};
         [DataService requestWithUploadImageUrl:@"/api/upload/upload" params:paramDic1 block:^(id result) {
             if ([self checkout:result]) {
                 NSLog(@"%@",result);
@@ -134,7 +140,7 @@
         finalStr = [replaceStr stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     }
     
-    NSString * uid =[[[NSUserDefaults standardUserDefaults]objectForKey:user_defaults_user]objectForKey:@"uid"];
+    NSString * uid =[[self getUserinfo] objectForKey:@"uid"];
     NSDictionary *paramDic = @{@"uid":uid
                                 ,@"content":_textView.text
                                 ,@"type":_moduleType
@@ -145,6 +151,7 @@
     [DataService requestWithPostUrl:@"/api/trend/publish" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
+            [self hideHUD];
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
@@ -164,41 +171,46 @@
 //添加按钮，按钮的点击事件
 -(void)ClickBtnImg
 {
-    NSLog(@"添加图片");
-    UIAlertController*alertyController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    
-    
-    if (self.imgArray.count>0 && ![self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
-        UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dakaixiangce:NO luzhi:NO];
-        }];
-        [alertyController addAction:xiangjiAction];
-        
-        UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dakaixiangce:YES luzhi:NO];
-        }];
-        [alertyController addAction:xiangceAction];
+    if (self.imgArray.count == 9) {
+        [self showTextMessage:@"最多发布九张图片"];
     }else{
-        UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照/录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dakaixiangce:NO luzhi:YES];
-        }];
-        [alertyController addAction:xiangjiAction];
+        NSLog(@"添加图片");
+        UIAlertController*alertyController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
-        UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dakaixiangce:YES luzhi:YES];
-        }];
-        [alertyController addAction:xiangceAction];
+//        if (self.imgArray.count>0 && ![self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+        if (self.imgArray.count>0 && !isVideo) {
+            UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dakaixiangce:NO luzhi:NO];
+            }];
+            [alertyController addAction:xiangjiAction];
+            
+            UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dakaixiangce:YES luzhi:NO];
+            }];
+            [alertyController addAction:xiangceAction];
+        }else{
+            UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照/录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dakaixiangce:NO luzhi:YES];
+            }];
+            [alertyController addAction:xiangjiAction];
+            
+            UIAlertAction*xiangceAction=[UIAlertAction actionWithTitle:@"从相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dakaixiangce:YES luzhi:YES];
+            }];
+            [alertyController addAction:xiangceAction];
+        }
+        
+        //    UIAlertAction*startVideoAction=[UIAlertAction actionWithTitle:@"录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //        [self dakaixiangce:NO];
+        //    }];
+        UIAlertAction*quxiaoAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        
+        [alertyController addAction:quxiaoAction];
+        //    [alertyController addAction:startVideoAction];
+        [self presentViewController:alertyController animated:YES completion:nil];
     }
     
-//    UIAlertAction*startVideoAction=[UIAlertAction actionWithTitle:@"录制" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [self dakaixiangce:NO];
-//    }];
-    UIAlertAction*quxiaoAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     
-    [alertyController addAction:quxiaoAction];
-//    [alertyController addAction:startVideoAction];
-    [self presentViewController:alertyController animated:YES completion:nil];
     
 }
 //录制视频
@@ -285,7 +297,9 @@
         NSString *imagePathStr = [NSHomeDirectory() stringByAppendingString:@"/Documents/touxiang.jpg"];
         [UIImageJPEGRepresentation(image, 1.0) writeToFile:imagePathStr atomically:YES];
         [self dismissViewControllerAnimated:YES completion:nil];
-        [self.imgArray addObject:image];
+        [self.imgArray addObject:@{@"local_img":image}];
+        self->isVideo = NO;
+//        [self.imgArray addObject:image];
         [self setFrame];
     }else if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:@"public.movie"]){
         
@@ -301,60 +315,114 @@
         [self YS_saveVideoFromPath:info[UIImagePickerControllerMediaURL] toCachePath:[NSTemporaryDirectory() stringByAppendingPathComponent:mediaName]];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-
 }
 //添加图片之后按钮移动
 -(void)setFrame
 {
-    static int num_rows = 1;
-    if (self.imgArray.count<=2) {
-        num_rows = 1;
-    }else if (self.imgArray.count>2 && self.imgArray.count<=5) {
-        num_rows = 2;
+    
+//    for (UIView *view in self.photoView.subviews) {
+//        if ([view isKindOfClass:[MMImageListView class]]) {
+//            [view removeFromSuperview];
+//            view.frame = CGRectZero;
+//        }
+//    }
+    
+    MMImageListView *imageListView = [[MMImageListView alloc] initWithFrame:CGRectZero];
+    Moment *moment = [[Moment alloc] init];
+    moment.fileCount = self.imgArray.count;
+    moment.imageArray = self.imgArray;
+    imageListView.moment = moment;
+    CGFloat top = 0;
+    if (moment.fileCount > 0) {
+        imageListView.origin = CGPointMake(15, top);
+        top = imageListView.bottom + 8;
+    }
+    [self.photoView addSubview:imageListView];
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        if (self.imgArray.count%3 ==0 && self.imgArray.count >=3 && self.imgArray.count <9) {
+            self.photoViewHeight.constant = top +self->width;
+        }else{
+            self.photoViewHeight.constant = top;
+        }
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+    }];
+    
+    
+    if (isVideo || self.imgArray.count >8) {
+        _btn.hidden = YES;
     }else{
-        num_rows = 3;
+        _btn.hidden = NO;
     }
     
-    if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.photoViewHeight.constant = k_screen_width*2/3;
-            [self.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
-        }];
-            
-        self.btn.hidden = YES;
-        _PlayerVC = [[AVPlayerViewController alloc] init];
-        _PlayerVC.view.backgroundColor = [UIColor whiteColor];
-        NSLog(@"%@",self.imgArray);
-        NSString *videoPathString = [[self.imgArray objectAtIndex:0] objectForKey:@"path"];
-        NSData *data = [NSData dataWithContentsOfFile:videoPathString];
-        NSLog(@"%lu",(unsigned long)data.length);
-        
-        
-        AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]]];
-        _PlayerVC.player = [AVPlayer playerWithPlayerItem:item];
-        _PlayerVC.view.frame = CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
-        _PlayerVC.showsPlaybackControls = YES;
-        [self.photoView addSubview:_PlayerVC.view];
-    }else{
-        [UIView animateWithDuration:0.3 animations:^{
-            self.photoViewHeight.constant = k_screen_width*num_rows/3;
-            [self.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
-        }];
+    
+    
+    
+//    static int num_rows = 1;
+//    if (self.imgArray.count<=2) {
+//        num_rows = 1;
+//    }else if (self.imgArray.count>2 && self.imgArray.count<=5) {
+//        num_rows = 2;
+//    }else{
+//        num_rows = 3;
+//    }
+//
+//    if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            self.photoViewHeight.constant = k_screen_width*2/3;
+//            [self.view layoutIfNeeded];
+//        } completion:^(BOOL finished) {
+//        }];
+//
+//        self.btn.hidden = YES;
+//
+//
+////        _PlayerVC = [[AVPlayerViewController alloc] init];
+////        _PlayerVC.view.backgroundColor = [UIColor whiteColor];
+////        NSLog(@"%@",self.imgArray);
+////        NSString *videoPathString = [[self.imgArray objectAtIndex:0] objectForKey:@"path"];
+////        NSData *data = [NSData dataWithContentsOfFile:videoPathString];
+////        NSLog(@"%lu",(unsigned long)data.length);
+////
+////
+////        AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]]];
+////        _PlayerVC.player = [AVPlayer playerWithPlayerItem:item];
+////        _PlayerVC.view.frame = CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
+////        _PlayerVC.showsPlaybackControls = YES;
+//
+//        UIImageView *imgView=[[UIImageView alloc]init];
+//        imgView.frame=CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
+//        imgView.contentMode = UIViewContentModeScaleAspectFill;
+//        imgView.layer.masksToBounds = YES;
+//        imgView.image = (UIImage*)[[self.imgArray objectAtIndex:0] objectForKey:@"img"];
+//        [self.photoView addSubview:imgView];
+//
+//        UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(k_screen_width*9/64-20, k_screen_width/4-20, 40, 40)];
+//        beginImgView.image = [UIImage imageNamed:@"player.png"];
+//        [imgView addSubview:beginImgView];
+//
+//        [self.photoView addSubview:_PlayerVC.view];
+//    }else{
+//        [UIView animateWithDuration:0.3 animations:^{
+//            self.photoViewHeight.constant = k_screen_width*num_rows/3;
+//            [self.view layoutIfNeeded];
+//        } completion:^(BOOL finished) {
+//        }];
         self.btn.frame=CGRectMake((self.imgArray.count%3)*width+20, self.imgArray.count/3*width+10, width-5, width-5);
-        self.btn.hidden = NO;
-        //显示所有的img
-        for (int i = 0; i<self.imgArray.count; i++) {
-            UIImageView *imgView=[[UIImageView alloc]init];
-            imgView.frame=CGRectMake((i%3)*width+20, i/3*width+10, width-5, width-5);
-            imgView.image=[self.imgArray objectAtIndex:i];
-            imgView.contentMode = UIViewContentModeScaleAspectFill;
-            imgView.layer.masksToBounds = YES;
-            
-            [self.photoView addSubview:imgView];
-        }
-    }
+    [self.photoView bringSubviewToFront:self.btn];
+//        //显示所有的img
+//        for (int i = 0; i<self.imgArray.count; i++) {
+//            UIImageView *imgView=[[UIImageView alloc]init];
+//            imgView.frame=CGRectMake((i%3)*width+20, i/3*width+10, width-5, width-5);
+//            imgView.image=[self.imgArray objectAtIndex:i];
+//            imgView.contentMode = UIViewContentModeScaleAspectFill;
+//            imgView.layer.masksToBounds = YES;
+//
+//            [self.photoView addSubview:imgView];
+//        }
+//    }
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -407,9 +475,10 @@
                     //拿到图片
                     UIImage *image = [self getVideoPreViewImageWithPath:videoPath];
                     //图片保存到本程序沙盒
-                    NSString *imagePathStr = [NSHomeDirectory() stringByAppendingString:@"/Documents/suolue.png"];
+                    NSString *imagePathStr = [NSHomeDirectory() stringByAppendingString:@"/Documents/suolue.jpg"];
                     [UIImageJPEGRepresentation(image, 1.0) writeToFile:imagePathStr atomically:YES];
-                    [self.imgArray addObject:@{@"path":path,@"img":image}];
+                    [self.imgArray addObject:@{@"path_source":path,@"path_source_img_local":image}];
+                    self->isVideo = YES;
                     [self setFrame];
                 });
             }

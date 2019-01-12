@@ -55,7 +55,7 @@
 #define k_view_width(Object) (Object).frame.size.width
 #define k_view_height(Object) (Object).frame.size.height
 
-//#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
 
 #define color_green [UIColor colorWithRed:42/255.0 green:161/255.0 blue:67/255.0 alpha:1]
 #define color_lightGray [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1]
@@ -63,6 +63,7 @@
 
 
 #define user_defaults_user      @"UserInfo"
+#define user_defaults_user_IM      @"IMUserInfo"
 
 
 #endif

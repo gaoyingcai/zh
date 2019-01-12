@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) int commentId;
 
+@property (assign, nonatomic) BOOL myDynamic;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

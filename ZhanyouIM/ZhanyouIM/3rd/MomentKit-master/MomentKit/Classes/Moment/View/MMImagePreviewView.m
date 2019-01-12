@@ -74,12 +74,12 @@
         [self addGestureRecognizer:tapGesturRecognizer];
         
         // 双击
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapGestureCallback:)];
-        doubleTap.numberOfTapsRequired = 2;
-        [self addGestureRecognizer:doubleTap];
+//        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapGestureCallback:)];
+//        doubleTap.numberOfTapsRequired = 2;
+//        [self addGestureRecognizer:doubleTap];
         // 单击
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCallback:)];
-        [singleTap requireGestureRecognizerToFail:doubleTap];
+//        [singleTap requireGestureRecognizerToFail:doubleTap];
         [self addGestureRecognizer:singleTap];
         // 长按
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureCallback:)];

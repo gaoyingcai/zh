@@ -14,8 +14,11 @@
 #import "PublishedViewController.h"
 #import "SeekHelpDetailsViewController.h"
 #import <AVKit/AVKit.h>
+#import "MJRefreshAutoNormalFooter.h"
+#import "MJRefreshNormalHeader.h"
+#import "UserInfoViewController.h"
 
-@interface CircleViewController ()<UITableViewDelegate,UITableViewDataSource,AVPlayerViewControllerDelegate>{
+@interface CircleViewController ()<UITableViewDelegate,UITableViewDataSource,AVPlayerViewControllerDelegate,MomentCellDelegate>{
     
     UIButton *newsBtn;
     UIButton *aidBtn;
@@ -41,12 +44,19 @@ static NSString *moduleType;
     }
 }
 
--(void)viewWillDisappear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = NO;
-}
+//-(void)viewWillDisappear:(BOOL)animated{
+//    self.tabBarController.tabBar.hidden = NO;
+//    if (self.myDynamic) {
+//        self.tabBarController.tabBar.hidden = YES;
+//    }else{
+//        self.tabBarController.tabBar.hidden = NO;
+//    }
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.momentArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
     if (!_myDynamic) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"tianjia@2x.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addMoment)];
     }
@@ -68,6 +78,22 @@ static NSString *moduleType;
     }
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = color_lightGray;
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        [self.momentArray removeAllObjects];
+        [self loadData];
+    }];
+    self.tableView.mj_footer= [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        [self loadData];
+    }];
+    
+//    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+//         [self loadData];
+//    }];
+    // 在快划到底部44px的时候就会自动刷新
+//    footer.triggerAutomaticallyRefreshPercent = -3;
+//    self.tableView.mj_footer = footer;
+    
 }
 
 
@@ -117,6 +143,9 @@ static NSString *moduleType;
     }
 }
 -(void)newsBtnAction:(UIButton*)btn{
+    self.momentArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+
     moduleType = @"1";
     [newsBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     newsBtn.backgroundColor = color_green;
@@ -130,6 +159,9 @@ static NSString *moduleType;
     [self loadData];
 }
 -(void)aidBtnAction:(UIButton*)btn{
+    self.momentArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+
     moduleType = @"2";
     [newsBtn setTitleColor:color_green forState:UIControlStateNormal];
     newsBtn.backgroundColor = [UIColor whiteColor];
@@ -143,6 +175,9 @@ static NSString *moduleType;
     [self loadData];
 }
 -(void)seekHelpBtnAction:(UIButton*)btn{
+    self.momentArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+
     moduleType = @"3";
     [newsBtn setTitleColor:color_green forState:UIControlStateNormal];
     newsBtn.backgroundColor = [UIColor whiteColor];
@@ -160,13 +195,15 @@ static NSString *moduleType;
     
     NSDictionary *paramDic;
     if (self.myDynamic) {
-        paramDic = @{@"type":moduleType,@"page":@"1",@"uid":[NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]]};
+        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",self.momentArray.count/5+1],@"uid":[NSString stringWithFormat:@"%@",[[self getUserinfo] objectForKey:@"uid"]]};
     }else{
-        paramDic = @{@"type":moduleType,@"page":@"1"};
+        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",self.momentArray.count/5+1]};
     }
     NSLog(@"%@",paramDic);
     [DataService requestWithPostUrl:@"/api/list/getItemList" params:paramDic block:^(id result) {
         if ([self checkout:result]) {
+            [self.tableView.mj_footer endRefreshing];
+            [self.tableView.mj_header endRefreshing];
             NSLog(@"%@",result);
             [self initMoment:[[result objectForKey:@"data"]objectForKey:@"list"]];
         }
@@ -176,17 +213,25 @@ static NSString *moduleType;
 #pragma mark - 测试数据
 - (void)initMoment:(NSMutableArray*)resultArray
 {
-    self.momentArray = [NSMutableArray arrayWithCapacity:0];
-    self.dataArray = [NSMutableArray arrayWithArray:resultArray];
+    
+    if (resultArray.count<5) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
+    
+    [self.dataArray addObjectsFromArray:resultArray];
+    
     
     if (!self.dataArray.count) {
         [self addQueshengImageToView:self.view imageName:@"dongtai@2x.png" hidden:NO];
+//        self.tableView.mj_footer = nil;
+        self.tableView.mj_footer.hidden =YES;
     }else{
+        self.tableView.mj_footer.hidden =NO;
         [self addQueshengImageToView:self.view imageName:@"dongtai@2x.png" hidden:YES];
         for (NSDictionary * dic in resultArray) {
             
             Moment *moment = [[Moment alloc] init];
-            moment.userName = [dic objectForKey:@"username"];
+            moment.userName = [NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]];
             moment.userThumbPath = [dic objectForKey:@"head_url"];
             moment.time = [[dic objectForKey:@"add_time"] longLongValue];
             moment.singleWidth = 500;
@@ -294,21 +339,48 @@ static NSString *moduleType;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *identifier = @"MomentCell";
-    MomentCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.backgroundColor = [UIColor whiteColor];
-    }
+//    static NSString *identifier = @"MomentCell";
+//    MomentCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (cell == nil) {
+//        cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        cell.backgroundColor = [UIColor whiteColor];
+//    }
+    
+    
+//    static NSString *identifier = @"MomentCell";
+//    MomentCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
+//    if (cell == nil) {
+//        cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        cell.backgroundColor = [UIColor whiteColor];
+//    }
+    
+//    MomentCell *cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+
+    
+    
+
+    MomentCell *cell = [[MomentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.backgroundColor = [UIColor whiteColor];
+
+    
     if ([moduleType isEqualToString:@"3"]) {
         cell.commentNum = -1;
     }else{
-        cell.commentNum = [[[self.dataArray objectAtIndex:indexPath.row]objectForKey:@"comment_num"] intValue];
+        if (self.dataArray.count) {
+            cell.commentNum = [[[self.dataArray objectAtIndex:indexPath.row]objectForKey:@"comment_num"] intValue];
+        }
     }
     NSLog(@"momentArray ==%@",self.momentArray);
-    cell.moment = [self.momentArray objectAtIndex:indexPath.row];
+    if (self.momentArray.count) {
+        cell.moment = [self.momentArray objectAtIndex:indexPath.row];
+    }
 //    cell.textLabel.text = [NSString stringWithFormat:@"测试%ld",(long)indexPath.row];
+    cell.tag = indexPath.row;
+    cell.delegate = self;
     return cell;
     
     
@@ -326,9 +398,13 @@ static NSString *moduleType;
 #pragma mark - UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // 使用缓存行高，避免计算多次
-    Moment *moment = [self.momentArray objectAtIndex:indexPath.row];
-    return moment.rowHeight;
+    // 使用缓存行高，避免计算多
+    if (self.momentArray.count) {
+        Moment *moment = [self.momentArray objectAtIndex:indexPath.row];
+        return moment.rowHeight;
+    }
+    return 1;
+    
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -339,6 +415,7 @@ static NSString *moduleType;
         [self.navigationController pushViewController:seekDetails animated:YES];
     }else{
         DetailsViewController * details = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil] instantiateViewControllerWithIdentifier:@"details"];
+        details.myDynamic = self.myDynamic;
         details.commentId = [[[self.dataArray objectAtIndex:indexPath.row] objectForKey:@"id"] intValue];
         [self.navigationController pushViewController:details animated:YES];
     }
@@ -351,6 +428,27 @@ static NSString *moduleType;
     NSIndexPath *indexPath =  [self.tableView indexPathForRowAtPoint:CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y)];
     MomentCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     cell.menuView.show = NO;
+}
+
+-(void)getFriendInfo:(NSString *)phone{
+    UserInfoViewController* userInfo = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"userInfo"];
+    userInfo.phone = phone;
+    userInfo.rightBtn = YES;
+    userInfo.postMessage = YES;
+    [self.navigationController pushViewController:userInfo animated:YES];
+}
+
+#pragma mark - MomentCellDelegate
+- (void)didClickProfile:(MomentCell *)cell
+{
+    NSLog(@"击用户头像");
+    
+    NSDictionary *dic = [self.dataArray objectAtIndex:cell.tag];
+    [self getFriendInfo:[dic objectForKey:@"accid"]];
+    
+    
+    
+//    cell.moment.userId
 }
 
 #pragma mark -

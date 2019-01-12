@@ -43,7 +43,8 @@
         if (error != nil) {
             [self showTextMessage:[NSString stringWithFormat:@"%@",error]];
         }else{
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            int index = (int)[[self.navigationController viewControllers]indexOfObject:self];
+            [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:(index -2)] animated:YES];
         }
     }];
 }

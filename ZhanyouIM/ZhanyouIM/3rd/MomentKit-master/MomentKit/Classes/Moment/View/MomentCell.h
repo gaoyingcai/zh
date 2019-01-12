@@ -37,7 +37,7 @@
 
 // 赞和评论视图(评论区视图,不是评论按钮视图)
 @property (nonatomic, strong) UIView *commentView;
-// 期待您的精彩评论 是否显示
+// 期待您的精彩评论 是否显示 (评论内容)
 @property (nonatomic, assign) BOOL pinglunView;
 //// 期待您的精彩评论
 //@property (nonatomic, strong) UITextField *pinglunTextField;

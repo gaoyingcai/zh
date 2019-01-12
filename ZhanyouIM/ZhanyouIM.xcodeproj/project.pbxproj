@@ -70,11 +70,16 @@
 		DF35AF1821E20876002B012F /* aixin@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF35AF1621E20875002B012F /* aixin@3x.png */; };
 		DF35AF1921E20876002B012F /* aixin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF35AF1721E20875002B012F /* aixin@2x.png */; };
 		DF4C006B21A833AA004BD691 /* SeekHelpDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4C006A21A833AA004BD691 /* SeekHelpDetailsViewController.m */; };
+		DF4C7A0721E61789001C8CB9 /* UIViewController+BackButtonHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4C7A0621E61789001C8CB9 /* UIViewController+BackButtonHandler.m */; };
+		DF4C7A1421E635E2001C8CB9 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DF4C7A1321E635E2001C8CB9 /* SVProgressHUD.bundle */; };
 		DF4DE07E217AF4EC005F1D89 /* SelectTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4DE07C217AF4EC005F1D89 /* SelectTimeView.m */; };
 		DF4DE081217AF50F005F1D89 /* SelectAddressView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4DE080217AF50F005F1D89 /* SelectAddressView.m */; };
 		DF4DE083217AF6C3005F1D89 /* address.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF4DE082217AF6C3005F1D89 /* address.plist */; };
+		DF4EF59C21E7C777004733E5 /* MyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4EF59B21E7C777004733E5 /* MyButton.m */; };
 		DF4F2EEE218A161D00BD4790 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF4F2EED218A161D00BD4790 /* CoreText.framework */; };
 		DF53A01B21A30C590003867C /* ReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF53A01A21A30C590003867C /* ReportViewController.m */; };
+		DF5B111E21E857A70056F120 /* loding@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF5B111C21E857A60056F120 /* loding@2x.png */; };
+		DF5B111F21E857A70056F120 /* loding@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF5B111D21E857A60056F120 /* loding@3x.png */; };
 		DF5B8DE9216F6E6B00F84CF5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF5B8DE8216F6E6B00F84CF5 /* AppDelegate.m */; };
 		DF5B8DEF216F6E6B00F84CF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF5B8DED216F6E6B00F84CF5 /* Main.storyboard */; };
 		DF5B8DF1216F6E6C00F84CF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF5B8DF0216F6E6C00F84CF5 /* Assets.xcassets */; };
@@ -146,6 +151,12 @@
 		DFE600A62176310800E1736A /* 求助@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFE6009D2176310800E1736A /* 求助@2x.png */; };
 		DFE600A72176310800E1736A /* 创业@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFE6009E2176310800E1736A /* 创业@2x.png */; };
 		DFE600AC217636AF00E1736A /* 资助@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFE600AB217636AF00E1736A /* 资助@2x.png */; };
+		DFEA8E0621E9C41C002E50CC /* heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E0221E9C41B002E50CC /* heart@2x.png */; };
+		DFEA8E0721E9C41C002E50CC /* heart@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E0321E9C41C002E50CC /* heart@3x.png */; };
+		DFEA8E0821E9C41C002E50CC /* star@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E0421E9C41C002E50CC /* star@3x.png */; };
+		DFEA8E0921E9C41C002E50CC /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E0521E9C41C002E50CC /* star@2x.png */; };
+		DFEA8E1421E9D02A002E50CC /* loading_1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E1221E9D029002E50CC /* loading_1@3x.png */; };
+		DFEA8E1521E9D02A002E50CC /* loading_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFEA8E1321E9D02A002E50CC /* loading_1@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -255,14 +266,21 @@
 		DF35AF1721E20875002B012F /* aixin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aixin@2x.png"; sourceTree = "<group>"; };
 		DF4C006921A833AA004BD691 /* SeekHelpDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SeekHelpDetailsViewController.h; sourceTree = "<group>"; };
 		DF4C006A21A833AA004BD691 /* SeekHelpDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeekHelpDetailsViewController.m; sourceTree = "<group>"; };
+		DF4C7A0521E61789001C8CB9 /* UIViewController+BackButtonHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+BackButtonHandler.h"; sourceTree = "<group>"; };
+		DF4C7A0621E61789001C8CB9 /* UIViewController+BackButtonHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+BackButtonHandler.m"; sourceTree = "<group>"; };
+		DF4C7A1321E635E2001C8CB9 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		DF4DE07C217AF4EC005F1D89 /* SelectTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTimeView.m; sourceTree = "<group>"; };
 		DF4DE07D217AF4EC005F1D89 /* SelectTimeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTimeView.h; sourceTree = "<group>"; };
 		DF4DE07F217AF50F005F1D89 /* SelectAddressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectAddressView.h; sourceTree = "<group>"; };
 		DF4DE080217AF50F005F1D89 /* SelectAddressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectAddressView.m; sourceTree = "<group>"; };
 		DF4DE082217AF6C3005F1D89 /* address.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = address.plist; sourceTree = "<group>"; };
+		DF4EF59A21E7C777004733E5 /* MyButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyButton.h; sourceTree = "<group>"; };
+		DF4EF59B21E7C777004733E5 /* MyButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyButton.m; sourceTree = "<group>"; };
 		DF4F2EED218A161D00BD4790 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		DF53A01921A30C590003867C /* ReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReportViewController.h; sourceTree = "<group>"; };
 		DF53A01A21A30C590003867C /* ReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReportViewController.m; sourceTree = "<group>"; };
+		DF5B111C21E857A60056F120 /* loding@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loding@2x.png"; sourceTree = "<group>"; };
+		DF5B111D21E857A60056F120 /* loding@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loding@3x.png"; sourceTree = "<group>"; };
 		DF5B8DE4216F6E6B00F84CF5 /* ZhanyouIM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZhanyouIM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF5B8DE7216F6E6B00F84CF5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		DF5B8DE8216F6E6B00F84CF5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -363,6 +381,12 @@
 		DFE6009D2176310800E1736A /* 求助@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "求助@2x.png"; sourceTree = "<group>"; };
 		DFE6009E2176310800E1736A /* 创业@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "创业@2x.png"; sourceTree = "<group>"; };
 		DFE600AB217636AF00E1736A /* 资助@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "资助@2x.png"; sourceTree = "<group>"; };
+		DFEA8E0221E9C41B002E50CC /* heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart@2x.png"; sourceTree = "<group>"; };
+		DFEA8E0321E9C41C002E50CC /* heart@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart@3x.png"; sourceTree = "<group>"; };
+		DFEA8E0421E9C41C002E50CC /* star@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star@3x.png"; sourceTree = "<group>"; };
+		DFEA8E0521E9C41C002E50CC /* star@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star@2x.png"; sourceTree = "<group>"; };
+		DFEA8E1221E9D029002E50CC /* loading_1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loading_1@3x.png"; sourceTree = "<group>"; };
+		DFEA8E1321E9D02A002E50CC /* loading_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loading_1@2x.png"; sourceTree = "<group>"; };
 		DFF83BB721AC214200DE9B21 /* ZhanyouIM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ZhanyouIM.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -457,6 +481,10 @@
 		DF1E69D52191E5DA0056325B /* img */ = {
 			isa = PBXGroup;
 			children = (
+				DFEA8E1321E9D02A002E50CC /* loading_1@2x.png */,
+				DFEA8E1221E9D029002E50CC /* loading_1@3x.png */,
+				DF5B111C21E857A60056F120 /* loding@2x.png */,
+				DF5B111D21E857A60056F120 /* loding@3x.png */,
 				DF35AF1721E20875002B012F /* aixin@2x.png */,
 				DF35AF1621E20875002B012F /* aixin@3x.png */,
 				DFBA3C6421B2A4070001D4AA /* pinglun@2x.png */,
@@ -616,6 +644,7 @@
 		DF5B8DDB216F6E6B00F84CF5 = {
 			isa = PBXGroup;
 			children = (
+				DF4C7A1321E635E2001C8CB9 /* SVProgressHUD.bundle */,
 				DF5B8DE6216F6E6B00F84CF5 /* ZhanyouIM */,
 				DF5B8DFF216F6E6D00F84CF5 /* ZhanyouIMTests */,
 				DF5B8E0A216F6E6D00F84CF5 /* ZhanyouIMUITests */,
@@ -684,6 +713,8 @@
 				DF5B8E24216F82A100F84CF5 /* BaseViewController.m */,
 				DF5B8E25216F82A100F84CF5 /* MainTabBarController.h */,
 				DF5B8E23216F82A000F84CF5 /* MainTabBarController.m */,
+				DF4C7A0521E61789001C8CB9 /* UIViewController+BackButtonHandler.h */,
+				DF4C7A0621E61789001C8CB9 /* UIViewController+BackButtonHandler.m */,
 				DF4DE07D217AF4EC005F1D89 /* SelectTimeView.h */,
 				DF4DE07C217AF4EC005F1D89 /* SelectTimeView.m */,
 				DF4DE07F217AF50F005F1D89 /* SelectAddressView.h */,
@@ -744,6 +775,8 @@
 				DF4C006A21A833AA004BD691 /* SeekHelpDetailsViewController.m */,
 				DFD7217121889D7800B07661 /* PublishedViewController.h */,
 				DFD7217221889D7800B07661 /* PublishedViewController.m */,
+				DF4EF59A21E7C777004733E5 /* MyButton.h */,
+				DF4EF59B21E7C777004733E5 /* MyButton.m */,
 				DFA40C5A2171C65A00B884A9 /* Circle.storyboard */,
 			);
 			path = "战友圈";
@@ -832,6 +865,10 @@
 		DFE60092217630A600E1736A /* img */ = {
 			isa = PBXGroup;
 			children = (
+				DFEA8E0221E9C41B002E50CC /* heart@2x.png */,
+				DFEA8E0321E9C41C002E50CC /* heart@3x.png */,
+				DFEA8E0521E9C41C002E50CC /* star@2x.png */,
+				DFEA8E0421E9C41C002E50CC /* star@3x.png */,
 				DFBA3C5521B28A6D0001D4AA /* 客服电话@2x.png */,
 				DFE600AB217636AF00E1736A /* 资助@2x.png */,
 				DFE6009E2176310800E1736A /* 创业@2x.png */,
@@ -962,6 +999,7 @@
 				DF5B8DF4216F6E6C00F84CF5 /* LaunchScreen.storyboard in Resources */,
 				DF11ED5521C4ABD20064E2D3 /* directory_tab@3x.png in Resources */,
 				DF35AF1921E20876002B012F /* aixin@2x.png in Resources */,
+				DFEA8E1421E9D02A002E50CC /* loading_1@3x.png in Resources */,
 				DFE600A52176310800E1736A /* 评论@2x.png in Resources */,
 				DF1E69D72191E5E60056325B /* 图片视频@2x.png in Resources */,
 				DF331FA22178A9BD00034F3F /* moment_like@2x.png in Resources */,
@@ -969,6 +1007,7 @@
 				DF331F992178A9BD00034F3F /* comment_bg@3x.png in Resources */,
 				DFE600AC217636AF00E1736A /* 资助@2x.png in Resources */,
 				DFA40C592171C64600B884A9 /* Session.storyboard in Resources */,
+				DFEA8E0721E9C41C002E50CC /* heart@3x.png in Resources */,
 				DFE600A42176310800E1736A /* 举报@2x.png in Resources */,
 				DFE600A62176310800E1736A /* 求助@2x.png in Resources */,
 				DFBA3C5921B2A37E0001D4AA /* sousuo@3x.png in Resources */,
@@ -976,6 +1015,7 @@
 				DFB206E5219FC48900A1C3E1 /* user_info@2x.png in Resources */,
 				DF3491DE21B6C9CF002AD782 /* zhanyou@2x.png in Resources */,
 				DF331FA52178A9BD00034F3F /* moment_like_hl@3x.png in Resources */,
+				DF5B111E21E857A70056F120 /* loding@2x.png in Resources */,
 				DF1DCD912180C94D004AAF30 /* 相机@2x.png in Resources */,
 				DFA40C4221719C9000B884A9 /* user_1@2x.png in Resources */,
 				DFBA3C6121B2A3C80001D4AA /* neirong@2x.png in Resources */,
@@ -998,7 +1038,10 @@
 				DF11ED5B21C4ABD20064E2D3 /* search_tab_1@2x.png in Resources */,
 				DF11ED5621C4ABD20064E2D3 /* directory_tab_1@3x.png in Resources */,
 				DF331FA82178A9BD00034F3F /* moment_operate_hl@2x.png in Resources */,
+				DF4C7A1421E635E2001C8CB9 /* SVProgressHUD.bundle in Resources */,
 				DF192330219C55150006CDB6 /* 红星5@2x.png in Resources */,
+				DF5B111F21E857A70056F120 /* loding@3x.png in Resources */,
+				DFEA8E0821E9C41C002E50CC /* star@3x.png in Resources */,
 				DF1DCD8D2180C685004AAF30 /* 缴费@2x.png in Resources */,
 				DF331F9B2178A9BD00034F3F /* moment_camera@3x.png in Resources */,
 				DFE60098217630D900E1736A /* 设置@2x.png in Resources */,
@@ -1008,12 +1051,14 @@
 				DFB206E7219FC49F00A1C3E1 /* Rectangle11@2x.png in Resources */,
 				DFE60096217630D100E1736A /* 新闻@2x.png in Resources */,
 				DFA40C6A2171E20F00B884A9 /* HomeCell.xib in Resources */,
+				DFEA8E1521E9D02A002E50CC /* loading_1@2x.png in Resources */,
 				DFA40C4421719C9000B884A9 /* circle@2x.png in Resources */,
 				DFA40C5F2171D65800B884A9 /* tianjia@2x.png in Resources */,
 				DFE600A72176310800E1736A /* 创业@2x.png in Resources */,
 				DFA40C5D2171C66900B884A9 /* User.storyboard in Resources */,
 				DFBA3C6E21B2A43C0001D4AA /* wangluo@3x.png in Resources */,
 				DF331FA72178A9BD00034F3F /* moment_operate@3x.png in Resources */,
+				DFEA8E0921E9C41C002E50CC /* star@2x.png in Resources */,
 				DF331FA42178A9BD00034F3F /* moment_like_hl@2x.png in Resources */,
 				DF11ED5721C4ABD20064E2D3 /* search_tab_1@3x.png in Resources */,
 				DFBA3C5E21B2A3A10001D4AA /* zhanyou@3x.png in Resources */,
@@ -1022,6 +1067,7 @@
 				DF1DCD932180CC34004AAF30 /* 公告@2x.png in Resources */,
 				DF3491DB21B6C7C3002AD782 /* wangluo@2x.png in Resources */,
 				DF5B8DEF216F6E6B00F84CF5 /* Main.storyboard in Resources */,
+				DFEA8E0621E9C41C002E50CC /* heart@2x.png in Resources */,
 				DF1D4D9F21931EAB001B17DE /* star_test@2x.png in Resources */,
 				DF4DE083217AF6C3005F1D89 /* address.plist in Resources */,
 				DF68D52C21B0335A001899B1 /* 更多@2x.png in Resources */,
@@ -1141,6 +1187,7 @@
 				DF331F8D2178A9BD00034F3F /* Comment.m in Sources */,
 				DF5B8DE9216F6E6B00F84CF5 /* AppDelegate.m in Sources */,
 				DF4DE07E217AF4EC005F1D89 /* SelectTimeView.m in Sources */,
+				DF4C7A0721E61789001C8CB9 /* UIViewController+BackButtonHandler.m in Sources */,
 				DF6A6A602174E10B002314B5 /* RegistViewController2.m in Sources */,
 				DF331F922178A9BD00034F3F /* MomentCell.m in Sources */,
 				DF4C006B21A833AA004BD691 /* SeekHelpDetailsViewController.m in Sources */,
@@ -1151,6 +1198,7 @@
 				DF4DE081217AF50F005F1D89 /* SelectAddressView.m in Sources */,
 				DFB206E2219FAB1300A1C3E1 /* ForgetPasswordViewController.m in Sources */,
 				DF6AC8F5217F66DB005F23B2 /* NoticeViewController.m in Sources */,
+				DF4EF59C21E7C777004733E5 /* MyButton.m in Sources */,
 				DF0B3C552173776100B73186 /* LoginViewController.m in Sources */,
 				DF5B8E27216F82A100F84CF5 /* MainTabBarController.m in Sources */,
 				DF28F3D121777EEF00D81BF5 /* TipViewController.m in Sources */,
@@ -1332,6 +1380,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = ZhanyouIM/ZhanyouIM.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3V88Q4JU22;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1347,12 +1396,14 @@
 					"\"$(SRCROOT)/ZhanyouIM/Supporting File\"",
 				);
 				INFOPLIST_FILE = ZhanyouIM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zhonghua.ZhanyouIM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1364,6 +1415,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = ZhanyouIM/ZhanyouIM.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3V88Q4JU22;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1379,12 +1431,14 @@
 					"\"$(SRCROOT)/ZhanyouIM/Supporting File\"",
 				);
 				INFOPLIST_FILE = ZhanyouIM/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zhonghua.ZhanyouIM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

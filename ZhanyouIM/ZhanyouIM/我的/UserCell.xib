@@ -37,25 +37,21 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="红星5.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ty9-H3-NiU">
-                                <rect key="frame" x="0.0" y="35" width="37" height="15"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="37" id="ZmZ-Df-UQq"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4e6-4L-hIL">
+                                <rect key="frame" x="0.0" y="35" width="216" height="15"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Ty9-H3-NiU" firstAttribute="top" secondItem="QaC-5s-u3K" secondAttribute="bottom" id="26V-Gd-m6e"/>
+                            <constraint firstAttribute="trailing" secondItem="4e6-4L-hIL" secondAttribute="trailing" id="6E7-oJ-Lxb"/>
                             <constraint firstAttribute="height" constant="50" id="9ux-SL-LU6"/>
-                            <constraint firstItem="Ty9-H3-NiU" firstAttribute="leading" secondItem="Mti-lH-Tql" secondAttribute="leading" id="Km5-BA-F84"/>
+                            <constraint firstItem="4e6-4L-hIL" firstAttribute="leading" secondItem="Mti-lH-Tql" secondAttribute="leading" id="EIK-t0-pyc"/>
                             <constraint firstItem="QaC-5s-u3K" firstAttribute="top" secondItem="Mti-lH-Tql" secondAttribute="top" id="bcW-ja-inZ"/>
                             <constraint firstAttribute="trailing" secondItem="QaC-5s-u3K" secondAttribute="trailing" id="d6j-oI-7Ai"/>
+                            <constraint firstItem="4e6-4L-hIL" firstAttribute="top" secondItem="QaC-5s-u3K" secondAttribute="bottom" id="gzm-Hx-OvK"/>
                             <constraint firstItem="QaC-5s-u3K" firstAttribute="leading" secondItem="Mti-lH-Tql" secondAttribute="leading" id="qhV-RS-nbt"/>
-                            <constraint firstAttribute="bottom" secondItem="Ty9-H3-NiU" secondAttribute="bottom" id="r3P-Wg-LWZ"/>
+                            <constraint firstAttribute="bottom" secondItem="4e6-4L-hIL" secondAttribute="bottom" id="zog-fY-QFS"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -70,17 +66,12 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
             <connections>
-                <outlet property="aidDateLabel" destination="Uty-i4-oBK" id="TWa-IE-vBj"/>
-                <outlet property="aidNameLabel" destination="WmN-PN-80I" id="qQl-So-1qX"/>
-                <outlet property="aidSumLabel" destination="87M-wJ-IcG" id="TDW-wn-3ae"/>
                 <outlet property="seekDateLabel" destination="4Fe-Ta-bPi" id="Lwu-yH-5At"/>
-                <outlet property="starImgViewContraint" destination="ZmZ-Df-UQq" id="hgq-iN-abA"/>
-                <outlet property="tipDateLabel" destination="J29-xK-grm" id="k1K-H7-TEp"/>
-                <outlet property="tipNameLabel" destination="xNB-ic-9d4" id="VhH-XN-0i7"/>
+                <outlet property="starImgBackView" destination="4e6-4L-hIL" id="SZx-6R-1Qu"/>
                 <outlet property="userImg" destination="2xO-YW-A3D" id="MpQ-ME-bPj"/>
                 <outlet property="userNameLabel" destination="QaC-5s-u3K" id="UFh-MK-huz"/>
             </connections>
-            <point key="canvasLocation" x="-968" y="-640"/>
+            <point key="canvasLocation" x="-950" y="-609"/>
         </tableViewCell>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="USER2" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="74" id="2Jw-Pw-vVo" customClass="UserCell">
             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
@@ -197,19 +188,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="59.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="资助对象:王铁柱" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WmN-PN-80I">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WmN-PN-80I">
                         <rect key="frame" x="12" y="8" width="187.5" height="30"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 元" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="87M-wJ-IcG">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="87M-wJ-IcG">
                         <rect key="frame" x="199.5" y="0.0" width="163.5" height="59.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018-10-18 13:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uty-i4-oBK">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uty-i4-oBK">
                         <rect key="frame" x="12" y="38" width="187.5" height="21.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -231,6 +222,11 @@
                     <constraint firstItem="WmN-PN-80I" firstAttribute="top" secondItem="Z0n-3s-Ak9" secondAttribute="top" constant="8" id="zIb-ub-Oeh"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="aidDateLabel" destination="Uty-i4-oBK" id="c76-mo-Jj5"/>
+                <outlet property="aidNameLabel" destination="WmN-PN-80I" id="3Kc-5T-Avh"/>
+                <outlet property="aidSumLabel" destination="87M-wJ-IcG" id="55R-dp-FkQ"/>
+            </connections>
             <point key="canvasLocation" x="-943.20000000000005" y="-337.33133433283359"/>
         </tableViewCell>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SEEKHELP" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="viB-LM-2zQ" customClass="UserCell">
@@ -303,13 +299,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="39.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="举报对象:王铁柱" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNB-ic-9d4">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNB-ic-9d4">
                         <rect key="frame" x="12" y="0.0" width="187.5" height="39.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018-10-19" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J29-xK-grm">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J29-xK-grm">
                         <rect key="frame" x="199.5" y="0.0" width="163.5" height="39.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <nil key="textColor"/>
@@ -327,10 +323,11 @@
                     <constraint firstItem="xNB-ic-9d4" firstAttribute="leading" secondItem="Con-KW-xbg" secondAttribute="leading" constant="12" id="xpz-BJ-VM3"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="tipDateLabel" destination="J29-xK-grm" id="nCk-4L-BdT"/>
+                <outlet property="tipNameLabel" destination="xNB-ic-9d4" id="xHK-o0-FZH"/>
+            </connections>
             <point key="canvasLocation" x="-935" y="-138"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="红星5.png" width="88" height="11"/>
-    </resources>
 </document>

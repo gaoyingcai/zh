@@ -40,7 +40,7 @@
         }
         
         
-        NSDictionary * paramDic = @{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"],
+        NSDictionary * paramDic = @{@"uid":[[self getUserinfo] objectForKey:@"uid"],
                                     @"reason":_textView.text,
                                     @"type":type,
                                     @"report_uid":_reportId

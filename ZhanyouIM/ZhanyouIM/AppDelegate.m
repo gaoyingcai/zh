@@ -63,7 +63,6 @@
     self.window.rootViewController=tabBar;
     [self.window makeKeyAndVisible];
     
-//    [NSThread sleepForTimeInterval:3.5];
     return YES;
 }
 
@@ -90,8 +89,9 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
-    NSNotification *notification = [NSNotification notificationWithName:@"ORDER_PAY_NOTIFICATION" object:@"success"];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"ORDER_PAY_NOTIFICATION" object:@"success"]];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORDER_PAY_NOTIFICATION_HELP" object:nil ];
 
     NSLog(@"1");
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.

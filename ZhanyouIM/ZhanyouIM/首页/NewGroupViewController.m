@@ -65,9 +65,11 @@
     [btn setTitleColor:color_green forState:UIControlStateNormal];
     
     if (_teamUserIdArray.count) {
+        self.title =@"添加好友";
         [btn setTitle:@"添加" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(addBtnaAddAction:) forControlEvents:UIControlEventTouchUpInside];
     }else{
+        self.title = @"创建群聊";
         [btn setTitle:@"创建" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(addBtnCreateAction:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -196,8 +198,8 @@
 }
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
-    tableView.sectionIndexTrackingBackgroundColor= [UIColor whiteColor];//待考证
-    tableView.sectionIndexColor = [UIColor whiteColor];
+    tableView.sectionIndexTrackingBackgroundColor= color_green;//点击的背景色
+    tableView.sectionIndexColor = RGBACOLOR(102, 102, 102, 1);
     tableView.sectionIndexBackgroundColor = [UIColor whiteColor];
     tableView.sectionIndexMinimumDisplayRowCount = 20;//tableview总行数大于多少才显示索引
     

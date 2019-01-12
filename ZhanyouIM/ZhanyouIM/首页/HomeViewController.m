@@ -31,6 +31,8 @@
     UITableView * groupTableView;
     
     NSMutableDictionary * announcementDic;
+    
+    BOOL showGroup;
 }
 
 @end
@@ -42,33 +44,45 @@
     [self.navigationItem setHidesBackButton:YES];
     self.tabBarController.tabBar.hidden = NO;
     [_addView setHidden:YES];
-    if (self.scrollView.contentOffset.x < k_screen_width/2) {
-        [self friendBtnAction:nil];
-    }else{
+    
+    if (showGroup) {
         [self groupBtnAction:nil];
+    }else{
+        [self friendBtnAction:nil];
     }
+    [self getUserInfo];
 }
 -(void)getUserInfo{
 
-    [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"uid"]} block:^(id result) {
+    [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[self getUserinfo] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
             NSLog(@"%@",result);
             self->announcementDic = [NSMutableDictionary dictionaryWithDictionary:[[result objectForKey:@"data"]objectForKey:@"notice"]];
-            NSDictionary *userInfo = [[result objectForKey:@"data"]objectForKey:@"userInfo"];
-
-//            NSString *urlStr = domain_img([userInfo objectForKey:@"head_url"]);
-//            [self.userImgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
-            int star_num = [[userInfo objectForKey:@"star"] intValue];
-            if (star_num == 0) {
-                star_num = 1;
-            }
-
-            [UIView animateWithDuration:0.3 animations:^{
-                [self.view layoutIfNeeded];
-            } completion:^(BOOL finished) {
-            }];
+            
+            NSDictionary *userInfoDic=[[result objectForKey:@"data"]objectForKey:@"userInfo"];
+            [self setUserInfo:userInfoDic];
+            NSString *userImgStr = [userInfoDic objectForKey:@"head_url"];
+            [self setLeftBtnWithImgStr:userImgStr];
         }
     }];
+}
+-(void)setLeftBtnWithImgStr:(NSString*)userImgStr{
+    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+    leftBtn.layer.cornerRadius = 18;
+    leftBtn.layer.masksToBounds = YES;
+//    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
+//    dispatch_async(queue, ^{
+//        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+//        });
+//    });
+    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
+    [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+    
+    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
 }
 
 - (void)viewDidLoad {
@@ -77,36 +91,7 @@
     
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"homeBadge" object:nil];
-    
     [[NSNotificationCenter defaultCenter]postNotificationName:@"homeBadge" object:nil userInfo:nil];
-
-    
-    
-//    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    leftBtn.frame = CGRectMake(0, 0, 25, 25);
-//    [leftBtn setBackgroundImage:[UIImage imageNamed:@"user_info.png"] forState:UIControlStateNormal];
-//    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
-
-    
-    NSMutableDictionary * userDic =[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user];
-    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    leftBtn.frame = CGRectMake(0, 0, 36, 36);
-    leftBtn.layer.cornerRadius = 18;
-    leftBtn.layer.masksToBounds = YES;
-    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(queue, ^{
-        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img([userDic objectForKey:@"userImg"])]]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-        });
-        
-    });
-    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
-    
-    
-    [self getUserInfo];
     
     self.scrollView.showsHorizontalScrollIndicator=NO;
     self.scrollView.contentSize = CGSizeMake(k_screen_width*2, 0);
@@ -127,6 +112,24 @@
     friendTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     groupTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
+//-(void)setLeftBtn{
+//    NSMutableDictionary * userDic =[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user];
+//    UIButton * leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    leftBtn.frame = CGRectMake(0, 0, 36, 36);
+//    leftBtn.layer.cornerRadius = 18;
+//    leftBtn.layer.masksToBounds = YES;
+//    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
+//    dispatch_async(queue, ^{
+//        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img([userDic objectForKey:@"userImg"])]]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
+//        });
+//
+//    });
+//    [leftBtn addTarget:self action:@selector(showUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc]initWithCustomView:leftBtn]];
+//
+//}
 -(void)setBadge:(NSNotification*)sender{
     self.navigationItem.rightBarButtonItem = nil;
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -332,6 +335,7 @@
         [self.navigationController pushViewController:sessionVc animated:YES];
 
     }else{
+        showGroup = YES;
         NIMTeam *team = [groupArr objectAtIndex:indexPath.row];
         NIMSession *session = [NIMSession session:team.teamId type:NIMSessionTypeTeam];
         MYSessionViewController *sessionVc = [[MYSessionViewController alloc] initWithSession:session];

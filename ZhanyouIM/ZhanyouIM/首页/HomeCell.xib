@@ -149,10 +149,12 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="accessBtn" destination="W2U-hv-dsw" id="OCl-2S-EUi"/>
+                <outlet property="accessBtnRight" destination="7FP-sP-iZ6" id="GMo-Ii-tHj"/>
                 <outlet property="checkTextLabel" destination="Gfo-Bd-Mme" id="mPA-9d-bwu"/>
                 <outlet property="imgView" destination="Cou-j2-Etn" id="InG-5b-S1a"/>
                 <outlet property="nameLabel" destination="nK4-Bu-daS" id="IRG-o3-7ar"/>
                 <outlet property="refusedBtn" destination="t3K-FQ-zKG" id="pKh-mH-gM6"/>
+                <outlet property="refusedBtnRight" destination="Kpp-zx-JkW" id="rOp-VV-bEF"/>
             </connections>
             <point key="canvasLocation" x="-791.20000000000005" y="-757.42128935532241"/>
         </tableViewCell>

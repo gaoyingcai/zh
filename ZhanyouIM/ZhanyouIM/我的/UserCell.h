@@ -26,7 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIImageView *userImg;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *starImgViewContraint;
+
+@property (strong, nonatomic) IBOutlet UIView *starImgBackView;
 @property (weak, nonatomic) IBOutlet UIImageView *userCellImg;
 @property (weak, nonatomic) IBOutlet UILabel *userCellTextLabel;
 

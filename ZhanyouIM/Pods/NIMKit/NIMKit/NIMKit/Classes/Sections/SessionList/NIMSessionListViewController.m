@@ -66,7 +66,7 @@
     self.tableView.tableFooterView  = [[UIView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
-    
+    NSLog(@"%@",_recentSessions);
     self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
 
     if (!self.recentSessions.count) {

@@ -160,7 +160,7 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 - (void)viewDidLoad {
-//    [self checkoutLogin];
+    [self checkoutLogin];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"sessionBadge" object:nil];
@@ -328,9 +328,15 @@
     if (step == NIMLoginStepLoginOK) {
         NSLog(@"登录成功");
         [self.navigationController popToRootViewControllerAnimated:YES];
+        [self refresh];
     }else if(step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
         NSLog(@"云信登录失败  -----%ld", (long)step);
-        [self showLogAlert];
+        if ([self isLogin]) {
+            [self showLogAlert];
+        }else{
+            [self deleteUserInfoAndPushToLogin];
+        }
+        
     }
 }
 - (void)onKick:(NIMKickReason)code clientType:(NIMLoginClientType)clientType{
@@ -338,34 +344,34 @@
 }
 -(void)showLogAlert{
     
-    if ([self isLogin]) {
+//    if ([self isLogin]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的账号在其他设备登录,请重新登录" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self deleteUserInfoAndPushToLogin];
         }];
         [alertController addAction:action];
         [self presentViewController:alertController animated:YES completion:nil];
-    }else{
-        [self deleteUserInfoAndPushToLogin];
-    }
+//    }else{
+//        [self deleteUserInfoAndPushToLogin];
+//    }
     
 }
 -(void)deleteUserInfoAndPushToLogin{
-    UIViewController *currentVC = [self getCurrentVC];
-    [self deleteAllUserInfo];
-    if (currentVC.presentingViewController) {
-        [currentVC dismissViewControllerAnimated:NO completion:^{
-            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
-                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
-                [navi popToRootViewControllerAnimated:NO];
-            }
-        }];
-    } else {
-        [currentVC.navigationController popToRootViewControllerAnimated:NO];
-    }
-    
-    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-    rootTab.selectedIndex = 0;
+//    UIViewController *currentVC = [self getCurrentVC];
+////    [self deleteAllUserInfo];
+//    if (currentVC.presentingViewController) {
+//        [currentVC dismissViewControllerAnimated:NO completion:^{
+//            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
+//                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
+//                [navi popToRootViewControllerAnimated:NO];
+//            }
+//        }];
+//    } else {
+//        [currentVC.navigationController popToRootViewControllerAnimated:NO];
+//    }
+//
+//    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+//    rootTab.selectedIndex = 0;
     
     LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;

@@ -184,6 +184,29 @@
 #pragma mark - 小图单击
 - (void)singleTapSmallViewCallback:(MMImageBackView *)imagebackView
 {
+    [self hideHUD];
+    
+    if (playerLayer) {
+        [playerLayer.player pause];
+        playerLayer= nil;
+        MMScrollView *scaleScrollview = (MMScrollView*)self.previewView.scrollView;
+        [UIView animateWithDuration:0.3 animations:^{
+            self->_previewView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+            self->_previewView.pageControl.hidden = YES;
+            scaleScrollview.contentRect = scaleScrollview.contentRect;
+            self->_previewView.scrollView.zoomScale = 1.0;
+        } completion:^(BOOL finished) {
+            [self->_previewView removeFromSuperview];
+        }];
+        return;
+    }
+    
+    
+    
+    
+    
+    
+    
     _previewView = [[MMImagePreviewView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIApplication *app = [UIApplication sharedApplication];
     [app.keyWindow addSubview:_previewView];
@@ -246,7 +269,7 @@
                         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:urlStr]];
                         [playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];// 监听loadedTimeRanges属性
                         playerLayer.player = [AVPlayer playerWithPlayerItem:playerItem];
-                        [scrollView.layer addSublayer:playerLayer];
+                        [self->_previewView.scrollView.layer addSublayer:playerLayer];
                         [playerLayer.player play];
 //                        [self showHUD:@"努力加载中" ToView:scrollView];
                         // 单击
@@ -256,6 +279,7 @@
                             [self singleTapBigViewCallback:scrollView];
                         }];
                     }else{
+//                        UIView *backview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self->_previewView.width , self->_previewView.height)];
                         NSString *urlStr = domain_img([dic objectForKey:@"path_source"]);
                         self->playerLayer = [AVPlayerLayer playerLayerWithPlayer:[AVPlayer playerWithURL:[NSURL URLWithString:urlStr]]];
                         self->playerLayer.delegate = self;
@@ -266,13 +290,12 @@
                         //                    [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];// 监听status属性
                         [self->playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];// 监听loadedTimeRanges属性
                         self->playerLayer.player = [AVPlayer playerWithPlayerItem:self->playerItem];
-                        
-                        //                    [playerLayer addObserver:self forKeyPath:@"status" options:AVPlayerStatusReadyToPlay|AVPlayerStatusUnknown context:nil];
-                        
-                        
-                        [scrollView.layer addSublayer:self->playerLayer];
+//                        [backview.layer addSublayer:self->playerLayer];
+//                        [scrollView addSubview:backview];
+                        [self->_previewView.scrollView.layer addSublayer:self->playerLayer];
+//                        [self->_previewView.scrollView addSubview:scrollView];
 //                        [playerLayer.player play];
-                        [self showHUD:@"努力加载中" ToView:scrollView];
+                        [self showHUD:@"努力加载中" ToView:self.previewView];
                         // 单击
                         [scrollView setTapBigView:^(MMScrollView *scrollView){
                             [self->playerLayer.player pause];

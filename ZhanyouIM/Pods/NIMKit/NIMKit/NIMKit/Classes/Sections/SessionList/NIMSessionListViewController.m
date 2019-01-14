@@ -67,9 +67,6 @@
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
     
-    NSArray *array = [NIMSDK sharedSDK].conversationManager.allRecentSessions;
-    NSLog(@"%@",array);
-    
     self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
 
     if (!self.recentSessions.count) {

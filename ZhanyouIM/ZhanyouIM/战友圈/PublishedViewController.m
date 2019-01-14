@@ -21,7 +21,7 @@
     NSMutableArray *sourceArray;
     NSMutableArray *resultArray;
     BOOL isVideo;
-    BOOL SelectMedia;
+    BOOL pushData;
 }
 //@property (nonatomic, strong) CLLocationManager* locationManager;
 @property(nonatomic,strong)CLGeocoder *geocoder;
@@ -48,7 +48,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    SelectMedia = NO;
     
     width = (k_screen_width-40)/3;
     [UIView animateWithDuration:0.3 animations:^{
@@ -153,6 +152,7 @@
         if ([self checkout:result]) {
             NSLog(@"%@",result);
             [self hideHUD];
+            self->pushData = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
@@ -247,7 +247,6 @@
     }
     
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    SelectMedia= YES;
     if (xiangce) {
         if (luzhi) {
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
@@ -320,14 +319,6 @@
 //添加图片之后按钮移动
 -(void)setFrame
 {
-    SelectMedia =NO;
-//    for (UIView *view in self.photoView.subviews) {
-//        if ([view isKindOfClass:[MMImageListView class]]) {
-//            [view removeFromSuperview];
-//            view.frame = CGRectZero;
-//        }
-//    }
-    
     MMImageListView *imageListView = [[MMImageListView alloc] initWithFrame:CGRectZero];
     Moment *moment = [[Moment alloc] init];
     moment.fileCount = self.imgArray.count;
@@ -358,72 +349,8 @@
         _btn.hidden = NO;
     }
     
-    
-    
-    
-//    static int num_rows = 1;
-//    if (self.imgArray.count<=2) {
-//        num_rows = 1;
-//    }else if (self.imgArray.count>2 && self.imgArray.count<=5) {
-//        num_rows = 2;
-//    }else{
-//        num_rows = 3;
-//    }
-//
-//    if (self.imgArray.count>0 && [self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
-//        [UIView animateWithDuration:0.3 animations:^{
-//            self.photoViewHeight.constant = k_screen_width*2/3;
-//            [self.view layoutIfNeeded];
-//        } completion:^(BOOL finished) {
-//        }];
-//
-//        self.btn.hidden = YES;
-//
-//
-////        _PlayerVC = [[AVPlayerViewController alloc] init];
-////        _PlayerVC.view.backgroundColor = [UIColor whiteColor];
-////        NSLog(@"%@",self.imgArray);
-////        NSString *videoPathString = [[self.imgArray objectAtIndex:0] objectForKey:@"path"];
-////        NSData *data = [NSData dataWithContentsOfFile:videoPathString];
-////        NSLog(@"%lu",(unsigned long)data.length);
-////
-////
-////        AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:[[self.imgArray objectAtIndex:0] objectForKey:@"path"]]];
-////        _PlayerVC.player = [AVPlayer playerWithPlayerItem:item];
-////        _PlayerVC.view.frame = CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
-////        _PlayerVC.showsPlaybackControls = YES;
-//
-//        UIImageView *imgView=[[UIImageView alloc]init];
-//        imgView.frame=CGRectMake(15, 15, k_screen_width*9/32, k_screen_width/2);
-//        imgView.contentMode = UIViewContentModeScaleAspectFill;
-//        imgView.layer.masksToBounds = YES;
-//        imgView.image = (UIImage*)[[self.imgArray objectAtIndex:0] objectForKey:@"img"];
-//        [self.photoView addSubview:imgView];
-//
-//        UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(k_screen_width*9/64-20, k_screen_width/4-20, 40, 40)];
-//        beginImgView.image = [UIImage imageNamed:@"player.png"];
-//        [imgView addSubview:beginImgView];
-//
-//        [self.photoView addSubview:_PlayerVC.view];
-//    }else{
-//        [UIView animateWithDuration:0.3 animations:^{
-//            self.photoViewHeight.constant = k_screen_width*num_rows/3;
-//            [self.view layoutIfNeeded];
-//        } completion:^(BOOL finished) {
-//        }];
-        self.btn.frame=CGRectMake((self.imgArray.count%3)*width+20, self.imgArray.count/3*width+10, width-5, width-5);
+    self.btn.frame=CGRectMake((self.imgArray.count%3)*width+20, self.imgArray.count/3*width+10, width-5, width-5);
     [self.photoView bringSubviewToFront:self.btn];
-//        //显示所有的img
-//        for (int i = 0; i<self.imgArray.count; i++) {
-//            UIImageView *imgView=[[UIImageView alloc]init];
-//            imgView.frame=CGRectMake((i%3)*width+20, i/3*width+10, width-5, width-5);
-//            imgView.image=[self.imgArray objectAtIndex:i];
-//            imgView.contentMode = UIViewContentModeScaleAspectFill;
-//            imgView.layer.masksToBounds = YES;
-//
-//            [self.photoView addSubview:imgView];
-//        }
-//    }
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -546,7 +473,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 -(void)viewWillDisappear:(BOOL)animated{
-    if (!SelectMedia) {
+    if (pushData) {
         [[NSNotificationCenter defaultCenter]postNotificationName:@"QZ" object:nil userInfo:@{@"type":[NSString stringWithFormat:@"%@",_moduleType]}];
     }
 }

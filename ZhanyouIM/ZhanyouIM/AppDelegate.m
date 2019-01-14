@@ -11,7 +11,6 @@
 #import <NIMSDK/NIMSDK.h>
 #import <NIMSDK/NIMSDKOption.h>
 
-
 @interface AppDelegate ()<NIMSystemNotificationManagerDelegate,NIMLoginManagerDelegate>
 
 @end

@@ -238,20 +238,19 @@
         if (_loginOut) {
         
             if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
+                [self deleteAllUserInfo];
                 [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
                     NSLog(@"%@",error);
                 }];
             }
-        [[[NIMSDK sharedSDK] loginManager] addDelegate:nil];
+//        [[[NIMSDK sharedSDK] loginManager] addDelegate:nil];
 
-        
-//        }else{
+            else{
                 [self deleteAllUserInfo];
                 LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
                 self.navigationController.interactivePopGestureRecognizer.enabled = NO;
                 [self.navigationController pushViewController:login animated:YES];
-
-//            }
+            }
         }else if (_postMessage){
             
             NSDictionary * dic = [self getUserinfo];

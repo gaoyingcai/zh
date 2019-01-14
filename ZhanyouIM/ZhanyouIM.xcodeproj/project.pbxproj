@@ -105,6 +105,7 @@
 		DF6AC8FB217F6714005F23B2 /* NewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6AC8FA217F6714005F23B2 /* NewGroupViewController.m */; };
 		DF96E44B21A6E26A00CD075E /* player@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF96E44A21A6E26A00CD075E /* player@2x.png */; };
 		DF96E44D21A6E35B00CD075E /* player@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF96E44C21A6E35B00CD075E /* player@3x.png */; };
+		DF9DBD4E21ECC9D50060E96B /* SeekHelpDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9DBD4D21ECC9D50060E96B /* SeekHelpDetailViewController.m */; };
 		DFA40C4021719C9000B884A9 /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA40C3821719C9000B884A9 /* home@2x.png */; };
 		DFA40C4121719C9000B884A9 /* home_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA40C3921719C9000B884A9 /* home_1@2x.png */; };
 		DFA40C4221719C9000B884A9 /* user_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA40C3A21719C9000B884A9 /* user_1@2x.png */; };
@@ -327,6 +328,8 @@
 		DF6AC8FA217F6714005F23B2 /* NewGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewGroupViewController.m; sourceTree = "<group>"; };
 		DF96E44A21A6E26A00CD075E /* player@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player@2x.png"; sourceTree = "<group>"; };
 		DF96E44C21A6E35B00CD075E /* player@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player@3x.png"; sourceTree = "<group>"; };
+		DF9DBD4C21ECC9D50060E96B /* SeekHelpDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SeekHelpDetailViewController.h; sourceTree = "<group>"; };
+		DF9DBD4D21ECC9D50060E96B /* SeekHelpDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeekHelpDetailViewController.m; sourceTree = "<group>"; };
 		DFA40C3821719C9000B884A9 /* home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home@2x.png"; sourceTree = "<group>"; };
 		DFA40C3921719C9000B884A9 /* home_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_1@2x.png"; sourceTree = "<group>"; };
 		DFA40C3A21719C9000B884A9 /* user_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_1@2x.png"; sourceTree = "<group>"; };
@@ -773,6 +776,8 @@
 				DF5ECC6F21861B7A00F5D70D /* DetailsViewController.m */,
 				DF4C006921A833AA004BD691 /* SeekHelpDetailsViewController.h */,
 				DF4C006A21A833AA004BD691 /* SeekHelpDetailsViewController.m */,
+				DF9DBD4C21ECC9D50060E96B /* SeekHelpDetailViewController.h */,
+				DF9DBD4D21ECC9D50060E96B /* SeekHelpDetailViewController.m */,
 				DFD7217121889D7800B07661 /* PublishedViewController.h */,
 				DFD7217221889D7800B07661 /* PublishedViewController.m */,
 				DF4EF59A21E7C777004733E5 /* MyButton.h */,
@@ -1183,6 +1188,7 @@
 				DF331F932178A9BD00034F3F /* MLLabelUtil.m in Sources */,
 				DFA40C522171C24400B884A9 /* HomeViewController.m in Sources */,
 				DF28F3CE21777ED000D81BF5 /* SeekHelpViewController.m in Sources */,
+				DF9DBD4E21ECC9D50060E96B /* SeekHelpDetailViewController.m in Sources */,
 				DF5B8E28216F82A100F84CF5 /* BaseViewController.m in Sources */,
 				DF331F8D2178A9BD00034F3F /* Comment.m in Sources */,
 				DF5B8DE9216F6E6B00F84CF5 /* AppDelegate.m in Sources */,

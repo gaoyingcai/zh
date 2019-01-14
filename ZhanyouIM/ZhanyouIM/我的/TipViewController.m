@@ -51,6 +51,7 @@
         cell = [UserCell tipCell];
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.tipNameLabel.text = [NSString stringWithFormat:@"举报对象:%@",[[dataArray objectAtIndex:indexPath.row] objectForKey:@"username"]];
     cell.tipDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row] objectForKey:@"add_time"]];
     

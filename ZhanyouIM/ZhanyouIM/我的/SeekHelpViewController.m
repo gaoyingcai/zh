@@ -58,6 +58,8 @@
         cell = [UserCell seekHelpCell];
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     cell.seekDateLabel.text = [self timestampToString:[[dataArray objectAtIndex:indexPath.row]objectForKey:@"add_time"]];
     NSString * contentStr = [NSString stringWithFormat:@"求助项目:%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"content"]];
     NSString * verifyMsgStr = [NSString stringWithFormat:@"审核结果:%@",[[dataArray objectAtIndex:indexPath.row]objectForKey:@"verify_msg"]];

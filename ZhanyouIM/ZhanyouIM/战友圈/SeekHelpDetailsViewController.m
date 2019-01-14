@@ -69,12 +69,29 @@
     }
     
     [self.userImageView sd_setImageWithURL:[NSURL URLWithString:domain_img([dataDic objectForKey:@"head_url"])]];
-    self.userName.text= [dataDic objectForKey:@"username"];
-    self.content.numberOfLines = 0;
-    self.content.text = [dataDic objectForKey:@"content"];
+    self.userName.text= [NSString stringWithFormat:@"%@",[dataDic objectForKey:@"username"]];
+//    self.content.numberOfLines = 0;
     suid = [dataDic objectForKey:@"uid"];
     
-    CGFloat top = self.content.frame.origin.y + self.content.frame.size.height;
+    
+//    self.content.text = [dataDic objectForKey:@"content"];
+    self.content.text = @"测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度测试高度";
+
+    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:16]};
+//    CGSize labelSize = [self.content.text boundingRectWithSize:CGSizeMake(200, 5000) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    
+    CGSize labelSize = [self.content.text boundingRectWithSize:CGSizeMake(k_screen_width - 12, 5000) options:NSStringDrawingUsesLineFragmentOrigin attributes:attribute context:nil].size;
+
+    //200为UILabel的宽度，5000是预设的一个高度，表示在这个范围内
+    //注意：之前使用了NSString类的sizeWithFont: constrainedToSize: lineBreakMode:方法，但是该方法已经被iOS7 Deprecated了，而iOS7新出了一个boudingRectWithSize: options: attributes: context:方法来代替。
+//    self.content.frame = CGRectMake(self.content.frame.origin.x, self.content.frame.origin.y, self.content.frame.size.width, labelSize.height);
+    self.contentConstant.constant = labelSize.height;
+    //保持原来Label的位置和宽度，只是改变高度。
+    self.content.numberOfLines = 0;//表示label可以多行显示
+//    self.content.font = [UIFont systemFontOfSize:14];
+    
+    CGFloat top = self.content.frame.origin.y + labelSize.height;
+    //self.content.frame.size.height;
     
     NSMutableArray * imgArray = [dataDic objectForKey:@"path"];
     

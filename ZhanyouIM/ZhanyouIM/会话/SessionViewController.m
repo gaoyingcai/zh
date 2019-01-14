@@ -339,35 +339,36 @@
     if ([self isLogin]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的账号在其他设备登录,请重新登录" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UIViewController *currentVC = [self getCurrentVC];
-            //        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            //        [userDefaults removeObjectForKey:user_defaults_user];
-            //        [userDefaults synchronize];
-            [self deleteAllUserInfo];
-            
-            if (currentVC.presentingViewController) {
-                [currentVC dismissViewControllerAnimated:NO completion:^{
-                    if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
-                        UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
-                        [navi popToRootViewControllerAnimated:NO];
-                    }
-                }];
-            } else {
-                [currentVC.navigationController popToRootViewControllerAnimated:NO];
-            }
-            
-            UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-            rootTab.selectedIndex = 0;
-            
-            LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-            [self.navigationController pushViewController:login animated:YES];
-            
+            [self deleteUserInfoAndPushToLogin];
         }];
         [alertController addAction:action];
         [self presentViewController:alertController animated:YES completion:nil];
+    }else{
+        [self deleteUserInfoAndPushToLogin];
     }
     
+}
+-(void)deleteUserInfoAndPushToLogin{
+    UIViewController *currentVC = [self getCurrentVC];
+    [self deleteAllUserInfo];
+    if (currentVC.presentingViewController) {
+        [currentVC dismissViewControllerAnimated:NO completion:^{
+            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
+                [navi popToRootViewControllerAnimated:NO];
+            }
+        }];
+    } else {
+        [currentVC.navigationController popToRootViewControllerAnimated:NO];
+    }
+    
+    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    rootTab.selectedIndex = 0;
+    
+    LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    [self.navigationController pushViewController:login animated:YES];
+
 }
 - (UIViewController *)getCurrentVC{
     UIViewController *result = nil;

@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet UILabel *content;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentConstant;
+
+
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backViewConstraintHeight;
 
 @property (weak, nonatomic) IBOutlet UITableView *billTableView;

@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic) BOOL myDynamic;
 
+@property (assign, nonatomic) BOOL isSeekHelp;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottom;
+
 
 @end
 

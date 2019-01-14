@@ -32,7 +32,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [_addView setHidden:YES];
     [self.view sendSubviewToBack:_addView];
-    self.tabBarController.tabBar.hidden = NO;
+//    self.tabBarController.tabBar.hidden = YES;
     self.navigationController.navigationBar.hidden = NO;
 
     [self checkoutLogin];
@@ -61,6 +61,7 @@
     
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[self getLocalUserinfo] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
+            self.tabBarController.tabBar.hidden = NO;
             NSDictionary *noticeDic = [[result objectForKey:@"data"]objectForKey:@"notice"];
             if ([[NSString stringWithFormat:@"%@",[noticeDic objectForKey:@"status"]] isEqualToString:@"1"]) {
                 self.noticeBackView.hidden = NO;
@@ -78,6 +79,7 @@
             NSString *userImgStr = [userInfoDic objectForKey:@"head_url"];
             [self setLeftBtnWithImgStr:userImgStr];
         }else{
+            self.tabBarController.tabBar.hidden = YES;
             [self showAlertViewWithDic:result];
         }
     }];

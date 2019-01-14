@@ -408,17 +408,24 @@ static NSString *moduleType;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if ([moduleType isEqualToString:@"3"]) {
-        SeekHelpDetailsViewController *seekDetails = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil ]instantiateViewControllerWithIdentifier:@"seekDetails"];
-        
-        seekDetails.commentId = [[[self.dataArray objectAtIndex:indexPath.row] objectForKey:@"id"] intValue];
-        [self.navigationController pushViewController:seekDetails animated:YES];
-    }else{
+//    if ([moduleType isEqualToString:@"3"]) {
+//        SeekHelpDetailsViewController *seekDetails = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil ]instantiateViewControllerWithIdentifier:@"seekDetails"];
+//
+//        seekDetails.commentId = [[[self.dataArray objectAtIndex:indexPath.row] objectForKey:@"id"] intValue];
+//        [self.navigationController pushViewController:seekDetails animated:YES];
+//    }else{
         DetailsViewController * details = [[UIStoryboard storyboardWithName:@"Circle" bundle:nil] instantiateViewControllerWithIdentifier:@"details"];
+    if ([moduleType isEqualToString:@"3"]) {
+        details.myDynamic = YES;
+        details.isSeekHelp = YES;
+    }else{
+        details.isSeekHelp = NO;
         details.myDynamic = self.myDynamic;
+    }
+    
         details.commentId = [[[self.dataArray objectAtIndex:indexPath.row] objectForKey:@"id"] intValue];
         [self.navigationController pushViewController:details animated:YES];
-    }
+//    }
     
 }
 
@@ -450,7 +457,12 @@ static NSString *moduleType;
     
 //    cell.moment.userId
 }
-
+- (void)didSelectFullText:(MomentCell *)cell
+{
+    NSLog(@"全文/收起");
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
 #pragma mark -
 - (void)didReceiveMemoryWarning
 {

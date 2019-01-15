@@ -19,7 +19,7 @@
 /**
  *  最近会话集合
  */
-@property (nonatomic,readonly) NSMutableArray * recentSessions;
+@property (nonatomic) NSMutableArray * recentSessions;
 
 /**
  *  删除会话时是不是也同时删除服务器会话 (防止漫游)

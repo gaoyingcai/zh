@@ -328,6 +328,7 @@
     if (step == NIMLoginStepLoginOK) {
         NSLog(@"登录成功");
         [self.navigationController popToRootViewControllerAnimated:YES];
+        self.recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
         [self refresh];
     }else if(step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
         NSLog(@"云信登录失败  -----%ld", (long)step);
@@ -370,8 +371,12 @@
 //        [currentVC.navigationController popToRootViewControllerAnimated:NO];
 //    }
 //
+    
 //    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
 //    rootTab.selectedIndex = 0;
+    
+    
+    [self.recentSessions removeAllObjects];
     
     LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;

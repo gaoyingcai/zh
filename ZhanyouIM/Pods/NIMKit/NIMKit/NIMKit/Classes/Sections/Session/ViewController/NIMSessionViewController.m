@@ -559,6 +559,7 @@
         [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
     }
     if ([eventName isEqualToString:NIMKitEventNameTapVideo]) {
+        
         [self singleTapSmallViewVideoPlayer:event.messageModel.message];
         return YES;
     }

@@ -22,16 +22,16 @@
         _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
         _scrollView.delegate = self;
         _scrollView.pagingEnabled = YES;
-        _scrollView.scrollEnabled = YES;
+        _scrollView.scrollEnabled = NO;//先禁止滑动
         _scrollView.userInteractionEnabled = YES;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         [self addSubview:_scrollView];
         // 页面控制
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.height-40, k_screen_width, 20)];
-        _pageControl.pageIndicatorTintColor = [UIColor grayColor];
-        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-        [self addSubview:_pageControl];
+//        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.height-40, k_screen_width, 20)];
+//        _pageControl.pageIndicatorTintColor = [UIColor grayColor];
+//        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+//        [self addSubview:_pageControl];
     }
     return self;
 }

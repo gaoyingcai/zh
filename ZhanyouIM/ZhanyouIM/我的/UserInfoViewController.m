@@ -21,6 +21,7 @@
     NSMutableArray *myFriendArr;
     NSString *userImgStr;
     NSString *userNameStr;
+    NSString *userId;
 }
 
 //"exit_time" = 1540224000;
@@ -74,6 +75,7 @@
             NSLog(@"%@",result);
 //            self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
 //            self->userName = [[result objectForKey:@"data"]objectForKey:@"username"];
+            userId = [[result objectForKey:@"data"]objectForKey:@"id"];
             self->userImgStr =[[result objectForKey:@"data"]objectForKey:@"head_url"];
             self->userNameStr =[NSString stringWithFormat:@"%@",[[result objectForKey:@"data"]objectForKey:@"username"]];
             if (self->dataArray == nil) {
@@ -95,7 +97,7 @@
     
     [alert addAction:[UIAlertAction actionWithTitle:@"举报战友" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         ReportViewController * report = [[UIStoryboard storyboardWithName:@"Session" bundle:nil] instantiateViewControllerWithIdentifier:@"report"];
-        report.reportId = self->_phone;
+        report.reportId = self->userId;
         [self.navigationController pushViewController:report animated:YES];
     }]] ;
     [alert addAction:[UIAlertAction actionWithTitle:@"删除战友" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

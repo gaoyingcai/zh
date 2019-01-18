@@ -12,5 +12,7 @@
 
 @property(nonatomic,strong)NSString*webViewStr;
 
+@property(nonatomic,strong)NSString*videoStr;
+
 
 @end

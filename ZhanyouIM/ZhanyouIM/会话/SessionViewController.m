@@ -292,10 +292,13 @@
          webView.title = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"title"]];
     }
     
-    NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
-    webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
+//    NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
+//    webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
     
-//    webView.webViewStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"notice_url"]];
+    webView.webViewStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"notice_url"]];
+    webView.videoStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"vedio_src"]];
+    
+//    webView.videoStr = @"http://aiwozhonghua-test2.kh.juanyunkeji.cn/Public/upload/video/2019-01-18/5c41f5cdd5300.mp4";
     
     [self.navigationController pushViewController:webView animated:YES];
 }

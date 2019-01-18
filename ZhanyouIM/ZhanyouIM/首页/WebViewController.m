@@ -8,6 +8,11 @@
 
 #import "WebViewController.h"
 #import <WebKit/WebKit.h>
+#import "Moment.h"
+#import "MMImageListView.h"
+
+
+
 @interface WebViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 //{
 //    WKWebView*_webView;
@@ -27,23 +32,33 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view.
-    
-//    [self setSlidBack];
-    
-//    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, k_star_width, 20)];
-//    statusBarView.backgroundColor=RGBACOLOR(34, 213, 202, 1);
-//    [self.view addSubview:statusBarView];
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
 
-    self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
+    if (self.videoStr.length >5) {
+        
+        NSMutableArray *array =[NSMutableArray arrayWithObject:@{@"path_source":self.videoStr,@"path_source_img_notice":@""}];
+        
+        MMImageListView *imageListView = [[MMImageListView alloc] initWithFrame:CGRectZero];
+        Moment *moment = [[Moment alloc] init];
+        moment.fileCount = 1;
+        moment.imageArray = array;
+        imageListView.moment = moment;
+        
+        UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 64, k_screen_width, k_screen_height*9/16)];
+        view.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:view];
+        [view addSubview:imageListView];
+        
+        self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, k_screen_width*9/16+64, k_screen_width, k_screen_height - k_screen_width*9/16 -74)];
+    }else{
+        self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
+    }
+    
+//    self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
     [self.webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_webViewStr]]];
     [self.view addSubview:self.webview];
     
     self.webview.navigationDelegate=self;//
     self.webview.UIDelegate=self;//这个协议主要用于WKWebView处理web界面的三种提示框(警告框、确认框、输入框)
-    
-//    [[_webView configuration].userContentController addScriptMessageHandler:self name:@"closebrowser"];
-    
 }
 
 #pragma -mark WKNavigationDelegate

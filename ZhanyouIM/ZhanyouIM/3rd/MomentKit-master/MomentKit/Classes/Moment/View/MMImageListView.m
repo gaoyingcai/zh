@@ -96,31 +96,66 @@
         
         NSDictionary * dic = [imageArray objectAtIndex:i];
         if ([[dic allKeys]containsObject:@"path_source"]) {
-            
+            CGRect VideoImgFrame = CGRectMake(0, 0, k_screen_width*9/32 , k_screen_width/2);
             if (count == 1) {
-                frame = CGRectMake(0, 0, k_screen_width*9/32, k_screen_width/2);
+                if ([[dic allKeys] containsObject:@"path_source_img_notice"]) {
+                    //获取视频尺寸
+                    NSString *urlStr =[dic objectForKey:@"path_source"];
+                    AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL URLWithString:urlStr]];
+                    NSArray *array = asset.tracks;
+                    CGSize videoSize = CGSizeZero;
+                    
+                    for (AVAssetTrack *track in array) {
+                        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+                            videoSize = track.naturalSize;
+                        }
+                    }
+                    if (videoSize.width >0) {
+                        NSInteger wi = videoSize.width;
+                        NSInteger he = videoSize.height;
+                        double hewiScale = (double)he/wi;
+                        double wiheScale = (double)wi/he;
+                        
+                        if (hewiScale*16 >9) {
+                            frame = CGRectMake(12 + ((k_screen_width -24) -(k_screen_width -24)*9/16 * wiheScale)/2, 0 , (k_screen_width -24)*9/16 * wiheScale, (k_screen_width -24)*9/16);
+                        }else{
+//                            if (hewiScale*16 >9) {
+//                                frame = CGRectMake(12 + ((k_screen_width -24)- (k_screen_width -24)*9/16 * wiheScale)/2, 0 , (k_screen_width -24)*9/16 * wiheScale, (k_screen_width -24)*9/16);
+//                            }else{
+                                frame = CGRectMake(12, 0 , k_screen_width-24, (k_screen_width -24)*hewiScale);
+//                            }
+                        }
+                        
+                        
+                        VideoImgFrame.size = frame.size;
+                    }
+                }else{
+                    frame = CGRectMake(0, 0, k_screen_width*9/32, k_screen_width/2);
+                }
             }
             imagebackView = [self viewWithTag:1000+i];
             imagebackView.hidden = NO;
             imagebackView.frame = frame;
-
-            UIImageView *videoImgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, k_screen_width*9/32 , k_screen_width/2)];
-            videoImgView.backgroundColor = [UIColor clearColor];
+            
+            UIImageView *videoImgView =[[UIImageView alloc]initWithFrame:VideoImgFrame];
+            videoImgView.contentMode =UIViewContentModeScaleToFill;
+            videoImgView.backgroundColor = [UIColor blackColor];
             
             
             if ([[dic allKeys] containsObject:@"path_source_img_local"]) {
                 videoImgView.image = (UIImage*)[dic objectForKey:@"path_source_img_local"];
                 [imagebackView addSubview:videoImgView];
+            }else if([[dic allKeys] containsObject:@"path_source_img_notice"]){
+//                videoImgView.image = [UIImage imageNamed:@"huanying@2x.png"];
+                
+                [imagebackView addSubview:videoImgView];
             }else{
                 NSString * urlStr = domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"]);
                 [videoImgView sd_setImageWithURL:[NSURL URLWithString:urlStr]];
-
-//                 [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
-//                [videoImgView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@"loding.png"]];
                 [imagebackView addSubview:videoImgView];
             }
             
-            UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(k_screen_width*9/64-20, k_screen_width/4-20, 40, 40)];
+            UIImageView * beginImgView = [[UIImageView alloc]initWithFrame:CGRectMake(VideoImgFrame.size.width/2-20, VideoImgFrame.size.height/2-20, 40, 40)];
             beginImgView.image = [UIImage imageNamed:@"player.png"];
             [videoImgView addSubview:beginImgView];
             
@@ -130,11 +165,7 @@
             if ([[dic allKeys] containsObject:@"local_img"]) {
                 imagebackView = [self viewWithTag:1000+i];
                 imagebackView.hidden = NO;
-//                CGFloat img_width = (k_screen_width-60)/3-5;
-//                CGFloat img_width = (k_screen_width-40)/3;
                 CGFloat img_width =  (k_screen_width-40)/3;
-//                (i%3)*width+20, i/3*width+10, width-5, width-5
-//                imagebackView.frame = CGRectMake(((k_screen_width-60)/3-5)*(i%3)+20, ((k_screen_width-60)/3-5) *(i/3), (k_screen_width-60)/3-5, (k_screen_width-60)/3-5);
                 imagebackView.frame = CGRectMake((i%3)*img_width+5, i/3*img_width+10, img_width-5, img_width-5);
                 NSLog(@"%@",domain_img([imageArray objectAtIndex:i]));
                 UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imagebackView.frame.size.width, imagebackView.frame.size.width)];
@@ -151,12 +182,6 @@
                     NSLog(@"%@",domain_img([imageArray objectAtIndex:i]));
                     
                     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imagebackView.frame.size.width, imagebackView.frame.size.height)];
-//                    [imageView setContentMode:UIViewContentModeScaleAspectFill];
-//                    imageView.clipsToBounds = YES;
-                    
-//                [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])]];
-                    
-//                [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
                     [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])] placeholderImage:[UIImage imageNamed:@"loading_1.png"]];
                     [imagebackView addSubview:imageView];
                 }else{
@@ -166,9 +191,6 @@
                     NSLog(@"%@",domain_img([imageArray objectAtIndex:i]));
                     
                     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imagebackView.frame.size.width, imagebackView.frame.size.width)];
-//                [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])]];
-                    
-//                [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
                     [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])] placeholderImage:[UIImage imageNamed:@"loding.png"]];
                     [imagebackView addSubview:imageView];
                 }
@@ -280,7 +302,14 @@
                         }];
                     }else{
 //                        UIView *backview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self->_previewView.width , self->_previewView.height)];
-                        NSString *urlStr = domain_img([dic objectForKey:@"path_source"]);
+                        NSString *urlStr;
+                        
+                        if ([[dic allKeys] containsObject:@"path_source_img_notice"]) {
+                            urlStr = [dic objectForKey:@"path_source"];
+                        }else{
+                            urlStr = domain_img([dic objectForKey:@"path_source"]);
+                        }
+                        
                         self->playerLayer = [AVPlayerLayer playerLayerWithPlayer:[AVPlayer playerWithURL:[NSURL URLWithString:urlStr]]];
                         self->playerLayer.delegate = self;
                         self->playerLayer.masksToBounds= YES;

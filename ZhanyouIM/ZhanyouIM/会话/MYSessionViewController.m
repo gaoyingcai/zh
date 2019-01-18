@@ -82,6 +82,7 @@
 -(void)getTeamInfo{
     TeamInfoViewController * teaminfo = [[UIStoryboard storyboardWithName:@"Session" bundle:nil] instantiateViewControllerWithIdentifier:@"teamInfo"];
     teaminfo.teamId = self.session.sessionId;
+    teaminfo.session = self.session;
     [self.navigationController pushViewController:teaminfo animated:YES];
 }
 

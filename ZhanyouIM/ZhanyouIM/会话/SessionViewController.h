@@ -11,7 +11,7 @@
 #import "NIMSessionListViewController.h"
 
 
-@interface SessionViewController : NIMSessionListViewController<NIMLoginManagerDelegate,NIMSystemNotificationManagerDelegate,UITabBarDelegate>
+@interface SessionViewController : NIMSessionListViewController<NIMLoginManagerDelegate,NIMSystemNotificationManagerDelegate,UITabBarControllerDelegate>
 {
     UIView *backView;
     NSMutableDictionary * announcementDic;

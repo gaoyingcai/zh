@@ -24,6 +24,9 @@
 
 @interface SessionViewController(){
     UIImageView * imageView; //缺省图片
+    NSDictionary * resultDic;
+    BOOL canClick;
+    BOOL alertIsShow;
 }
 
 @end
@@ -32,7 +35,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [_addView setHidden:YES];
     [self.view sendSubviewToBack:_addView];
-//    self.tabBarController.tabBar.hidden = YES;
+    self.tabBarController.tabBar.hidden = NO;
     self.navigationController.navigationBar.hidden = NO;
 
     [self checkoutLogin];
@@ -42,6 +45,7 @@
 -(void)checkoutLogin{
     NSDictionary * dic = [self getLocalUserinfo];
     if (dic == nil) {
+        [self.recentSessions removeAllObjects];
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [self.navigationController pushViewController:login animated:YES];
@@ -61,7 +65,7 @@
     
     [DataService requestWithPostUrl:@"/api/common/getIndexData" params:@{@"uid":[[self getLocalUserinfo] objectForKey:@"uid"]} block:^(id result) {
         if ([self checkout:result]) {
-            self.tabBarController.tabBar.hidden = NO;
+            self->canClick = YES;
             NSDictionary *noticeDic = [[result objectForKey:@"data"]objectForKey:@"notice"];
             if ([[NSString stringWithFormat:@"%@",[noticeDic objectForKey:@"status"]] isEqualToString:@"1"]) {
                 self.noticeBackView.hidden = NO;
@@ -79,7 +83,8 @@
             NSString *userImgStr = [userInfoDic objectForKey:@"head_url"];
             [self setLeftBtnWithImgStr:userImgStr];
         }else{
-            self.tabBarController.tabBar.hidden = YES;
+            self->canClick = NO;
+            self->resultDic = [NSDictionary dictionaryWithDictionary:result];
             [self showAlertViewWithDic:result];
         }
     }];
@@ -111,6 +116,7 @@
     return reSizeImage;
 }
 -(void)showAlertViewWithDic:(NSDictionary *)dic{
+    alertIsShow = YES;
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"提示" message:[dic objectForKey:@"message"] preferredStyle:UIAlertControllerStyleAlert];
     
     RegistViewController2 * regist2 = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"regist2"];
@@ -150,6 +156,7 @@
     
     UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [self deleteAllUserInfo];
+        [self.recentSessions removeAllObjects];
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [self.navigationController pushViewController:login animated:YES];
@@ -162,6 +169,8 @@
 - (void)viewDidLoad {
     [self checkoutLogin];
     [super viewDidLoad];
+    self.tabBarController.delegate = self;
+    canClick = YES;
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"sessionBadge" object:nil];
     
@@ -277,10 +286,17 @@
      };
      */
     WebViewController *webView = [[WebViewController alloc]init];
-    webView.title = [announcementDic objectForKey:@"title"];
+    if ([[announcementDic objectForKey:@"title"] isKindOfClass:[NSNull class]]) {
+        webView.title = @"官方公告";
+    }else{
+         webView.title = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"title"]];
+    }
+    
     NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
     webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
-    //    webView.webViewStr = @"https://www.baidu.com/";
+    
+//    webView.webViewStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"notice_url"]];
+    
     [self.navigationController pushViewController:webView animated:YES];
 }
 
@@ -291,6 +307,15 @@
     [backView removeFromSuperview];
     backView =nil;
 }
+
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
+    if (!canClick&&!alertIsShow) {
+        [self showAlertViewWithDic:resultDic];
+    }
+    return canClick;
+}
+
 
 //-(void)autoLoginIM{
 //    NSDictionary * dic =[self getUserIMInfo];
@@ -332,6 +357,7 @@
         [self refresh];
     }else if(step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
         NSLog(@"云信登录失败  -----%ld", (long)step);
+        [[[NIMSDK sharedSDK] loginManager] removeDelegate:self];
         if ([self isLogin]) {
             [self showLogAlert];
         }else{
@@ -345,68 +371,62 @@
 }
 -(void)showLogAlert{
     
-//    if ([self isLogin]) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的账号在其他设备登录,请重新登录" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self deleteUserInfoAndPushToLogin];
-        }];
-        [alertController addAction:action];
-        [self presentViewController:alertController animated:YES completion:nil];
-//    }else{
-//        [self deleteUserInfoAndPushToLogin];
-//    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的账号在其他设备登录,请重新登录" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self deleteUserInfoAndPushToLogin];
+    }];
+    [alertController addAction:action];
+    [self presentViewController:alertController animated:YES completion:nil];
     
 }
 -(void)deleteUserInfoAndPushToLogin{
-//    UIViewController *currentVC = [self getCurrentVC];
-////    [self deleteAllUserInfo];
-//    if (currentVC.presentingViewController) {
-//        [currentVC dismissViewControllerAnimated:NO completion:^{
-//            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
-//                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
-//                [navi popToRootViewControllerAnimated:NO];
-//            }
-//        }];
-//    } else {
-//        [currentVC.navigationController popToRootViewControllerAnimated:NO];
-//    }
-//
-    
-//    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-//    rootTab.selectedIndex = 0;
-    
-    
+
+    UIViewController *currentVC = [SessionViewController getCurrentVC];
     [self.recentSessions removeAllObjects];
-    
-    LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    [self.navigationController pushViewController:login animated:YES];
-
-}
-- (UIViewController *)getCurrentVC{
-    UIViewController *result = nil;
-    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
-    if (window.windowLevel != UIWindowLevelNormal){
-        NSArray *windows = [[UIApplication sharedApplication] windows];
-        for(UIWindow * tmpWin in windows){
-            if (tmpWin.windowLevel == UIWindowLevelNormal){
-                window = tmpWin;
-                break;
+    if (currentVC.presentingViewController) {
+        [currentVC dismissViewControllerAnimated:NO completion:^{
+            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
+                [navi popToRootViewControllerAnimated:NO];
             }
-        }
+        }];
+    } else {
+        [currentVC.navigationController popToRootViewControllerAnimated:NO];
     }
-    UIView *frontView = [[window subviews] objectAtIndex:0];
-    id nextResponder = [frontView nextResponder];
-    if ([nextResponder isKindOfClass:[UIViewController class]])
-        result = nextResponder;
-    else
-        result = window.rootViewController;
-    return result;
+    
+    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    rootTab.selectedIndex = 0;
     
 }
 
 
-
+//获取当前屏幕显示的viewcontroller
++ (UIViewController *)getCurrentVC {
+    
+    UIViewController *result = nil;
+    
+    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    do {
+        if ([rootVC isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *navi = (UINavigationController *)rootVC;
+            UIViewController *vc = [navi.viewControllers lastObject];
+            result = vc;
+            rootVC = vc.presentedViewController;
+            continue;
+        } else if([rootVC isKindOfClass:[UITabBarController class]]) {
+            UITabBarController *tab = (UITabBarController *)rootVC;
+            result = tab;
+            rootVC = [tab.viewControllers objectAtIndex:tab.selectedIndex];
+            continue;
+        } else if([rootVC isKindOfClass:[UIViewController class]]) {
+            result = rootVC;
+            rootVC = nil;
+        }
+    } while (rootVC != nil);
+    
+    return result;
+}
 
 //判断登录状态
 -(BOOL)isLogin{

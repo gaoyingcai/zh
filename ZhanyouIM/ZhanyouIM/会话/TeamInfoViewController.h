@@ -7,6 +7,9 @@
 //
 
 #import "BaseViewController.h"
+#import <NIMSDK/NIMSDK.h>
+
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,8 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSMutableArray * teamUserArray;
 
 
-
-
+@property (nonatomic, strong)  NIMSession *session;
 
 @end
 

@@ -99,6 +99,11 @@
         [self.navigationController pushViewController:report animated:YES];
     }]] ;
     [alert addAction:[UIAlertAction actionWithTitle:@"删除战友" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        NIMSession *session = [NIMSession session:self->_phone type:NIMSessionTypeP2P];
+        NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:session];
+        [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+        
         [[NIMSDK sharedSDK].userManager deleteFriend:self->_phone completion:^(NSError * _Nullable error) {
             if (error) {
                 [self showTextMessage:@"删除失败"];
@@ -125,6 +130,8 @@
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell.userImg sd_setImageWithURL:[NSURL URLWithString:[[[dataArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row]objectForKey:@"info"]]];
+
+        
         return cell;
     }else if (indexPath.section == 1 ||indexPath.section ==2){
         static NSString *reuseIdentifier = @"USERINFO2";
@@ -232,21 +239,20 @@
 //        [self.navigationController pushViewController:userInfo animated:YES];
 //    }
     
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        [self showUserHeaderImage];
+    }
+    
     
     if (indexPath.section == 3) {
-        
         if (_loginOut) {
-        
+            [self deleteAllUserInfo];
             if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
-                [self deleteAllUserInfo];
                 [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
                     NSLog(@"%@",error);
                 }];
-            }
-//        [[[NIMSDK sharedSDK] loginManager] addDelegate:nil];
-
-            else{
-                [self deleteAllUserInfo];
+            }else{
+                
                 LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
                 self.navigationController.interactivePopGestureRecognizer.enabled = NO;
                 [self.navigationController pushViewController:login animated:YES];
@@ -282,6 +288,32 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.1;
 }
+
+
+
+//放大头像
+-(void)showUserHeaderImage{
+    UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    bigImageView.backgroundColor = [UIColor blackColor];
+    bigImageView.contentMode = UIViewContentModeScaleAspectFit;
+    UIApplication *app = [UIApplication sharedApplication];
+    [app.keyWindow addSubview:bigImageView];
+    [bigImageView sd_setImageWithURL:[NSURL URLWithString:[[[dataArray objectAtIndex:0]objectAtIndex:0]objectForKey:@"info"]]];
+    
+    UIButton *button = [[UIButton alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+    button.backgroundColor = [UIColor clearColor];
+    [button addTarget:self action:@selector(showLittleImage:) forControlEvents:UIControlEventTouchUpInside];
+    [app.keyWindow addSubview:button];
+    
+}
+-(void)showLittleImage:(UIButton *)button{
+    UIApplication *app = [UIApplication sharedApplication];
+    UIView *view = [app.keyWindow.subviews objectAtIndex:1];
+    [view removeFromSuperview];
+    [button removeFromSuperview];
+}
+     
+     
 
 
 /*

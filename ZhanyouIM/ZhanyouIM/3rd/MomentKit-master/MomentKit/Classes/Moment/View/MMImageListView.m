@@ -287,7 +287,22 @@
                         self->playerLayer.borderColor = [UIColor blackColor].CGColor;
                         self->playerLayer.frame = CGRectMake(0, 0, self->_previewView.width , self->_previewView.height);
                         self->playerItem = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:urlStr]];
-                        //                    [playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];// 监听status属性
+                        
+                        
+//                        [self->playerLayer.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+//                            float current=CMTimeGetSeconds(time);
+//                            float total=CMTimeGetSeconds([self->playerItem duration]);
+//                            NSLog(@"当前已经播放%.2fs.",current);
+//                            if (current >= total) {
+//                                [self->playerLayer.player seekToTime:CMTimeMake(0, 1)];
+//                            }
+//                        }];
+                        
+                        
+                        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:self->playerItem];
+                        
+                        
+//                        [self->playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];// 监听status属性
                         [self->playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];// 监听loadedTimeRanges属性
                         self->playerLayer.player = [AVPlayer playerWithPlayerItem:self->playerItem];
 //                        [backview.layer addSublayer:self->playerLayer];
@@ -318,6 +333,12 @@
     NSLog(@"%@",_previewView);
 }
 
+#pragma mark - 接收播放完成的通知
+- (void)runLoopTheMovie:(NSNotification *)notification {
+    AVPlayerItem *playerItem = notification.object;
+    [playerItem seekToTime:kCMTimeZero];
+    [playerLayer.player play];
+}
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
     
     if ([keyPath isEqualToString:@"loadedTimeRanges"])
@@ -366,6 +387,8 @@
 {
     [self hideHUD];
     if (playerLayer) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self->playerItem];
+
         [playerLayer.player pause];
         playerLayer= nil;
     }

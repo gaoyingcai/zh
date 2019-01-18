@@ -81,6 +81,7 @@ static NSString *moduleType;
     
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         [self.momentArray removeAllObjects];
+        [self.dataArray removeAllObjects];
         [self loadData];
     }];
     self.tableView.mj_footer= [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{

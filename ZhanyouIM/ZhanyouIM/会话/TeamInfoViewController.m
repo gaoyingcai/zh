@@ -28,7 +28,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     width = k_screen_width/6; //比实际照片尺寸打20 左边10 右边10
-
+    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 25, 25);
     [btn setBackgroundImage:[UIImage imageNamed:@"更多@2x.png"] forState:UIControlStateNormal];
@@ -167,12 +167,17 @@
 }
 
 -(void)updataTeamName{
-    [[NIMSDK sharedSDK].teamManager updateTeamName:textField.text teamId:_teamId completion:^(NSError * _Nullable error) {
-        if (!error) {
-            self.teamNameLabel.text = self->textField.text;
-            [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] -2)] animated:YES];
-        }
-    }];
+    
+    if (self.teamNameLabel.text.length>20) {
+        [self showTextMessage:@"群聊名称不得多余20字"];
+    }else{
+        [[NIMSDK sharedSDK].teamManager updateTeamName:textField.text teamId:_teamId completion:^(NSError * _Nullable error) {
+            if (!error) {
+                self.teamNameLabel.text = self->textField.text;
+                [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] -2)] animated:YES];
+            }
+        }];
+    }
 }
 
 - (IBAction)teamNameBtnAction:(id)sender {
@@ -219,6 +224,9 @@
         report.reportId = self->_teamId;
         [self.navigationController pushViewController:report animated:YES];
     }]] ;
+    
+    
+    
     [alert addAction:[UIAlertAction actionWithTitle:@"删除该群聊" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
         //退群
@@ -234,6 +242,9 @@
                     }
                 }];
             }else{
+                NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
+                [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+                
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
         }];
@@ -241,6 +252,12 @@
         
         
     }]] ;
+    
+    
+    
+    
+    
+    
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }]];
     

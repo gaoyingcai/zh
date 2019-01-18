@@ -9,9 +9,11 @@
 #import "WebViewController.h"
 #import <WebKit/WebKit.h>
 @interface WebViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
-{
-    WKWebView*_webView;
-}
+//{
+//    WKWebView*_webView;
+//}
+
+@property (nonatomic,strong) WKWebView *webview;
 
 @end
 
@@ -33,12 +35,12 @@
 //    [self.view addSubview:statusBarView];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
 
-    _webView=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
-    [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_webViewStr]]];
-    [self.view addSubview:_webView];
+    self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
+    [self.webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_webViewStr]]];
+    [self.view addSubview:self.webview];
     
-    _webView.navigationDelegate=self;//
-    _webView.UIDelegate=self;//这个协议主要用于WKWebView处理web界面的三种提示框(警告框、确认框、输入框)
+    self.webview.navigationDelegate=self;//
+    self.webview.UIDelegate=self;//这个协议主要用于WKWebView处理web界面的三种提示框(警告框、确认框、输入框)
     
 //    [[_webView configuration].userContentController addScriptMessageHandler:self name:@"closebrowser"];
     

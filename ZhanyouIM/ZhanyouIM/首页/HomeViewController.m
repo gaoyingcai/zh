@@ -47,6 +47,7 @@
     
     if (showGroup) {
         [self groupBtnAction:nil];
+        showGroup = NO;
     }else{
         [self friendBtnAction:nil];
     }

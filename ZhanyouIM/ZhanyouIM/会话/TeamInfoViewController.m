@@ -229,25 +229,54 @@
     
     [alert addAction:[UIAlertAction actionWithTitle:@"删除该群聊" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
+//        NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
+//        [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+        
+        [[NIMSDK sharedSDK].conversationManager deleteRemoteSessions:@[self.session] completion:^(NSError * _Nullable error) {
+            NSLog(@"%@",error);
+        }];
+        
+        NSArray *array = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
+
+        NSLog(@"%@",array);
+        NSLog(@"%@",array);
+        
+        
         //退群
         [[NIMSDK sharedSDK].teamManager quitTeam:self->_teamId completion:^(NSError * _Nullable error) {
             if (error) {
                 [self showTextMessage:@"删除失败"];
-                //解散群
-                [[NIMSDK sharedSDK].teamManager quitTeam:self->_teamId completion:^(NSError * _Nullable error) {
-                    if (error) {
-                        [self showTextMessage:@"删除失败"];
-                    }else{
-                        [self.navigationController popViewControllerAnimated:YES];
-                    }
-                }];
             }else{
+                
+//                //解散群
+//                [[NIMSDK sharedSDK].teamManager quitTeam:self->_teamId completion:^(NSError * _Nullable error) {
+//                    if (error) {
+//                        [self showTextMessage:@"删除失败"];
+//                    }else{
+//                        NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
+//                        [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+//
+//                        [self.navigationController popViewControllerAnimated:YES];
+//                    }
+//                }];
+//
                 NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
                 [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+
                 
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
         }];
+        
+        
+//        NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
+//        [[NIMSDK sharedSDK].conversationManager deleteRemoteSessions:@[recentSession.session] completion:nil];
+        
+        
+        
+//        NIMRecentSession *recentSession = [[NIMSDK sharedSDK].conversationManager recentSessionBySession:self.session];
+//        [[NIMSDK sharedSDK].conversationManager deleteRecentSession:recentSession];
+
         
         
         

@@ -25,15 +25,16 @@
     
     [WXApi registerApp:@"wx1f997c650f37820d"];
     
+    [self registerAPNs];
+    
     
     //4d3fd964f78d
     //推荐在程序启动的时候初始化 NIMSDK
     NSString *appKey        = @"98a51dd54e15912adb7b21a09c5f79c0";
     NIMSDKOption *option    = [NIMSDKOption optionWithAppKey:appKey];
-//    option.apnsCername      = @"your APNs cer name";
+    option.apnsCername      = @"zhanyouTest";
 //    option.pkCernam         = @"your pushkit cer name";
     [[NIMSDK sharedSDK] registerWithOption:option];
-    
     
 //    NIMServerSetting *setting    = [[NIMServerSetting alloc] init];
 //    setting.enabledHttps = YES;
@@ -64,8 +65,26 @@
     
     return YES;
 }
-
-
+- (void)registerAPNs
+{
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotifications)])
+    {
+        UIUserNotificationType types = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |      UIRemoteNotificationTypeAlert;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
+                                                                                 categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else
+    {
+        UIRemoteNotificationType types = UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound |        UIRemoteNotificationTypeBadge;
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+    }
+}
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [[NIMSDK sharedSDK] updateApnsToken:deviceToken];
+}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {

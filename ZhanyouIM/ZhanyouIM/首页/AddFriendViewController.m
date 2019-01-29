@@ -158,6 +158,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (tableView.tag == 0) {
         cell.nameLabel.text =[[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"username"];
+        cell.phoneLabel.text = [[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"phone"];
         cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
         cell.imgView.layer.masksToBounds =YES;
         [cell.imgView sd_setImageWithURL:[NSURL URLWithString:domain_img([[searchMeArr objectAtIndex:indexPath.row] objectForKey:@"head_url"])]];

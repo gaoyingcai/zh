@@ -65,8 +65,12 @@
     self.tableView.dataSource       = self;
     self.tableView.tableFooterView  = [[UIView alloc] init];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
-    NSLog(@"%@",_recentSessions);
+    NSMutableArray *myRecentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
+    for (NIMRecentSession *recentSession in myRecentSessions) {
+        if ([[NIMSDK sharedSDK].teamManager isMyTeam:recentSession.session.sessionId]) {
+            [_recentSessions addObject:recentSession];
+        }
+    }
     self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
 
     if (!self.recentSessions.count) {
@@ -175,7 +179,10 @@
 {
     //清理本地数据
     NSInteger index = [self.recentSessions indexOfObject:recentSession];
-    [self.recentSessions removeObjectAtIndex:index];
+    if (index >0 && index <self.recentSessions.count) {
+        [self.recentSessions removeObjectAtIndex:index];
+    }
+    
     
     //如果删除本地会话后就不允许漫游当前会话，则需要进行一次删除服务器会话的操作
     if (self.autoRemoveRemoteSession)

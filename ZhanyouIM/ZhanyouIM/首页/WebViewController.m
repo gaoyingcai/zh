@@ -10,6 +10,8 @@
 #import <WebKit/WebKit.h>
 #import "Moment.h"
 #import "MMImageListView.h"
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 
@@ -17,7 +19,7 @@
 //{
 //    WKWebView*_webView;
 //}
-
+@property (nonatomic,strong)  AVPlayerViewController * PlayerVC;
 @property (nonatomic,strong) WKWebView *webview;
 
 @end
@@ -35,20 +37,77 @@
 
     if (self.videoStr.length >5) {
         
-        NSMutableArray *array =[NSMutableArray arrayWithObject:@{@"path_source":self.videoStr,@"path_source_img_notice":@""}];
-        
-        MMImageListView *imageListView = [[MMImageListView alloc] initWithFrame:CGRectZero];
-        Moment *moment = [[Moment alloc] init];
-        moment.fileCount = 1;
-        moment.imageArray = array;
-        imageListView.moment = moment;
-        
+//        NSMutableArray *array =[NSMutableArray arrayWithObject:@{@"path_source":self.videoStr,@"path_source_img_notice":@""}];
+//
+//        MMImageListView *imageListView = [[MMImageListView alloc] initWithFrame:CGRectZero];
+//        Moment *moment = [[Moment alloc] init];
+//        moment.fileCount = 1;
+//        moment.imageArray = array;
+//        imageListView.moment = moment;
+//
         UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 64, k_screen_width, k_screen_height*9/16)];
         view.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:view];
-        [view addSubview:imageListView];
-        
+//        [view addSubview:imageListView];
+//
         self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, k_screen_width*9/16+64, k_screen_width, k_screen_height - k_screen_width*9/16 -74)];
+        
+        
+        
+        //获取视频尺寸
+        AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL URLWithString:self.videoStr]];
+        NSArray *array = asset.tracks;
+        CGSize videoSize = CGSizeZero;
+        for (AVAssetTrack *track in array) {
+            if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+                videoSize = track.naturalSize;
+            }
+        }
+//        UIImageView *imageView =[[UIImageView alloc]init];
+//        imageView.backgroundColor = [UIColor blackColor];
+//        imageView.userInteractionEnabled = YES;
+//        CGRect frame = CGRectZero;
+//        [view addSubview:imageView];
+        
+        
+        
+//        _PlayerVC.player = [AVPlayer playerWithURL:self.videoStr];
+//        [self.PlayerVC.player play];
+        
+        
+        _PlayerVC = [[AVPlayerViewController alloc] init];
+        
+//        _PlayerVC.view.frame = [[UIScreen mainScreen] bounds];
+        _PlayerVC.showsPlaybackControls = YES;
+        _PlayerVC.player = [AVPlayer playerWithURL:[NSURL URLWithString:self.videoStr]];
+        
+        
+        
+//        [app.keyWindow addSubview:self.PlayerVC.view];
+        
+        if (videoSize.width >0) {
+            NSInteger wi = videoSize.width;
+            NSInteger he = videoSize.height;
+            double hewiScale = (double)he/wi;
+            double wiheScale = (double)wi/he;
+            
+            
+            if (hewiScale*16 >9) {
+                _PlayerVC.view.frame = CGRectMake(12 + ((k_screen_width -24) -(k_screen_width -24)*9/16 * wiheScale)/2, 0 , (k_screen_width -24)*9/16 * wiheScale, (k_screen_width -24)*9/16);
+            }else{
+                _PlayerVC.view.frame = CGRectMake(12, 0 , k_screen_width-24, (k_screen_width -24)*hewiScale);
+            }
+        }
+        
+        
+        [view addSubview:_PlayerVC.view];
+        
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(singleTapSmallViewVideoPlayer)];
+//        [imageView addGestureRecognizer:tap];
+        
+        
+        
+        
     }else{
         self.webview=[[WKWebView alloc]initWithFrame:CGRectMake(0, 20, k_screen_width, k_screen_height)];
     }
@@ -59,6 +118,38 @@
     
     self.webview.navigationDelegate=self;//
     self.webview.UIDelegate=self;//这个协议主要用于WKWebView处理web界面的三种提示框(警告框、确认框、输入框)
+}
+
+#pragma mark -视频播放
+- (void)singleTapSmallViewVideoPlayer
+{
+    UIApplication *app = [UIApplication sharedApplication];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",self.videoStr]];
+    _PlayerVC.player = [AVPlayer playerWithURL:url];
+    [self.PlayerVC.player play];
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, k_screen_height*1/5, k_screen_width, k_screen_height*2/3)];
+    [button addTarget:self action:@selector(closeShow:) forControlEvents:UIControlEventTouchUpInside];
+    [app.keyWindow addSubview:button];
+}
+-(AVPlayerViewController*)PlayerVC{
+    if (!_PlayerVC) {
+        _PlayerVC = [[AVPlayerViewController alloc] init];
+        _PlayerVC.view.frame = [[UIScreen mainScreen] bounds];
+        _PlayerVC.showsPlaybackControls = YES;
+    }
+    return _PlayerVC;
+}
+//关闭显示
+- (void)closeShow:(UIButton *)button
+{
+    if (self.PlayerVC) {
+        [self.PlayerVC.player pause];
+        self.PlayerVC = nil;
+    }
+    UIApplication *app = [UIApplication sharedApplication];
+    UIView *view = [app.keyWindow.subviews objectAtIndex:1];
+    [view removeFromSuperview];
+    [button removeFromSuperview];
 }
 
 #pragma -mark WKNavigationDelegate

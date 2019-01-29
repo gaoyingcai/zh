@@ -23,6 +23,15 @@
 - (void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.hidden = YES;
     self.tabBarController.tabBar.hidden = YES;
+    
+    if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
+        [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
+            NSLog(@"%@",error);
+            if (error == nil) {
+                [self deleteAllUserInfo];
+            }
+        }];
+    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,7 +55,7 @@
             
             [self setUserInfo:@{@"uid":[[result objectForKey:@"data"] objectForKey:@"uid"],@"phone":[[result objectForKey:@"data"] objectForKey:@"accid"]}];
             [self setUserIMInfo: @{@"accid":[[result objectForKey:@"data"] objectForKey:@"accid"],@"token":[[result objectForKey:@"data"] objectForKey:@"token"]}];
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            [self.navigationController popToRootViewControllerAnimated:NO];
         }else{
             [self showTextMessage:[NSString stringWithFormat:@"%@",[result objectForKey:@"message"]]];
             return;

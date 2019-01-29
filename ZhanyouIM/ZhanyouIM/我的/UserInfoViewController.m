@@ -75,7 +75,7 @@
             NSLog(@"%@",result);
 //            self->userImgStr = domain_img([[result objectForKey:@"data"]objectForKey:@"head_url"]);
 //            self->userName = [[result objectForKey:@"data"]objectForKey:@"username"];
-            userId = [[result objectForKey:@"data"]objectForKey:@"id"];
+            self->userId = [[result objectForKey:@"data"]objectForKey:@"id"];
             self->userImgStr =[[result objectForKey:@"data"]objectForKey:@"head_url"];
             self->userNameStr =[NSString stringWithFormat:@"%@",[[result objectForKey:@"data"]objectForKey:@"username"]];
             if (self->dataArray == nil) {
@@ -248,17 +248,22 @@
     
     if (indexPath.section == 3) {
         if (_loginOut) {
-            [self deleteAllUserInfo];
-            if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
-                [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
-                    NSLog(@"%@",error);
-                }];
-            }else{
-                
-                LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
-                self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-                [self.navigationController pushViewController:login animated:YES];
-            }
+            
+//            if ([[[NIMSDK sharedSDK] loginManager] isLogined]) {
+//                [[[NIMSDK sharedSDK] loginManager] logout:^(NSError *error) {
+//                    NSLog(@"%@",error);
+//                    if (error == nil) {
+//                        [self deleteAllUserInfo];
+//                    }
+//                }];
+//            }
+//            else{
+                [self deleteAllUserInfo];
+            [self.navigationController popToRootViewControllerAnimated:NO];
+//                LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+//                self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+//                [self.navigationController pushViewController:login animated:YES];
+//            }
         }else if (_postMessage){
             
             NSDictionary * dic = [self getUserinfo];
@@ -300,7 +305,8 @@
     bigImageView.contentMode = UIViewContentModeScaleAspectFit;
     UIApplication *app = [UIApplication sharedApplication];
     [app.keyWindow addSubview:bigImageView];
-    [bigImageView sd_setImageWithURL:[NSURL URLWithString:[[[dataArray objectAtIndex:0]objectAtIndex:0]objectForKey:@"info"]]];
+    NSString *userImageStr = [[[dataArray objectAtIndex:0]objectAtIndex:0]objectForKey:@"info"];
+    [bigImageView sd_setImageWithURL:[NSURL URLWithString:[userImageStr stringByReplacingOccurrencesOfString:@"_thumb.png" withString:@""]]];
     
     UIButton *button = [[UIButton alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     button.backgroundColor = [UIColor clearColor];

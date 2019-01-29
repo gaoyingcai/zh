@@ -39,6 +39,8 @@
     self.navigationController.navigationBar.hidden = NO;
 
     [self checkoutLogin];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
     
 }
 
@@ -48,9 +50,9 @@
         [self.recentSessions removeAllObjects];
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-        [self.navigationController pushViewController:login animated:YES];
+        [self.navigationController pushViewController:login animated:NO];
     }else{
-        [self manualLoginIM];
+        [self autoLoginIM];
         [self getUserInfo];
     }
 }
@@ -94,13 +96,6 @@
     leftBtn.frame = CGRectMake(0, 0, 36, 36);
     leftBtn.layer.cornerRadius = 18;
     leftBtn.layer.masksToBounds = YES;
-//    dispatch_queue_t queue = dispatch_queue_create("com.demo.serialQueue", DISPATCH_QUEUE_SERIAL);
-//    dispatch_async(queue, ^{
-//        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
-//        });
-//    });
     UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:domain_img(userImgStr)]]];
     [leftBtn setBackgroundImage:[self reSizeImage:img toSize:leftBtn.size] forState:UIControlStateNormal];
     
@@ -159,7 +154,7 @@
         [self.recentSessions removeAllObjects];
         LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-        [self.navigationController pushViewController:login animated:YES];
+        [self.navigationController pushViewController:login animated:NO];
     }];
     
     [alertController addAction:defaultAction];
@@ -173,8 +168,6 @@
     canClick = YES;
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setBadge:) name:@"sessionBadge" object:nil];
-    
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(autoLoginIM) name:@"IMAutoLoginOut" object:nil];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:@"sessionBadge" object:nil userInfo:nil];
 
@@ -228,8 +221,6 @@
 
 -(void)showUserInfo:(UIButton*)btn{
     UserViewController* user = [[UIStoryboard storyboardWithName:@"User" bundle:nil] instantiateViewControllerWithIdentifier:@"user"];
-//    userInfo.phone = [[[NSUserDefaults standardUserDefaults] objectForKey:user_defaults_user] objectForKey:@"phone"];
-//    userInfo.loginOut=YES;
     [self.navigationController pushViewController:user animated:YES];
     
 }
@@ -292,13 +283,9 @@
          webView.title = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"title"]];
     }
     
-//    NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
-//    webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
-    
-    webView.webViewStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"notice_url"]];
+    NSString *userid= [[self getLocalUserinfo] objectForKey:@"uid"];
+    webView.webViewStr = [NSString stringWithFormat:@"%@?uid=%@",[announcementDic objectForKey:@"notice_url"],userid];
     webView.videoStr = [NSString stringWithFormat:@"%@",[announcementDic objectForKey:@"vedio_src"]];
-    
-//    webView.videoStr = @"http://aiwozhonghua-test2.kh.juanyunkeji.cn/Public/upload/video/2019-01-18/5c41f5cdd5300.mp4";
     
     [self.navigationController pushViewController:webView animated:YES];
 }
@@ -320,53 +307,39 @@
 }
 
 
-//-(void)autoLoginIM{
-//    NSDictionary * dic =[self getUserIMInfo];
-//    NSString *account = [dic objectForKey:@"accid"];
-//    NSString *token   = [dic objectForKey:@"token"];
-//    NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
-//    loginData.account = account;
-//    loginData.token = token;
-//    [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
-//}
-//- (void)onAutoLoginFailed:(NSError *)error{
-//    [self showLogAlert];
-//}
-
-//手动登录云信
--(void)manualLoginIM{
+-(void)autoLoginIM{
     NSDictionary * dic =[self getUserIMInfo];
     NSString *account = [dic objectForKey:@"accid"];
     NSString *token   = [dic objectForKey:@"token"];
-    
-    NSArray * clientArray = [[[NIMSDK sharedSDK]loginManager] currentLoginClients];
-    for (NIMLoginClient *client in clientArray) {
-        [[[NIMSDK sharedSDK]loginManager]kickOtherClient:client completion:nil];
-    }
-    
-    [[[NIMSDK sharedSDK] loginManager] addDelegate:self];
-    [[[NIMSDK sharedSDK] loginManager] login:account token:token completion:^(NSError *error) {
-        if (error) {
-            NSLog(@"手动登录失败:%@",error);
-        }
-    }];
+    NIMAutoLoginData *loginData = [[NIMAutoLoginData alloc] init];
+    loginData.account = account;
+    loginData.token = token;
+    loginData.forcedMode = YES;
+    [[[NIMSDK sharedSDK] loginManager] autoLogin:loginData];
+}
+- (void)onAutoLoginFailed:(NSError *)error{
+    [self deleteUserInfoAndPushToLogin];
 }
 - (void)onLogin:(NIMLoginStep)step{
     NSLog(@"appdelete == %ld",(long)step);
     if (step == NIMLoginStepLoginOK) {
         NSLog(@"登录成功");
-        [self.navigationController popToRootViewControllerAnimated:YES];
-        self.recentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
-        [self refresh];
-    }else if(step == NIMLoginStepLoginFailed || step == NIMLoginStepLoseConnection){
-        NSLog(@"云信登录失败  -----%ld", (long)step);
-        [[[NIMSDK sharedSDK] loginManager] removeDelegate:self];
-        if ([self isLogin]) {
-            [self showLogAlert];
-        }else{
-            [self deleteUserInfoAndPushToLogin];
+        NSArray * clientArray = [[[NIMSDK sharedSDK]loginManager] currentLoginClients];
+        for (NIMLoginClient *client in clientArray) {
+            [[[NIMSDK sharedSDK]loginManager]kickOtherClient:client completion:nil];
         }
-        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        [self.recentSessions removeAllObjects];
+        NSMutableArray *myRecentSessions = [[NIMSDK sharedSDK].conversationManager.allRecentSessions mutableCopy];
+        for (NIMRecentSession *recentSession in myRecentSessions) {
+            if ([[NIMSDK sharedSDK].teamManager isMyTeam:recentSession.session.sessionId]) {
+                [self.recentSessions addObject:recentSession];
+            }
+        }
+
+        [self refresh];
+    }else if(step == NIMLoginStepLoseConnection){
+        NSLog(@"云信登录失败  -----%ld", (long)step);
     }
 }
 - (void)onKick:(NIMKickReason)code clientType:(NIMLoginClientType)clientType{
@@ -385,23 +358,31 @@
 -(void)deleteUserInfoAndPushToLogin{
 
     UIViewController *currentVC = [SessionViewController getCurrentVC];
-    [self.recentSessions removeAllObjects];
-    if (currentVC.presentingViewController) {
-        [currentVC dismissViewControllerAnimated:NO completion:^{
-            if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
-                UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
-                [navi popToRootViewControllerAnimated:NO];
-            }
-        }];
-    } else {
-        [currentVC.navigationController popToRootViewControllerAnimated:NO];
+    if ([currentVC isKindOfClass:[SessionViewController class]]) {
+        [self deleteAllUserInfo];
+        [self.recentSessions removeAllObjects];
+        LoginViewController * login = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"login"];
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        [self.navigationController pushViewController:login animated:NO];
+    }else{
+        [self deleteAllUserInfo];
+        [self.recentSessions removeAllObjects];
+        if (currentVC.presentingViewController) {
+            [currentVC dismissViewControllerAnimated:NO completion:^{
+                if ([currentVC.presentingViewController isKindOfClass:[UINavigationController class]]) {
+                    UINavigationController *navi = (UINavigationController *)currentVC.presentingViewController;
+                    [navi popToRootViewControllerAnimated:NO];
+                }
+            }];
+        } else {
+            [currentVC.navigationController popToRootViewControllerAnimated:NO];
+        }
+        
+        UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+        rootTab.selectedIndex = 0;
+        
     }
-    
-    UITabBarController *rootTab = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-    rootTab.selectedIndex = 0;
-    
 }
-
 
 //获取当前屏幕显示的viewcontroller
 + (UIViewController *)getCurrentVC {

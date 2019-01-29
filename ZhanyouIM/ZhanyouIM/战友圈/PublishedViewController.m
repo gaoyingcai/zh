@@ -177,8 +177,7 @@
     }else{
         NSLog(@"添加图片");
         UIAlertController*alertyController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-//        if (self.imgArray.count>0 && ![self.imgArray[0] isKindOfClass:[NSDictionary class]]) {
+    
         if (self.imgArray.count>0 && !isVideo) {
             UIAlertAction*xiangjiAction=[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self dakaixiangce:NO luzhi:NO];
@@ -250,7 +249,8 @@
     if (xiangce) {
         if (luzhi) {
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-            picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+//            picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+            picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];
         }else{
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
             picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];

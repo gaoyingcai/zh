@@ -191,7 +191,21 @@
                     NSLog(@"%@",domain_img([imageArray objectAtIndex:i]));
                     
                     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imagebackView.frame.size.width, imagebackView.frame.size.width)];
+                    
+                    [SDWebImageDownloader.sharedDownloader setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,image/jpeg,*/*;q=0.8"
+                                                 forHTTPHeaderField:@"Accept"];
+                    
                     [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])] placeholderImage:[UIImage imageNamed:@"loding.png"]];
+
+//                    [imageView sd_setImageWithURL:[NSURL URLWithString:domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"])] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//                        NSLog(@"****************");
+//                        NSLog(@"%@",domain_img([[imageArray objectAtIndex:i]objectForKey:@"path_source_img"]));
+//                        NSLog(@"%@",error);
+//                        NSLog(@"***************");
+//                        NSLog(@"%@",error);
+//                    }];
+                    
+
                     [imagebackView addSubview:imageView];
                 }
                 
@@ -222,12 +236,6 @@
         }];
         return;
     }
-    
-    
-    
-    
-    
-    
     
     _previewView = [[MMImagePreviewView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIApplication *app = [UIApplication sharedApplication];

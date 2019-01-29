@@ -166,9 +166,9 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [NIMKitProgressHUD show];
+//    [NIMKitProgressHUD show];
     [self requestAsset:assets.firstObject handler:^(NSString *path, PHAssetMediaType type) {
-        [NIMKitProgressHUD dismiss];
+//        [NIMKitProgressHUD dismiss];
         if (weakSelf.libraryResultHandler) {
             weakSelf.libraryResultHandler(nil,path,type);
         }

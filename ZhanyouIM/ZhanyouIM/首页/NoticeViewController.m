@@ -20,7 +20,7 @@
 
 @implementation NoticeViewController
 
-static int MaxNotificationCount =10;
+static int MaxNotificationCount =1000;
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
@@ -46,8 +46,30 @@ static int MaxNotificationCount =10;
 
 - (void)onReceiveSystemNotification:(NIMSystemNotification *)notification
 {
-    [_notificationArr insertObject:notification atIndex:0];
-    _shouldMarkAsRead = YES;
+    Boolean needInster = YES;
+    for (int i =0; i<_notificationArr.count; i++) {
+        NIMSystemNotification * notifation1 = _notificationArr[i];
+        NIMUserAddAttachment *attachment1 = (NIMUserAddAttachment*)notifation1.attachment;
+        NIMUserAddAttachment *attachment = (NIMUserAddAttachment*)notification.attachment;
+        
+        NSString *notifationStr1 = [NSString stringWithFormat:@"%@",notifation1.sourceID];
+        NSString *attachmentStr1 = [NSString stringWithFormat:@"%ld",(long)attachment1.operationType];
+        NSString *notifationStr = [NSString stringWithFormat:@"%@",notification.sourceID];
+        NSString *attachmentStr = [NSString stringWithFormat:@"%ld",(long)attachment.operationType];
+        
+        if ([notifationStr1 isEqualToString:notifationStr] && [attachmentStr1 isEqualToString:attachmentStr]) {
+            needInster = NO;
+            notification.read = YES;
+        }
+    }
+    if (needInster) {
+        [_notificationArr insertObject:notification atIndex:0];
+    }
+    
+    
+    
+    
+//    _shouldMarkAsRead = YES;
     [self.tableView reloadData];
 }
 
@@ -84,9 +106,15 @@ static int MaxNotificationCount =10;
             NIMUserAddAttachment *attachment1 = (NIMUserAddAttachment*)notifation1.attachment;
             if (i+1<notifications.count) {
                 for (int j = i+1; j< notifications.count; j++) {
-                    NIMSystemNotification * notifation2 = notifications[i];
+                    NIMSystemNotification * notifation2 = notifications[j];
                     NIMUserAddAttachment *attachment2 = (NIMUserAddAttachment*)notifation2.attachment;
-                    if (notifation1.sourceID == notifation2.sourceID&& attachment1.operationType == attachment2.operationType) {
+                    
+                    NSString *notifationStr1 = [NSString stringWithFormat:@"%@",notifation1.sourceID];
+                    NSString *attachmentStr1 = [NSString stringWithFormat:@"%ld",(long)attachment1.operationType];
+                    NSString *notifationStr2 = [NSString stringWithFormat:@"%@",notifation2.sourceID];
+                    NSString *attachmentStr2 = [NSString stringWithFormat:@"%ld",(long)attachment2.operationType];
+                    
+                    if ([notifationStr1 isEqualToString:notifationStr2] && [attachmentStr1 isEqualToString:attachmentStr2]) {
                         [repeatNotifations addObject:notifation1];
                         notifation2.read = YES;
                     }

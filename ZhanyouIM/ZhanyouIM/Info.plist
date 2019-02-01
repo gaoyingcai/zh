@@ -41,15 +41,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>我们需要使用相机</string>
+	<string>为了发布图片视频消息,我们需要获取您的相机权限</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>我们需要使用您的位置</string>
+	<string>为了发布位置消息,我们需要获取您的相机权限</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>我们需要使用您的位置</string>
+	<string>为了发布位置消息,我们需要获取您的相机权限</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>我们需要访问麦克风</string>
+	<string>为了发布语音消息,我们需要获取您的相机权限</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>我们需要使用相册</string>
+	<string>为了发布图片视频消息,我们需要获取您的相机权限</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

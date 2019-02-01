@@ -12,10 +12,13 @@
 #import "ForgetPasswordViewController.h"
 #import "DataService.h"
 #import <NIMSDK/NIMSDK.h>
+#import "UILabel+YBAttributeTextTapAction.h"
+#import "WebViewController.h"
 
-@interface LoginViewController ()<NIMLoginManagerDelegate>
+@interface LoginViewController ()<NIMLoginManagerDelegate,YBAttributeTapActionDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet UILabel *agreementLabel;
 
 @end
 
@@ -36,6 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self setAgreementStr];
 }
 - (IBAction)forgetAction:(UIButton *)sender {
     ForgetPasswordViewController * forget = [[UIStoryboard storyboardWithName:@"LoginRegist" bundle:nil] instantiateViewControllerWithIdentifier:@"forget"];
@@ -87,6 +91,47 @@
 }
 */
 
+
+
+
+- (void)setAgreementStr
+{
+    NSString *agreementStr = @"点击登录或注册代表您同意《用户协议》和《隐私政策》";
+    NSMutableArray *ranges = [NSMutableArray array]; // 特殊字符的Range集合,修改文字颜用
+    NSMutableArray *actionStrs = [NSMutableArray array];
+    [actionStrs addObject:@"《用户协议》"];
+    [actionStrs addObject:@"《隐私政策》"];
+    NSRange range1 = [agreementStr rangeOfString:@"《用户协议》"];
+    NSRange range2 = [agreementStr rangeOfString:@"《隐私政策》"];
+    [ranges addObject:[NSValue valueWithRange:range1]];
+    [ranges addObject:[NSValue valueWithRange:range2]];
+    
+    // 转换成富文本字符串
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:agreementStr];
+    [attrStr addAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14.f]} range:NSMakeRange(0, agreementStr.length)];
+    // 最好设置一下行高，不设的话默认是0
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 0;
+    [attrStr addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, agreementStr.length)];
+    // 给指定文字添加颜色
+    for (NSValue *rangeVal in ranges) {
+        [attrStr addAttributes:@{NSForegroundColorAttributeName : [UIColor blueColor]} range:rangeVal.rangeValue];
+    }
+    
+    self.agreementLabel.attributedText = attrStr;
+    self.agreementLabel.textAlignment = NSTextAlignmentCenter;
+    // 给指定文字添加点击事件,并设置代理,代理中监听点击
+    [self.agreementLabel yb_addAttributeTapActionWithStrings:actionStrs delegate:self];
+
+}
+-(void)yb_tapAttributeInLabel:(UILabel *)label string:(NSString *)string range:(NSRange)range index:(NSInteger)index{
+    NSLog(@"点击了协议");
+    
+    WebViewController *webView = [[WebViewController alloc]init];
+    webView.title = string;
+    webView.webViewStr = @"http://aiwozhonghua-test2.kh.juanyunkeji.cn/zt/notice_tell.html";
+    [self.navigationController pushViewController:webView animated:YES];
+}
 
 
 @end

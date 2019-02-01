@@ -15,6 +15,7 @@
 		DF0B3C5B2173878200B73186 /* RegistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0B3C5A2173878200B73186 /* RegistViewController.m */; };
 		DF0BEB1E219DBB790069B38A /* next@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0BEB1D219DBB790069B38A /* next@2x.png */; };
 		DF0BEB21219DC6810069B38A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0BEB20219DC6800069B38A /* WebViewController.m */; };
+		DF0DCDA322049A2B005643AD /* UILabel+YBAttributeTextTapAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0DCDA222049A2B005643AD /* UILabel+YBAttributeTextTapAction.m */; };
 		DF0E897A2199CD720067B4E1 /* TeamInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0E89792199CD720067B4E1 /* TeamInfoViewController.m */; };
 		DF11ED5421C4ABD20064E2D3 /* search_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4C21C4ABCE0064E2D3 /* search_tab@2x.png */; };
 		DF11ED5521C4ABD20064E2D3 /* directory_tab@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF11ED4D21C4ABCF0064E2D3 /* directory_tab@3x.png */; };
@@ -192,6 +193,8 @@
 		DF0BEB1D219DBB790069B38A /* next@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next@2x.png"; sourceTree = "<group>"; };
 		DF0BEB1F219DC6800069B38A /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		DF0BEB20219DC6800069B38A /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		DF0DCDA122049A2B005643AD /* UILabel+YBAttributeTextTapAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+YBAttributeTextTapAction.h"; sourceTree = "<group>"; };
+		DF0DCDA222049A2B005643AD /* UILabel+YBAttributeTextTapAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+YBAttributeTextTapAction.m"; sourceTree = "<group>"; };
 		DF0E89782199CD720067B4E1 /* TeamInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TeamInfoViewController.h; sourceTree = "<group>"; };
 		DF0E89792199CD720067B4E1 /* TeamInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TeamInfoViewController.m; sourceTree = "<group>"; };
 		DF11ED4C21C4ABCE0064E2D3 /* search_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_tab@2x.png"; sourceTree = "<group>"; };
@@ -472,6 +475,15 @@
 			path = img;
 			sourceTree = "<group>";
 		};
+		DF0DCDA022049A2B005643AD /* YBAttributeTextTapAction */ = {
+			isa = PBXGroup;
+			children = (
+				DF0DCDA122049A2B005643AD /* UILabel+YBAttributeTextTapAction.h */,
+				DF0DCDA222049A2B005643AD /* UILabel+YBAttributeTextTapAction.m */,
+			);
+			path = YBAttributeTextTapAction;
+			sourceTree = "<group>";
+		};
 		DF1DCD9C2180E0AD004AAF30 /* utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +514,7 @@
 		DF331EA72178A97500034F3F /* 3rd */ = {
 			isa = PBXGroup;
 			children = (
+				DF0DCDA022049A2B005643AD /* YBAttributeTextTapAction */,
 				DF1DCD9C2180E0AD004AAF30 /* utils */,
 				DF331EA82178A9BD00034F3F /* MomentKit-master */,
 			);
@@ -1193,6 +1206,7 @@
 				DF331F8D2178A9BD00034F3F /* Comment.m in Sources */,
 				DF5B8DE9216F6E6B00F84CF5 /* AppDelegate.m in Sources */,
 				DF4DE07E217AF4EC005F1D89 /* SelectTimeView.m in Sources */,
+				DF0DCDA322049A2B005643AD /* UILabel+YBAttributeTextTapAction.m in Sources */,
 				DF4C7A0721E61789001C8CB9 /* UIViewController+BackButtonHandler.m in Sources */,
 				DF6A6A602174E10B002314B5 /* RegistViewController2.m in Sources */,
 				DF331F922178A9BD00034F3F /* MomentCell.m in Sources */,

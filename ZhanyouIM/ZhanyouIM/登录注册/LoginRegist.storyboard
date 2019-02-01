@@ -129,22 +129,35 @@
                                     <constraint firstAttribute="trailing" secondItem="gIc-M4-DAq" secondAttribute="trailing" id="x8z-K3-SCA"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m1M-OX-oj4">
+                                <rect key="frame" x="0.0" y="607" width="375" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="bJh-d7-2VP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="G5Y-rg-fgk" firstAttribute="top" secondItem="eVF-sg-3J2" secondAttribute="top" constant="64" id="5FR-5Y-AFo"/>
                             <constraint firstItem="w8n-mq-TBt" firstAttribute="top" secondItem="G5Y-rg-fgk" secondAttribute="bottom" id="CCc-aK-alk"/>
                             <constraint firstItem="R1O-UK-H95" firstAttribute="trailing" secondItem="w8n-mq-TBt" secondAttribute="trailing" constant="20" id="CnU-S4-rry"/>
+                            <constraint firstItem="m1M-OX-oj4" firstAttribute="leading" secondItem="R1O-UK-H95" secondAttribute="leading" id="Hpy-Ok-y3v"/>
                             <constraint firstItem="G5Y-rg-fgk" firstAttribute="leading" secondItem="R1O-UK-H95" secondAttribute="leading" id="J7P-4x-Dv1"/>
                             <constraint firstItem="w8n-mq-TBt" firstAttribute="leading" secondItem="R1O-UK-H95" secondAttribute="leading" constant="20" id="h5d-ek-YHX"/>
+                            <constraint firstItem="R1O-UK-H95" firstAttribute="bottom" secondItem="m1M-OX-oj4" secondAttribute="bottom" constant="30" id="m9h-2H-4Uz"/>
                             <constraint firstItem="w8n-mq-TBt" firstAttribute="height" secondItem="eVF-sg-3J2" secondAttribute="height" multiplier="80:222" id="ohs-rI-1EO"/>
                             <constraint firstItem="G5Y-rg-fgk" firstAttribute="height" secondItem="eVF-sg-3J2" secondAttribute="height" multiplier="185:667" id="qBc-Jd-ccy"/>
                             <constraint firstItem="G5Y-rg-fgk" firstAttribute="trailing" secondItem="R1O-UK-H95" secondAttribute="trailing" id="rPa-XO-wri"/>
+                            <constraint firstItem="R1O-UK-H95" firstAttribute="trailing" secondItem="m1M-OX-oj4" secondAttribute="trailing" id="rb1-Bn-0T4"/>
                             <constraint firstItem="w8n-mq-TBt" firstAttribute="centerX" secondItem="eVF-sg-3J2" secondAttribute="centerX" id="tHN-6P-n6M"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="R1O-UK-H95"/>
                     </view>
                     <connections>
+                        <outlet property="agreementLabel" destination="m1M-OX-oj4" id="E27-e3-HY4"/>
                         <outlet property="numberTextField" destination="gIc-M4-DAq" id="9rF-ZN-qWK"/>
                         <outlet property="passwordTextField" destination="8LC-15-AWt" id="6at-Gz-VNs"/>
                     </connections>

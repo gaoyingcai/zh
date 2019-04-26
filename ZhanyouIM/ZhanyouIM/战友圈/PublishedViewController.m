@@ -249,8 +249,8 @@
     if (xiangce) {
         if (luzhi) {
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-//            picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
-            picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];
+            picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+//            picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];
         }else{
             picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
             picker.mediaTypes = [NSArray arrayWithObjects:@"public.image", nil];

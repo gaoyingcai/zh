@@ -36,7 +36,7 @@
 //    view.backgroundColor = [UIColor colorWithRed:70.0/255.0 green:74.0/255.0 blue:75.0/255.0 alpha:1.0];
 //    view.layer.cornerRadius = 4.0;
 //    view.layer.masksToBounds = YES;
-//    // 点赞
+    // 点赞
 //    UUButton *btn = [[UUButton alloc] initWithFrame:CGRectMake(0, 0, view.width/2, kOperateHeight)];
 //    btn.backgroundColor = [UIColor clearColor];
 //    btn.titleLabel.font = [UIFont systemFontOfSize:14.0];
@@ -67,6 +67,8 @@
     
     
     
+
+    
     _imageView = [[UIImageView alloc]initWithFrame:CGRectMake(kOperateWidth-kOperateBtnWidth*7/4, kOperateHeight/4, kOperateBtnWidth/2, kOperateHeight/2)];
     _imageView.image = [UIImage imageNamed:@"评论@2x.png"];
     [self addSubview:_imageView];
@@ -74,6 +76,18 @@
     _commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(kOperateWidth-kOperateBtnWidth, 0, kOperateBtnWidth, kOperateHeight)];
     _commentLabel.font = [UIFont systemFontOfSize:11];
     [self addSubview:_commentLabel];
+    
+    
+    //屏蔽消息
+    UUButton *btn = [[UUButton alloc] initWithFrame:CGRectMake(_imageView.left-90,kOperateHeight/4,80,kOperateHeight/2)];
+    btn.backgroundColor = [UIColor clearColor];
+    btn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    btn.spacing = 3;
+    [btn setTitle:@"举报" forState:UIControlStateNormal];
+    [btn setTitleColor:kHLTextColor forState:UIControlStateNormal];
+//    [btn setImage:[UIImage imageNamed:@"moment_like"] forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(likeClick) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:btn];
     
     
 //    // 菜单操作按钮
@@ -132,12 +146,12 @@
 //
 //}
 
-//- (void)likeClick
-//{
-//    if (self.likeMoment) {
-//        self.likeMoment();
-//    }
-//}
+- (void)likeClick
+{
+    if (self.likeMoment) {
+        self.likeMoment();
+    }
+}
 
 - (void)commentClick
 {

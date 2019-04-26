@@ -91,6 +91,11 @@ CGFloat maxLimitHeight = 0;
             [weakSelf.delegate didAddComment:weakSelf];
         }
     }];
+    [_menuView setLikeMoment:^{
+        if ([weakSelf.delegate respondsToSelector:@selector(didLikeMoment:)]) {
+            [weakSelf.delegate didLikeMoment:weakSelf];
+        }
+    }];
     [self.contentView addSubview:_menuView];
     // 最大高度限制
     maxLimitHeight = _linkLabel.font.lineHeight * 6;

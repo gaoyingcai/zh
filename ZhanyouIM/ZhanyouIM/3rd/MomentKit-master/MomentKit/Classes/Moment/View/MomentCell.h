@@ -65,7 +65,7 @@
 // 删除
 - (void)didDeleteMoment:(MomentCell *)cell;
 // 点赞
-//- (void)didLikeMoment:(MomentCell *)cell;
+- (void)didLikeMoment:(MomentCell *)cell;
 // 评论
 - (void)didAddComment:(MomentCell *)cell;
 // 查看全文/收起

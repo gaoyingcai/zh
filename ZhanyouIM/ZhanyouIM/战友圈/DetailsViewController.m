@@ -201,10 +201,17 @@
     [self getFriendInfo:[dic objectForKey:@"accid"]];
 }
 
-// 点赞
+// 点赞---改为屏蔽功能
 - (void)didLikeMoment:(MomentCell *)cell
 {
     NSLog(@"点赞");
+    NSDictionary *dic = [self->dataArray objectAtIndex:cell.tag];
+    NSDictionary * paramDic= @{@"uid":[[self getUserinfo] objectForKey:@"uid"],@"shield_uid":[dic objectForKey:@"uid"],@"info_id":[NSString stringWithFormat:@"%d",_commentId]};
+    [DataService requestWithPostUrl:@"/api/trend/shield_user" params:paramDic block:^(id result) {
+        if ([self checkout:result]) {
+            [self showTextMessage:@"举报成功,系统将在24小时内做出处理!"];
+        }
+    }];
 }
 #pragma mark --键盘的显示隐藏--
 -(void)keyboardWillShow:(NSNotification *)notification{

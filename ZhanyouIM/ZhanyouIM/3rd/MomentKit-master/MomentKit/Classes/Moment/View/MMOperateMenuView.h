@@ -18,9 +18,9 @@
 
 @property (nonatomic) int commentNum;
 
-//// 赞
-//@property (nonatomic, copy) void (^likeMoment)(void);
-// //评论
+// 赞
+@property (nonatomic, copy) void (^likeMoment)(void);
+ //评论
 @property (nonatomic, copy) void (^commentMoment)(void);
 
 @end

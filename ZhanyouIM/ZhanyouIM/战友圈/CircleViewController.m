@@ -196,9 +196,9 @@ static NSString *moduleType;
     
     NSDictionary *paramDic;
     if (self.myDynamic) {
-        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",self.momentArray.count/5+1],@"uid":[NSString stringWithFormat:@"%@",[[self getUserinfo] objectForKey:@"uid"]]};
+        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",(self.momentArray.count/5+1)],@"uid":[NSString stringWithFormat:@"%@",[[self getUserinfo] objectForKey:@"uid"]]};
     }else{
-        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",self.momentArray.count/5+1]};
+        paramDic = @{@"type":moduleType,@"page":[NSString stringWithFormat:@"%lu",(self.momentArray.count/5+1)],@"cur_uid":[NSString stringWithFormat:@"%@",[[self getUserinfo] objectForKey:@"uid"]]};
     }
     NSLog(@"%@",paramDic);
     [DataService requestWithPostUrl:@"/api/list/getItemList" params:paramDic block:^(id result) {
@@ -463,6 +463,21 @@ static NSString *moduleType;
     NSLog(@"全文/收起");
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+// 点赞---改为屏蔽功能
+- (void)didLikeMoment:(MomentCell *)cell
+{
+    NSLog(@"点赞");
+    NSDictionary *dic = [self.dataArray objectAtIndex:cell.tag];
+    NSDictionary * paramDic= @{@"uid":[[self getUserinfo] objectForKey:@"uid"],@"shield_uid":[dic objectForKey:@"uid"],@"info_id":[[self.dataArray objectAtIndex:cell.tag] objectForKey:@"id"]};
+    [DataService requestWithPostUrl:@"/api/trend/shield_user" params:paramDic block:^(id result) {
+        if ([self checkout:result]) {
+            [self showTextMessage:@"举报成功,系统将在24小时内做出处理!"];
+//            [self.momentArray removeObjectAtIndex:cell.tag];
+//            [self.dataArray removeObjectAtIndex:cell.tag];
+//            [self.tableView reloadData];
+        }
+    }];
 }
 #pragma mark -
 - (void)didReceiveMemoryWarning
